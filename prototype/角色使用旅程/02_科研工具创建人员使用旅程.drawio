@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17" type="device" compressed="false" modified="2026-10-10T00:00:00.000Z">
+  <diagram id="demandJourney" name="02_科研工具创建人员使用旅程">
+    <mxGraphModel dx="1520" dy="2730" grid="1" gridSize="10" guides="1" connect="1" arrows="1" page="0" pageScale="1" pageWidth="1520" pageHeight="2730" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="band0" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F1F6FF;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="180" width="1450" height="340" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="需求侧  /  用途与验收" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="188" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" parent="1" style="rounded=0;fillColor=#EEF7F4;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="545" width="1450" height="1275" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="AI 中台  /  工具建设与发布" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="553" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F1F6FF;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="1845" width="1450" height="640" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="AI4S  /  登记、发现与调用" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="1853" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="edge0" edge="1" parent="1" source="demand" target="reuseGate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="reuseGate" target="reuseBuild" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.0;exitY=0.5;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="415" y="450" />
+              <mxPoint x="415" y="585" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="reuseGate" target="newBuild" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1075" y="450" />
+              <mxPoint x="1075" y="585" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="reuseBuild" target="configure" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="415" y="765" />
+              <mxPoint x="710" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="newBuild" target="configure" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1075" y="765" />
+              <mxPoint x="710" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="configure" target="develop" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="develop" target="test" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="test" target="testGate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="testGate" target="fix" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="975.0" y="1365.0" />
+              <mxPoint x="975.0" y="1367.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge9" edge="1" parent="1" source="fix" target="develop" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=0.0;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1257.5" y="1022" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge10" edge="1" parent="1" source="testGate" target="release" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge11" edge="1" parent="1" source="release" target="handover" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge12" edge="1" parent="1" source="handover" target="register" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge13" edge="1" parent="1" source="register" target="available" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge14" edge="1" parent="1" source="available" target="use" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge15" edge="1" parent="1" source="use" target="feedback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="995.0" y="2297.0" />
+              <mxPoint x="995.0" y="2299.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge16" edge="1" parent="1" source="use" target="delivered" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge17" edge="1" parent="1" source="feedback" target="configure" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1465" y="2299" />
+              <mxPoint x="1465" y="857" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="demand" value="01  明确工具用途与交付标准&#10;接收科研任务需求或使用反馈&#10;[科研人员交接 / 能力需求]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="235" width="360" height="104" />
+        </mxCell>
+        <mxCell id="reuseGate" value="已有能力&#10;是否可以复用或扩展？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="570" y="380" width="280" height="140" />
+        </mxCell>
+        <mxCell id="reuseBuild" value="02A  复用或扩展已有能力&#10;核对模型、程序、接口及许可&#10;[AI 中台 · 业务级步骤]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="220" y="620" width="390" height="104" />
+        </mxCell>
+        <mxCell id="newBuild" value="02B  创建新的工具能力&#10;明确开发方式和执行依赖&#10;[AI 中台 · 业务级步骤]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="880" y="620" width="390" height="104" />
+        </mxCell>
+        <mxCell id="configure" value="03  定义工具与调用契约&#10;输入输出、参数、依赖与边界&#10;[AI 中台 · 工具配置]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="805" width="360" height="104" />
+        </mxCell>
+        <mxCell id="develop" value="04  开发与调试工具&#10;接入所需程序、模型或服务&#10;[AI 中台 · 开发调试]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="970" width="360" height="104" />
+        </mxCell>
+        <mxCell id="test" value="05  执行功能与科研适用性验证&#10;检查正常、异常、越界输入&#10;[AI 中台 · 测试验证]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="1135" width="360" height="104" />
+        </mxCell>
+        <mxCell id="testGate" value="约定测试与&#10;交付条件是否满足？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="570" y="1295" width="280" height="140" />
+        </mxCell>
+        <mxCell id="fix" value="定位失败原因&#10;修订实现、配置或适用边界&#10;[AI 中台 · 修改后重测]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="1310" width="315" height="114" />
+        </mxCell>
+        <mxCell id="release" value="06  发布可调用的能力版本&#10;交付调用标识、依赖与使用说明&#10;[AI 中台 · 能力发布]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="1495" width="360" height="104" />
+        </mxCell>
+        <mxCell id="handover" value="07  准备能力交接资料&#10;版本、输入输出、测试依据与授权&#10;[AI 中台 → AI4S]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="1670" width="360" height="104" />
+        </mxCell>
+        <mxCell id="register" value="08  在 AI4S 登记或关联资源&#10;引用中台能力，补充科研分类与说明&#10;[科研资源 / 空间资产]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="1915" width="360" height="104" />
+        </mxCell>
+        <mxCell id="available" value="09  核对版本、授权与可用范围&#10;按需发布资源并进入发现目录&#10;[AI4S · 科研资源]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="2080" width="360" height="104" />
+        </mxCell>
+        <mxCell id="use" value="10  交给科研超级中枢使用&#10;科研人员在研究任务中调用与复核&#10;[科研超级中枢 · 任务会话]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="2245" width="360" height="104" />
+        </mxCell>
+        <mxCell id="feedback" value="接收失败样例与适用性反馈&#10;回 AI 中台修订并再次验证&#10;[使用反馈 → AI 中台]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="2240" width="315" height="118" />
+        </mxCell>
+        <mxCell id="delivered" value="交付可复用能力&#10;进入持续维护阶段" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="2380" width="360" height="78" />
+        </mxCell>
+        <mxCell id="edgeText1" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="432.0" y="410" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText2" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="972.0" y="410" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText8" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="952.0" y="1330" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText10" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="728.0" y="1455" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText12" value="跨系统交接" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="760.0" y="1835" width="100" height="30" />
+        </mxCell>
+        <mxCell id="edgeText15" value="问题 / 需求" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="927.0" y="2250" width="132" height="30" />
+        </mxCell>
+        <mxCell id="title" value="ScienceLab AI4S  /  科研工具创建人员使用旅程" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="25" width="1440" height="53" />
+        </mxCell>
+        <mxCell id="subtitle" value="建设主场：AI 中台｜接收需求 → 复用或新建 → 开发调试与验证 → 发布能力 → AI4S 登记与科研调用" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="91" width="1440" height="52" />
+        </mxCell>
+        <mxCell id="note0" value="具体工具创建在 AI 中台完成。&#10;AI4S 中的资产登记表单&#10;不替代开发、调试和运行验证。&#10;此图不假定某一种模型、SDK&#10;或特定 AI 中台菜单。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="80" y="1070" width="340" height="155" />
+        </mxCell>
+        <mxCell id="note1" value="能力发布 ≠ 资源上架。&#10;发布说明哪个版本可以被调用；&#10;上架说明哪些用户可以发现它。&#10;实际调用仍需满足权限与依赖条件。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="1100" y="1610" width="325" height="160" />
+        </mxCell>
+        <mxCell id="note2" value="登记、关联或同步的具体方式&#10;需与实际 AI 中台方案对齐。&#10;本图不假定已经自动打通&#10;API、单点登录或目录同步。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="90" y="1940" width="335" height="135" />
+        </mxCell>
+        <mxCell id="note3" value="图例：实框＝现有或已确认的角色动作；虚框＝业务级环节，具体页面或联动尚待核实。&#10;实箭头＝正常推进；虚箭头＝修改重试、跨系统交接或使用反馈。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2520" width="1440" height="75" />
+        </mxCell>
+        <mxCell id="note4" value="交付：可识别的能力版本、调用与复用说明、测试依据、适用边界和维护责任。&#10;用户已明确“工具在 AI 中台创建”；当前工作区未提供 AI 中台页面，因此不将图中中台步骤视作已验证功能。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2620" width="1440" height="75" />
+        </mxCell>
+        <mxCell id="date" value="角色与系统分工依据用户确认；对应原型模块参考本工作区。更新：2026-10-10" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=14;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2700" width="1440" height="22" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

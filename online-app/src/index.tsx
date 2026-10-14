@@ -1,0 +1,7 @@
+import React from 'react';import {createRoot} from 'react-dom/client';import {BrowserRouter,HashRouter,Navigate,useLocation,Routes,Route} from 'react-router-dom';
+import {KnowledgeCenter as Knowledge} from './components/v1/knowledge';import {DatasetMarketplace as Datasets} from './components/v1/datasets';import {Catalog} from './components/v1/catalog';import {ResearchRuntime,useResearch} from './components/v1/store';
+import Detail from './execution-detail';import List from './execution-list';
+import './resource.css';import './components/v1/v1.css';import './components/v1/workspace-home.css';import './components/v1/research-task-original.css';
+function App(){const l=useLocation();const kind=l.pathname.replace('/resource/','').split('/')[0];const {toast}=useResearch();if(!l.pathname.startsWith('/resource/'))return <Navigate to="/resource/knowledge" replace/>;return <><ResearchRuntime/><main id="v-main" className="v-resource-main">{kind==='knowledge'?<Knowledge/>:kind==='datasets'?<Datasets/>:['models','tools','skills'].includes(kind)?<Catalog key={kind} kind={kind as "models"|"tools"|"skills"}/>:kind==='execution-detail'?<Detail/>:kind==='execution-list'?<List/>:<p>页面不存在</p>}</main>{toast&&<div className="v-toast">{toast}</div>}</>}
+const routes=<Routes><Route path="*" element={<App/>}/></Routes>;
+createRoot(document.getElementById('root')!).render(location.protocol==='file:'||location.hash.startsWith('#/resource/')?<HashRouter>{routes}</HashRouter>:<BrowserRouter basename="/app/app_17f8q1hymdy">{routes}</BrowserRouter>);

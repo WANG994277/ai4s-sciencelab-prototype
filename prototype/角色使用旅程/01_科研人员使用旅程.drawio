@@ -1,0 +1,243 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17" type="device" compressed="false" modified="2026-10-10T00:00:00.000Z">
+  <diagram id="entryJourney" name="01_科研人员使用旅程">
+    <mxGraphModel dx="1520" dy="2820" grid="1" gridSize="10" guides="1" connect="1" arrows="1" page="0" pageScale="1" pageWidth="1520" pageHeight="2820" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="band0" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F1F6FF;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="180" width="1450" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="AI4S  /  定位研究" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="188" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" parent="1" style="rounded=0;fillColor=#EEF7F4;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="515" width="1450" height="1390" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="科研超级中枢  /  开展读、算" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="523" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F1F6FF;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="1930" width="1450" height="645" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="AI4S  /  判断与成果" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="1938" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="edge0" edge="1" parent="1" source="entry" target="hub" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="hub" target="input" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="input" target="plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="plan" target="ready" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="ready" target="repair" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="repair" target="input" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=0.0;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1257.5" y="757" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="ready" target="dispatch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="dispatch" target="read" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="710" y="1345" />
+              <mxPoint x="420" y="1345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="dispatch" target="compute" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="710" y="1345" />
+              <mxPoint x="1070" y="1345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge9" edge="1" parent="1" source="read" target="observe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="420" y="1512" />
+              <mxPoint x="710" y="1512" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge10" edge="1" parent="1" source="compute" target="observe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1070" y="1512" />
+              <mxPoint x="710" y="1512" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge11" edge="1" parent="1" source="observe" target="runGate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge12" edge="1" parent="1" source="runGate" target="runError" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="975.0" y="1780.0" />
+              <mxPoint x="975.0" y="1777.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge13" edge="1" parent="1" source="runError" target="plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1470" y="1777.5" />
+              <mxPoint x="1470" y="912" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge14" edge="1" parent="1" source="runGate" target="review" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge15" edge="1" parent="1" source="review" target="evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge16" edge="1" parent="1" source="evidence" target="nextStudy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="975.0" y="2225.0" />
+              <mxPoint x="975.0" y="2227.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge17" edge="1" parent="1" source="nextStudy" target="input" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1490" y="2227.5" />
+              <mxPoint x="1490" y="757" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge18" edge="1" parent="1" source="evidence" target="save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge19" edge="1" parent="1" source="save" target="reuse" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="970.0" y="2432.0" />
+              <mxPoint x="970.0" y="2455.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="entry" value="01  进入工作台或课题空间&#10;明确本次研究目标&#10;[科研工作台 / 课题空间]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="235" width="360" height="104" />
+        </mxCell>
+        <mxCell id="hub" value="02  进入科研超级中枢&#10;新建或继续研究会话&#10;[科研超级中枢 / 任务内中枢会话]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="550" width="360" height="104" />
+        </mxCell>
+        <mxCell id="input" value="03  描述问题、加载上下文&#10;提供文献、数据、约束与版本&#10;[中枢输入区 · 上下文]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="705" width="360" height="104" />
+        </mxCell>
+        <mxCell id="plan" value="04  查看中枢研究计划&#10;核对任务范围、能力与确认点&#10;[科研超级中枢 · 研究计划]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="860" width="360" height="104" />
+        </mxCell>
+        <mxCell id="ready" value="计划、材料与权限&#10;是否满足执行要求？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="570" y="1020" width="280" height="142" />
+        </mxCell>
+        <mxCell id="repair" value="补充材料 / 调整计划&#10;申请所需资源授权&#10;[中枢上下文 / 资源授权]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="1034" width="315" height="114" />
+        </mxCell>
+        <mxCell id="dispatch" value="05  确认计划并推进研究&#10;中枢按任务组织读、算能力&#10;[科研超级中枢 · 执行会话]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="1215" width="360" height="104" />
+        </mxCell>
+        <mxCell id="read" value="通过中枢开展「读」&#10;检索研读、证据摘录与引用&#10;[科研超级中枢 · 知识能力]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="225" y="1380" width="390" height="104" />
+        </mxCell>
+        <mxCell id="compute" value="通过中枢开展「算」&#10;数据分析、模型调用与科学计算&#10;[科研超级中枢 · 工具能力]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="875" y="1380" width="390" height="104" />
+        </mxCell>
+        <mxCell id="observe" value="06  在中枢查看进度与产物&#10;检查轨迹、工具状态和阶段结果&#10;[科研超级中枢 · 轨迹 / 产出]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="1550" width="360" height="104" />
+        </mxCell>
+        <mxCell id="runGate" value="本次执行&#10;是否正常完成？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="570" y="1710" width="280" height="140" />
+        </mxCell>
+        <mxCell id="runError" value="查看失败原因与调用记录&#10;补齐条件后回中枢调整重试&#10;[中枢轨迹 · 人工接管]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="1720" width="315" height="115" />
+        </mxCell>
+        <mxCell id="review" value="07  人工复核结果与证据&#10;核查来源、模型边界和适用条件&#10;[产物溯源 · 科学问题]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="1995" width="360" height="104" />
+        </mxCell>
+        <mxCell id="evidence" value="本轮判断依据&#10;是否充分？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="570" y="2155" width="280" height="140" />
+        </mxCell>
+        <mxCell id="nextStudy" value="补充证据 / 修订假设&#10;把下一轮问题带回中枢&#10;[科学问题 → 科研超级中枢]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="1100" y="2170" width="315" height="115" />
+        </mxCell>
+        <mxCell id="save" value="08  保存有边界的阶段判断&#10;保留证据、产物和未解决问题&#10;[科研任务 · 科学问题 · 空间资产]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="2380" width="360" height="104" />
+        </mxCell>
+        <mxCell id="reuse" value="按需整理可复用资产&#10;向项目管理人员提交阶段材料&#10;[空间资产 / 评审交接]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1050" y="2400" width="360" height="110" />
+        </mxCell>
+        <mxCell id="edgeText4" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="957.0" y="1055" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText6" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="725.0" y="1175" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText7" value="按需选读" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="423.0" y="1305" width="84" height="30" />
+        </mxCell>
+        <mxCell id="edgeText8" value="按需选算" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="988.0" y="1305" width="84" height="30" />
+        </mxCell>
+        <mxCell id="edgeText12" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="967.0" y="1745" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText14" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="727.0" y="1860" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText16" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="962.0" y="2195" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText18" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="727.0" y="2305" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText19" value="按需" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="944.0" y="2400" width="52" height="30" />
+        </mxCell>
+        <mxCell id="title" value="ScienceLab AI4S  /  科研人员使用旅程" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="25" width="1440" height="53" />
+        </mxCell>
+        <mxCell id="subtitle" value="核心入口：科研超级中枢｜提交问题与材料 → 确认计划 → 中枢组织读、算 → 人工复核与迭代" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="91" width="1440" height="52" />
+        </mxCell>
+        <mxCell id="note0" value="起点：已有研究目标或待解决问题。&#10;课题空间提供研究归属；&#10;读、算操作围绕科研超级中枢展开。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="95" y="355" width="380" height="90" />
+        </mxCell>
+        <mxCell id="note1" value="中枢可以调用底层知识、模型与工具。&#10;科研人员通过中枢推进任务，&#10;本旅程不要求其进入 AI 中台开发工具。&#10;底层服务接入状态以实际环境为准。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="1100" y="550" width="315" height="145" />
+        </mxCell>
+        <mxCell id="note2" value="读、算按计划选择和组合，&#10;可以只读、只算或读算迭代。&#10;图中两支不要求同时执行，&#10;在产出节点汇集本次实际结果。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="130" y="1190" width="315" height="130" />
+        </mxCell>
+        <mxCell id="note3" value="“依据充分”并不等于假设成立。&#10;反驳假设或保留分歧，也可以形成&#10;有来源、有边界的阶段判断。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="95" y="2165" width="355" height="125" />
+        </mxCell>
+        <mxCell id="note4" value="图例：实框＝原型现有或本地演示；虚框＝尚待接入或未核实的业务环节。&#10;实箭头＝正常推进；虚箭头＝退回、跨角色交接或可选路径。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2610" width="1440" height="65" />
+        </mxCell>
+        <mxCell id="note5" value="交付：阶段判断、证据与产物、下一轮研究问题或待评审材料。&#10;当前读、算运行仍为演示；权限申请、异常重试与成果送审的具体联动需在目标环境核实。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2695" width="1440" height="80" />
+        </mxCell>
+        <mxCell id="date" value="角色与系统分工依据用户确认；对应原型模块参考本工作区。更新：2026-10-10" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=14;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2790" width="1440" height="22" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

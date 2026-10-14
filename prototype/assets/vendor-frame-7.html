@@ -1,0 +1,1450 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>科研数据集 · AI4S</title>
+  <style>
+:root {
+  --blue: #1765e3;
+  --blue-hover: #0f58cf;
+  --blue-soft: #ebf3ff;
+  --blue-line: #8fb5ec;
+  --ink: #15233b;
+  --ink-2: #33415a;
+  --muted: #6b7a90;
+  --muted-2: #8e9bb0;
+  --line: #e2e9f3;
+  --line-2: #d5dfeb;
+  --bg: #f4f7fc;
+  --sider: 236px;
+  --rail: 68px;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+input, textarea { border: 0; background: none; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+svg { display: block; flex: none; }
+[hidden] { display: none !important; }
+
+/* ---------- 外壳 ---------- */
+.app { display: grid; grid-template-columns: var(--sider) 1fr; min-height: 100vh; }
+.app.is-rail { grid-template-columns: var(--rail) 1fr; }
+.sider { background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; z-index: 25; }
+.sider-logo { height: 56px; display: flex; align-items: center; padding: 0 30px; border-bottom: 1px solid var(--line); }
+.logo { display: flex; gap: 4px; align-items: center; color: var(--ink); text-decoration: none; }
+.logo strong { display: block; font-size: 19px; line-height: 1; font-weight: 800; letter-spacing: .2px; color: #0e1c35; font-family: "Helvetica Neue", Arial, sans-serif; }
+.logo em { display: block; font-style: normal; color: #2b5fb8; font-size: 10.5px; line-height: 1.1; margin-top: 2px; font-family: "Helvetica Neue", Arial, sans-serif; }
+.sider-nav { padding: 12px 12px; display: flex; flex-direction: column; overflow: auto; flex: 1; }
+.nav-sep { height: 1px; background: var(--line); margin: 8px 0; }
+.nav-label { color: #7c8aa0; font-size: 12px; padding: 8px 12px 4px; }
+.nav-item { display: flex; align-items: center; gap: 12px; height: 42px; padding: 0 12px; border-radius: 6px; color: var(--ink-2); text-decoration: none; position: relative; font-size: 14px; }
+.nav-item svg { color: #3b475b; }
+.nav-item .arrow { margin-left: auto; color: #6e7b90; }
+.nav-item:hover { background: #f5f8fd; }
+.nav-item.active { background: #eaf2fd; color: #1452b8; font-weight: 600; }
+.nav-item.active svg { color: #1452b8; }
+.nav-item.active::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; border-radius: 2px 0 0 2px; background: var(--blue); }
+.is-rail .sider-logo { padding: 0; justify-content: center; }
+.is-rail .logo span, .is-rail .nav-item > span, .is-rail .nav-item .arrow, .is-rail .nav-label, .is-rail .sider-foot span:last-child { display: none; }
+.is-rail .nav-item { justify-content: center; padding: 0; }
+.sider-foot { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #8b98ab; font-size: 12px; border-top: 1px solid var(--line); }
+.mark-n { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; padding: 0 20px 0 24px; position: sticky; top: 0; z-index: 20; }
+.crumb { color: var(--muted); white-space: nowrap; font-size: 13px; margin-left: 4px; }
+.crumb b { color: var(--ink); font-weight: 600; margin-left: 6px; }
+.top-search { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #f6f8fb; border: 1px solid #e3e9f1; height: 34px; border-radius: 6px; padding: 0 12px; width: 300px; color: #7d8aa0; }
+.top-search input { width: 100%; outline: none; font-size: 13px; }
+.top-search input::placeholder { color: #98a4b6; }
+.top-actions { display: flex; align-items: center; gap: 12px; position: relative; }
+.scope-btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; border-radius: 6px; padding: 0 12px; background: #f6f8fb; border: 1px solid #e3e9f1; font-size: 13px; }
+.scope-btn span { color: var(--muted); }
+.scope-btn b { font-weight: 600; font-size: 12.5px; }
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; display: inline-grid; place-items: center; color: #3a475c; position: relative; }
+.icon-btn:hover, .scope-btn:hover, .user-btn:hover { background: #f1f5fb; }
+.has-dot::after { content: ""; position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #e5484d; }
+.user-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 6px; border-radius: 8px; font-size: 14px; }
+.user-btn i { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(145deg, #6ea6f4, #3b7be0); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 13px; }
+.menu { position: absolute; top: 44px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 32px rgba(24, 60, 120, .12); min-width: 170px; padding: 6px; z-index: 30; }
+.menu button { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+.menu button:hover { background: #f3f7fd; }
+.menu button.on { color: var(--blue); background: var(--blue-soft); }
+.menu-h { font-weight: 600; padding: 6px 10px 4px; font-size: 13px; }
+.menu-p { color: var(--muted); padding: 0 10px 8px; font-size: 12px; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #16263f; color: #fff; padding: 10px 18px; border-radius: 999px; z-index: 90; box-shadow: 0 10px 30px rgba(0,0,0,.18); font-size: 13px; }
+
+/* ---------- 科研数据集页面（沿用科学工具箱样式） ---------- */
+.stage { position: relative; background:
+  radial-gradient(900px 260px at 62% 60px, rgba(214, 229, 250, .75), rgba(244, 247, 252, 0) 70%),
+  linear-gradient(180deg, #f2f6fc 0, #f5f8fc 420px, #f5f8fc 100%); flex: 1; }
+.page { max-width: 1520px; margin: 0 auto; padding: 38px 60px 60px 100px; }
+.tb-head { display: flex; align-items: flex-start; gap: 24px; min-height: 118px; position: relative; }
+.tb-title h1 { font-size: 32px; line-height: 1.25; font-weight: 700; color: #0f1f3d; letter-spacing: .5px; }
+.tb-title .kicker { font-size: 15.5px; font-weight: 700; color: #1b2c4b; margin-top: 4px; }
+.tb-title .sub { font-size: 14.5px; color: #56657c; margin-top: 10px; }
+.tb-art { position: absolute; left: 50%; top: -12px; width: 300px; height: 118px; transform: translateX(-4%); pointer-events: none; }
+.tb-art .glow { position: absolute; inset: -30px -60px; background: radial-gradient(closest-side, rgba(196, 218, 250, .75), rgba(196, 218, 250, 0)); }
+.tb-art svg.orbit { position: absolute; left: 0; top: 0; }
+.tile { position: absolute; display: grid; place-items: center; color: #fff; border-radius: 8px; }
+.tile-ai { left: 116px; top: 3px; width: 64px; height: 64px; border-radius: 10px; font-size: 25px; font-weight: 500; font-family: "Helvetica Neue", Arial, sans-serif; background: linear-gradient(160deg, #7cb2f7 0%, #3f82ea 100%); box-shadow: 0 10px 22px rgba(61, 125, 232, .32), inset 0 1px 0 rgba(255,255,255,.35); }
+.tile-l { left: 0; top: 55px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tile-r { left: 265px; top: 64px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tb-actions { margin-left: auto; display: flex; gap: 14px; margin-top: 22px; position: relative; z-index: 1; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 6px; height: 34px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+.btn:hover { background: var(--blue-hover); }
+.btn.lg { height: 42px; padding: 0 22px; font-size: 14.5px; box-shadow: 0 6px 14px rgba(23, 101, 227, .22); }
+.btn.ghost { background: #fff; color: #1d2a40; border: 1px solid var(--line-2); box-shadow: none; }
+.btn.ghost:hover { border-color: #b9cbe3; background: #fbfcff; }
+.btn:disabled { background: #a8c6f4; cursor: not-allowed; }
+.btn.sm { height: 28px; padding: 0 12px; font-size: 13px; border-radius: 5px; }
+.btn.sm.ghost { color: #25324a; }
+
+.tb-search { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 18px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.tb-search form { display: flex; align-items: stretch; height: 46px; }
+.tb-search label { flex: 1; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-2); border-right: 0; border-radius: 6px 0 0 6px; padding: 0 16px; color: #5d6b80; }
+.tb-search input { flex: 1; outline: none; font-size: 14px; height: 100%; }
+.tb-search input::placeholder { color: #9aa6b8; }
+.tb-search .btn { height: auto; border-radius: 0 6px 6px 0; width: 88px; font-size: 14.5px; }
+
+.filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.filters[data-group="field"] { margin-top: 18px; }
+.filters .lbl { width: 76px; flex: none; font-weight: 600; color: #1d2a40; font-size: 13px; margin-right: -8px; }
+.filter-box { margin-top: 18px; }
+.filter-box .filters { margin-top: 8px; }
+.filter-box .filters[data-group="field"] { margin-top: 0; }
+.filters[hidden] { display: none; }
+.filters.sub .chip { height: 24px; font-size: 12px; background: #fafbfd; }
+.fmore, .fclear { height: 26px; padding: 0 6px; font-size: 12.5px; color: var(--blue); display: inline-flex; align-items: center; gap: 2px; background: none; }
+.fclear { color: var(--muted); margin-left: 6px; }
+.fclear:hover { color: var(--blue); }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: #34425a; }
+.field .checks input { padding: 0; width: auto; }
+.field small.opt { font-size: 12px; color: var(--muted); margin-left: 6px; }
+.field .inline { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-top: 4px; }
+.kv-note { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.chip { height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: #fff; color: #34425a; font-size: 12.5px; }
+.chip:hover { border-color: #aac3e6; color: var(--blue); }
+.chip.on { background: #eaf2fe; border-color: var(--blue-line); color: #1356c2; }
+
+.tb-bar { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 18px; border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 0; }
+.tabs button { height: 48px; padding: 0 12px; margin-right: 18px; font-size: 14px; color: #3a475d; position: relative; }
+.tabs button:hover { color: var(--blue); }
+.tabs button.on { color: #1356c2; }
+.tabs button.on::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: -1px; height: 3px; border-radius: 2px; background: var(--blue); }
+.bar-tools { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; color: #56657c; font-size: 12.5px; }
+.bar-tools .count { margin-right: 4px; }
+.select { position: relative; }
+.select select { appearance: none; -webkit-appearance: none; height: 34px; width: 122px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; padding: 0 30px 0 14px; font-size: 13.5px; color: #25324a; outline: none; }
+.select svg { position: absolute; right: 9px; top: 10px; color: #5d6b80; pointer-events: none; }
+.view-btn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; color: #6b7a90; font-size: 13.5px; }
+.view-btn.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.hot { margin-top: 26px; border-radius: 12px; padding: 14px 14px 16px; background: linear-gradient(100deg, #ecf3fd 0%, #eaf2fd 60%, #e7f0fc 100%); border: 1px solid #e4edf9; }
+.hot > header { display: flex; align-items: baseline; gap: 8px; padding: 0 2px 12px; }
+.hot > header svg { color: #e2a12b; align-self: center; }
+.hot > header b { font-size: 16px; font-weight: 500; color: #1c2a42; }
+.hot > header span { font-size: 12px; color: #6b7a90; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.hot .grid { gap: 16px; }
+
+.card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 12px; padding: 14px 16px; min-width: 0; }
+.card.feature { padding: 14px 16px; border-color: #e3ebf6; }
+.tools-grid { margin-top: 14px; }
+.tools-grid .card { grid-template-rows: 1fr auto; padding: 14px 16px 12px; transition: box-shadow .15s, border-color .15s; }
+.tools-grid .card:hover { border-color: #c8d9f1; box-shadow: 0 8px 22px rgba(30, 80, 150, .07); }
+.ic { width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center; color: #fff; }
+.ic-blue   { background: linear-gradient(160deg, #5aa1fb 0%, #2f78ea 100%); box-shadow: 0 6px 14px rgba(47, 120, 234, .28); }
+.ic-purple { background: linear-gradient(160deg, #b36bf8 0%, #8a3fe8 100%); box-shadow: 0 6px 14px rgba(138, 63, 232, .26); }
+.ic-green  { background: linear-gradient(160deg, #4fd083 0%, #1fa75c 100%); box-shadow: 0 6px 14px rgba(31, 167, 92, .26); }
+.ic-orange { background: linear-gradient(160deg, #ff9a52 0%, #f46a26 100%); box-shadow: 0 6px 14px rgba(244, 106, 38, .26); }
+.ic-pink   { background: linear-gradient(160deg, #f76aa3 0%, #e63d7f 100%); box-shadow: 0 6px 14px rgba(230, 61, 127, .26); }
+.ic-teal   { background: linear-gradient(160deg, #3ed1d6 0%, #13a8b4 100%); box-shadow: 0 6px 14px rgba(19, 168, 180, .26); }
+.body { min-width: 0; display: flex; flex-direction: column; }
+.body b.name { font-size: 15px; font-weight: 500; color: #15233b; line-height: 1.4; padding-right: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+.tags em { font-style: normal; font-size: 12px; line-height: 20px; height: 20px; padding: 0 6px; border-radius: 3px; color: #637188; background: #f1f4f8; white-space: nowrap; }
+.tags em.ok { color: #1f9a57; background: #e8f7ee; }
+.tags em.official { color: #2167d4; background: #e7f0fd; }
+.tags em.kind { font-weight: 600; }
+.tags em.k-mcp { color: #2167d4; background: #eaf2fe; }
+.tags em.k-fn { color: #4a5a73; background: #eef1f5; }
+.tags em.k-comp { color: #0f8a7e; background: #e5f6f4; }
+.pbox ol.steps { margin: 6px 0 0; padding-left: 20px; }
+.pbox ol.steps li { margin: 3px 0; }
+.desc { font-size: 13px; color: #4c5a70; margin-top: 6px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.card footer { grid-column: 2; align-self: end; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.meta { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; color: #7a879b; font-size: 12px; white-space: nowrap; overflow: hidden; }
+.meta span { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.meta span.owner { flex: 0 1 auto; min-width: 0; }
+.meta span.owner i { font-style: normal; overflow: hidden; text-overflow: ellipsis; }
+.meta svg { color: #7a879b; }
+.ops { display: flex; gap: 8px; flex: none; }
+.more { position: absolute; right: 12px; top: 8px; width: 26px; height: 24px; border-radius: 5px; display: grid; place-items: center; color: #5b687d; }
+.more:hover { background: #f1f5fb; }
+.more-menu { right: 8px; top: 34px; min-width: 132px; }
+
+.list { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.list-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 280px auto; gap: 16px; align-items: center; padding: 14px 20px; border-top: 1px solid #eef2f8; }
+.list-row:first-child { border-top: 0; }
+.list-row .ic { width: 40px; height: 40px; margin: 0; }
+.empty { margin-top: 16px; background: #fff; border: 1px dashed var(--line-2); border-radius: 8px; padding: 36px; text-align: center; color: var(--muted); }
+
+.mask { position: fixed; inset: 0; background: rgba(15, 28, 50, .3); z-index: 60; display: flex; }
+.mask.drawer-mask { justify-content: flex-end; }
+.drawer { width: min(440px, 100%); height: 100%; background: #fff; padding: 18px 22px; box-shadow: -12px 0 40px rgba(0,0,0,.08); overflow: auto; }
+.drawer.wide { width: min(640px, 100%); }
+.btn.auto { cursor: default; background: #effaf3; color: #1f7a45; box-shadow: inset 0 0 0 1px #bfe5cd; }
+.btn.auto:hover { background: #effaf3; }
+.kbind { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.kbind > span { font-size: 12px; color: #8390a4; }
+.bchip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 5px; font-size: 12px; color: #25324a; background: #f4f8fe; border: 1px solid #d6e4f8; cursor: default; }
+a.bchip { cursor: pointer; }
+a.bchip:hover { border-color: var(--blue-line); color: var(--blue); }
+.bchip.tool { background: #f6f4fd; border-color: #e0daf6; }
+.bchip em { font-style: normal; font-size: 11px; color: #1356c2; }
+.bchip.tool em { color: #6547c9; }
+.bchip small { font-size: 11.5px; color: var(--muted); }
+.bchip small::before { content: "· "; }
+.bchip i { font-style: normal; font-size: 11px; color: #1f7a45; }
+.bmore { font-size: 12px; color: var(--muted); }
+.bind-field > span small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.brow { display: grid; grid-template-columns: minmax(0, 1.4fr) 92px minmax(0, 1fr) 28px; gap: 8px; align-items: center; margin-bottom: 8px; }
+.brow select, .brow input { min-width: 0; border: 1px solid var(--line-2); border-radius: 6px; padding: 6px 8px; background: #fff; font-size: 12.5px; }
+.brow select:disabled { background: #f6f8fb; color: #56657c; }
+.bquick { display: flex; flex-wrap: wrap; gap: 6px; }
+.bempty { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; }
+.lchip.grp { cursor: pointer; padding-right: 8px; color: #43516a; background: #f6f8fb; border-style: dashed; }
+.lchip.grp .ic { background: #eef2f8; color: #56657c; }
+.lchip.grp svg:last-child { transition: transform .15s; }
+.lchip.grp.on svg:last-child { transform: rotate(180deg); }
+.lp-chips.sub { margin-top: 8px; padding: 8px; border-radius: 6px; background: #f6f8fb; }
+.lchip.comp { padding-right: 8px; }
+.lchip .src.ok { color: #1f7a45; background: #effaf3; }
+.lp-note { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.lp-note a { color: var(--blue); cursor: pointer; }
+.dtabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line-2); margin: 16px 0 14px; }
+.dtabs button { height: 36px; padding: 0 14px; font-size: 13.5px; color: #43516a; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.dtabs button.on { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+.pbox { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; font-size: 13px; color: #43516a; line-height: 1.65; }
+.pbox h4 { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: #1d2b44; margin-bottom: 6px; }
+.pbox h4 i { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.pbox ul { padding-left: 16px; margin: 0; }
+.pbox code, .etable code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.etable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+.etable th, .etable td { text-align: left; padding: 6px 8px; border-top: 1px solid #eef2f8; vertical-align: top; }
+.etable th { color: var(--muted); font-weight: 500; }
+.code-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 6px; font-size: 13px; color: #1d2b44; font-weight: 600; }
+pre.code { background: #0f1c32; color: #d6e2f5; border-radius: 8px; padding: 12px 14px; font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace; overflow: auto; max-height: 360px; margin: 0 0 14px; white-space: pre; }
+.cform .prow { display: grid; grid-template-columns: 130px 1fr; gap: 4px 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eef2f8; font-size: 13px; }
+.cform .prow > span { color: #1d2b44; }
+.cform .prow small { grid-column: 2; color: var(--muted); font-size: 12px; }
+.cform input[type=text], .cform input[type=number], .cform select { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input:focus, .cform select:focus { border-color: var(--blue-line); }
+.cform .note { font-size: 12.5px; color: var(--muted); margin: 0 0 6px; }
+.cform .dirty { color: #b26a00; }
+.btn.auto.plan { background: #f3f5f8; color: #6b7a90; box-shadow: inset 0 0 0 1px #dfe4ec; }
+.pbox.plan { background: #fafbfd; border-style: dashed; }
+.pbox .alink, .alink { color: var(--blue); cursor: pointer; margin-left: 6px; }
+.pgroup { margin-top: 14px; }
+.pgroup h5 { font-size: 13.5px; color: #1d2b44; padding: 6px 0; border-bottom: 1px solid var(--line-2); display: flex; align-items: baseline; gap: 10px; }
+.pgroup h5 span { font-weight: 400; font-size: 12px; color: var(--muted); }
+.cform .num { display: inline-flex; align-items: center; gap: 6px; }
+.cform .num input { width: 140px; }
+.cform .num em { font-style: normal; color: var(--muted); font-size: 12.5px; }
+.cform .chg { font-style: normal; color: #b26a00; font-size: 9px; margin-left: 4px; vertical-align: middle; }
+.cform-foot { position: sticky; bottom: -18px; background: #fff; padding: 12px 0; margin-top: 8px; border-top: 1px solid #eef2f8; }
+.kit-line { display: flex; align-items: center; gap: 6px; margin: 6px 0 0; font-size: 12.5px; color: #43516a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kit-line b { font-weight: 500; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; flex: none; }
+.kit-line svg { flex: none; color: #1356c2; }
+.lchip .kn { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 999px; padding: 0 6px; line-height: 17px; }
+.rftabs { margin: 8px 0 4px; }
+.rftabs button { position: relative; font-size: 13px; padding: 0 12px; }
+.rdot { position: absolute; top: 8px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #e0503f; }
+.rlist { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
+.rcard { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #43516a; }
+.rcard p { margin: 5px 0 0; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.rcard code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.rcard small, .rc-sub { color: var(--muted); font-size: 12px; }
+.rc-top { display: flex; align-items: center; gap: 8px; }
+.rc-top b { color: #1d2b44; font-size: 14px; }
+.rs { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.rs.def { color: #0b7a55; background: #e3f6ee; }
+.rs.gray { color: #6b7a90; background: #f1f3f7; }
+.rst { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.rst i { width: 7px; height: 7px; border-radius: 50%; background: #c3cad6; }
+.rst.ok { color: #0b7a55; } .rst.ok i { background: #19a974; }
+.rst.fail { color: #c0392b; } .rst.fail i { background: #e0503f; }
+.rst.testing i { background: #f0a020; animation: rblink 0.8s infinite alternate; }
+@keyframes rblink { to { opacity: 0.3; } }
+.rc-act { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.btn.danger { color: #c0392b !important; }
+.cform .req { font-style: normal; color: #e0503f; margin-left: 2px; }
+.cform input[type=password], .cform input[type=file] { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input[type=file] { padding: 4px 8px; }
+.cform small.warn { color: #b26a00; }
+.cform .sw { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.rtable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+.rtable th, .rtable td { text-align: left; padding: 5px 8px; border-top: 1px solid #eef2f8; }
+.rtable th { color: var(--muted); font-weight: 500; }
+.kit-note { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+.ktools { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.ktools li { border: 1px solid #e3e9f3; border-radius: 8px; padding: 10px 12px; }
+.ktools li.off { background: #fafbfd; opacity: .65; }
+.ktools label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.ktools input { margin-top: 3px; }
+.ktools .kt-top { display: flex; align-items: center; gap: 8px; }
+.ktools .kt-top b { font-size: 13.5px; color: #1d2b44; }
+.ktools code, .kv code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; color: #43516a; background: #f3f6fb; border-radius: 3px; padding: 0 5px; }
+.ktools p { margin: 3px 0 0; font-size: 12.5px; color: #43516a; }
+.ktools small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.drawer > header, .modal > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.drawer h3, .modal h3 { font-size: 16px; }
+.drawer .card { border: 0; padding: 0; }
+.kv { margin: 16px 0; display: grid; gap: 10px; }
+.kv li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #eef2f8; padding-bottom: 8px; font-size: 13px; }
+.kv span { color: var(--muted); }
+.row-actions { display: flex; gap: 10px; }
+.row-actions.right { justify-content: flex-end; }
+.modal { width: min(480px, calc(100% - 32px)); margin: auto; background: #fff; border-radius: 12px; padding: 18px 22px 20px; }
+.field { display: grid; gap: 6px; margin-bottom: 12px; color: #43516a; font-size: 13px; }
+.field input, .field textarea, .field select { border: 1px solid var(--line-2); border-radius: 6px; padding: 8px 10px; background: #fff; outline: none; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--blue-line); }
+
+/* 课题空间已加载工具 */
+.loaded { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px 16px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.lp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lp-head > svg { color: var(--blue); }
+.lp-head b { font-size: 15px; font-weight: 600; color: #15233b; }
+.lp-space { font-size: 12.5px; color: #1356c2; background: #eaf2fe; border: 1px solid var(--blue-line); border-radius: 999px; padding: 0 10px; line-height: 22px; }
+.lp-count { font-size: 12.5px; color: var(--muted); }
+.lp-actions { margin-left: auto; display: flex; gap: 8px; }
+.lp-desc { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; font-size: 13px; color: #56657c; line-height: 1.6; }
+.lp-desc span { flex: none; color: #8390a4; }
+.lp-desc p { min-width: 0; }
+.lp-desc .from { flex: none; margin-left: auto; font-size: 12px; color: #9aa6b8; white-space: nowrap; }
+.lp-hint { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 8px 12px; border: 1px dashed var(--blue-line); border-radius: 6px; background: #f4f8fe; color: #1356c2; font-size: 13px; }
+.lp-hint svg { flex: none; }
+.lp-hint .grow { flex: 1; }
+.lp-hint .x { color: #7a879b; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lchip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 4px 0 4px; border: 1px solid var(--line-2); border-radius: 6px; background: #fbfcfe; font-size: 13px; color: #25324a; }
+.lchip:hover { border-color: #b9cbe3; }
+.lchip .ic { width: 24px; height: 24px; border-radius: 6px; box-shadow: none; }
+.lchip b { font-weight: 500; max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.lchip .x { width: 20px; height: 20px; border-radius: 4px; display: grid; place-items: center; color: #8a96a8; }
+.lchip .x:hover { background: #eef2f8; color: #c0392b; }
+.src { font-style: normal; font-size: 11px; line-height: 18px; padding: 0 5px; border-radius: 3px; white-space: nowrap; }
+.src.warn { color: #b8620f; background: #fdf2e4; }
+.lp-more { height: 32px; padding: 0 12px; border-radius: 6px; color: var(--blue); font-size: 13px; }
+.lp-more:hover { background: #f1f5fb; }
+.lp-empty { margin-top: 12px; padding: 14px; border: 1px dashed var(--line-2); border-radius: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.btn.load.on { background: #eaf2fe; box-shadow: inset 0 0 0 1px var(--blue-line); color: #1356c2; }
+.btn.load.on:hover { background: #dde9fc; }
+.ops .btn.sm { padding: 0 10px; }
+.tools-grid .card.is-loaded { border-color: #c9dbf6; }
+.tabs button .n { font-style: normal; font-size: 12px; margin-left: 4px; color: var(--muted); }
+.tabs button.on .n { color: #1356c2; }
+
+/* 宽弹窗（新建） */
+.modal.wide { width: min(720px, calc(100% - 32px)); max-height: calc(100vh - 64px); display: flex; flex-direction: column; }
+.modal.wide .scroll { overflow: auto; margin: 0 -22px; padding: 0 22px; }
+
+@media (max-width: 1600px) { .tools-grid .card footer { grid-column: 1 / -1; } }
+@media (max-width: 1440px) { .page { padding-left: 40px; padding-right: 32px; } }
+@media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb-art { display: none; } }
+@media (max-width: 900px) {
+  .app { grid-template-columns: var(--rail) 1fr; }
+  .logo span, .nav-item > span, .nav-item .arrow, .nav-label, .sider-foot span:last-child { display: none; }
+  .nav-item { justify-content: center; padding: 0; }
+  .sider-logo { padding: 0; justify-content: center; }
+  .grid { grid-template-columns: 1fr; }
+  .top-search { display: none; }
+  .page { padding: 24px 18px 40px; }
+  .tb-bar { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- 科研技能 / 科研模型 / 科研智能体 / 科研数据集 补充 ---------- */
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.mbox { border: 1px solid #dfe8f5; background: #f7faff; border-radius: 8px; padding: 10px 12px; }
+.mbox b { display: block; font-size: 18px; color: #1452b8; font-weight: 700; }
+.mbox span { font-size: 12px; color: var(--muted); }
+.lineage { display: flex; align-items: stretch; flex-wrap: wrap; gap: 6px; padding: 16px; border: 1px dashed #cfdcf0; border-radius: 10px; background: #fbfdff; margin-bottom: 12px; }
+.lnode { flex: 1 1 120px; min-width: 110px; border: 1px solid #d6e4f8; background: #fff; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 3px; }
+.lnode b { font-size: 13px; color: #1b2c4b; word-break: break-all; }
+.lnode small { font-size: 11.5px; color: var(--muted); }
+.lnode.gray { background: #f7f8fa; border-color: #e3e7ee; }
+.lnode.link { border-color: #b9d2f5; }
+.lnode.on { background: #eaf2fd; border-color: #8fb5ee; }
+.lnode.on b { color: #1452b8; }
+.larrow { display: grid; place-items: center; color: #8fa3c2; }
+.tags em.k-skill { color: #8a4bd0; background: #f3ecfc; }
+.tags em.k-agent { color: #c2560c; background: #fdf0e6; }
+.skill-md { white-space: pre-wrap; }
+  .tags em.sec-s { color: #b8620f; background: #fdf2e4; }
+.tags em.sec-c { color: #c2344d; background: #fdebee; font-weight: 600; }
+.tags em.need { color: #b8620f; background: #fff; box-shadow: inset 0 0 0 1px #f1c894; }
+.rs.warn { color: #b8620f; background: #fdf2e4; }
+.kit-note code, .kv code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: #f1f4f8; border-radius: 3px; padding: 0 4px; }
+</style>
+<style>.sider{display:none !important;}.topbar{display:none !important;}.app{grid-template-columns:1fr !important;}.main{width:100% !important;min-width:0;}</style><style>.tb-actions{display:none !important;}[data-act^="newver"]{display:none !important;}</style></head>
+<body>
+<!--
+  合并约定
+  1. 每人一个 HTML，文件名与侧栏一致：科研工作台.html、科研超级中枢.html、科研知识中心.html、科研技能.html、科研模型.html、科研数据集.html、科学工具箱.html、云上实验室.html、科研资产.html、历史任务.html。
+  2. 侧栏和顶栏是公共外壳，合并时保持不动。
+  3. 本页只改「科研数据集页面」标记之间的内容，以及底部 PAGE 配置（数据与详情页签）；公共逻辑在「通用列表引擎」段，与其他使用同一引擎的页面保持一致。
+  4. 本页视觉沿用科学工具箱页面风格；数据集来源（自定义 / 对外开放 / 外部）、模态类型与版本管理参考《AI4S原型截图.docx》中 AI 中台「数据集管理」截图。
+-->
+<div class="app" id="app">
+  <aside class="sider">
+    <div class="sider-logo">
+      <a class="logo" href="科研工作台.html" aria-label="AI4S 首页">
+        <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fa0ff"/><stop offset="1" stop-color="#1459d9"/></linearGradient>
+            <linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b6ef0"/><stop offset="1" stop-color="#5bb4ff"/></linearGradient>
+          </defs>
+          <path d="M13.2 2.2c1-1.9 3.7-1.9 4.7 0L32.6 27a1.8 1.8 0 0 1-1.6 2.7h-4.7a2 2 0 0 1-1.8-1.1L15.6 11 11 19.4 6.8 22.6Z" fill="url(#lg1)"/>
+          <path d="M1.3 26.8 6.8 17c1.3 2.8 4 4.6 7.2 4.6 1.6 0 3-.4 4.3-1.2l-2.6 4.6c-1.6 2.9-4.9 4.6-8.3 4.6H2.8a1.8 1.8 0 0 1-1.5-2.8Z" fill="url(#lg2)"/>
+        </svg>
+        <span><strong>AI4S</strong><em>AI for Science</em></span>
+      </a>
+    </div>
+    <nav class="sider-nav">
+      <a class="nav-item" href="科研工作台.html"><span data-icon="home"></span><span>科研工作台</span></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研超级中枢.html"><span data-icon="hub"></span><span>科研超级中枢</span></a>
+      <div class="nav-sep"></div>
+      <div class="nav-label">科研广场</div>
+      <a class="nav-item" href="科研应用.html"><span data-icon="grid"></span><span>科研应用</span></a>
+      <a class="nav-item" href="科研知识中心.html"><span data-icon="book"></span><span>科研知识中心</span></a>
+      <a class="nav-item" href="科研技能.html"><span data-icon="layers"></span><span>科研技能</span></a>
+      <a class="nav-item" href="科研智能体.html"><span data-icon="network"></span><span>科研智能体</span></a>
+      <a class="nav-item" href="科研模型.html"><span data-icon="box"></span><span>科研模型</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <a class="nav-item active" href="科研数据集.html" aria-current="page"><span data-icon="db"></span><span>科研数据集</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <a class="nav-item" href="科学工具箱.html"><span data-icon="wrench"></span><span>科学工具箱</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="云上实验室.html"><span data-icon="flask"></span><span>云上实验室</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研资产.html"><span data-icon="folder"></span><span>科研资产</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="历史任务.html"><span data-icon="history"></span><span>历史任务</span></a>
+    </nav>
+    <div class="sider-foot"><span class="mark-n">N</span><span>AI4S 科研平台 · 原型</span></div>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <button class="icon-btn" type="button" id="rail-btn" aria-label="收起导航"><span data-icon="panel"></span></button>
+      <div class="crumb">当前页面：<b>科研数据集</b></div>
+      <form class="top-search" id="top-search">
+        <span data-icon="search" data-size="16"></span>
+        <input id="top-q" placeholder="搜索文献、数据、工具或提问…" />
+      </form>
+      <div class="top-actions">
+        <button class="scope-btn" type="button" id="scope-btn"><span>课题空间：</span><b id="scope-label">配方优化课题</b><span data-icon="down" data-size="15"></span></button>
+        <div class="menu" id="scope-menu" style="left:0" hidden></div>
+        <button class="icon-btn has-dot" type="button" id="bell-btn" aria-label="通知"><span data-icon="bell"></span></button>
+        <div class="menu" id="bell-menu" style="right:120px;width:280px" hidden>
+          <div class="menu-h">科研活动 · 2 条未读</div>
+          <button type="button"><b>计算任务开始运行</b><div class="menu-p" style="padding:0">GROMACS 分子动力学模拟（任务 #1025）</div></button>
+          <button type="button"><b>实验数据已同步</b><div class="menu-p" style="padding:0">实验 GB-2026-0915 数据已同步至 ELN</div></button>
+        </div>
+        <button class="icon-btn" type="button" id="help-btn" aria-label="帮助"><span data-icon="help"></span></button>
+        <div class="menu" id="help-menu" style="right:80px;width:260px" hidden>
+          <div class="menu-h">科研数据集</div>
+          <p class="menu-p">在这里查找科研数据集。点「加载」把数据集以只读方式挂载到课题空间，Research Agent 通过 dataset_query 按引用查询；AI 能看到的内容由安全等级决定，敏感和核心数据需先申请授权。</p>
+        </div>
+        <button class="user-btn" type="button" id="user-btn"><i>林</i> 林夏 <span data-icon="down" data-size="15"></span></button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <!-- ========== 科研数据集页面 开始 ========== -->
+      <div class="page" id="datasets">
+        <header class="tb-head">
+          <div class="tb-title">
+            <h1>科研数据集</h1>
+            <p class="kicker">实验、计算、观测、生产和文献数据</p>
+            <p class="sub">按模态、类型、场景和安全等级管理，统一版本、授权和血缘</p>
+          </div>
+          <div class="tb-art" aria-hidden="true">
+            <div class="glow"></div>
+            <svg class="orbit" width="310" height="118" viewBox="0 0 310 118"><ellipse cx="155" cy="62" rx="118" ry="29" transform="rotate(-6 155 62)" fill="none" stroke="#a9c3ea" stroke-width="1.2"/></svg>
+            <span class="tile tile-l" data-icon="chart" data-size="20"></span>
+            <span class="tile tile-ai">AI</span>
+            <span class="tile tile-r" data-icon="db" data-size="20"></span>
+          </div>
+        </header>
+
+        <div class="tb-search">
+          <form id="item-search">
+            <label><span data-icon="search" data-size="19"></span><input id="item-q" placeholder="搜索数据集名称、字段或格式（如：门尼黏度、测井曲线、SEG-Y、蛋白结构...）" /></label>
+            <button class="btn" type="submit">搜索</button>
+          </form>
+        </div>
+
+        <section class="loaded" id="loaded-panel" aria-label="课题空间已加载数据集"></section>
+
+        <div class="filter-box"></div>
+
+        <div class="tb-bar">
+          <div class="tabs" id="item-tabs"></div>
+          <div class="bar-tools">
+            <span class="count" id="item-count"></span>
+            <div class="select">
+              <select id="item-sort" aria-label="排序">
+                <option>综合排序</option>
+                <option>最近更新</option>
+                <option>最多使用</option>
+                <option>名称</option>
+              </select>
+              <span data-icon="down" data-size="14"></span>
+            </div>
+            <button class="view-btn on" type="button" data-view="card"><span data-icon="grid" data-size="16"></span>卡片</button>
+            <button class="view-btn" type="button" data-view="list"><span data-icon="list" data-size="16"></span>列表</button>
+          </div>
+        </div>
+
+        <div id="item-results"></div>
+      </div>
+      <!-- ========== 科研数据集页面 结束 ========== -->
+    </div>
+  </section>
+</div>
+
+<div class="mask drawer-mask" id="drawer" hidden></div>
+<div class="mask" id="modal" hidden></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+
+// ========== 科研数据集 · 页面配置（数据 + 详情页签） ==========
+/* ========== 科研数据集 ==========
+   数据集 = 数据文件 + 字段说明 + 版本 + 安全等级。加载到空间后以只读方式挂载，
+   Research Agent 通过 MCP 工具 dataset_query / dataset_stats 查询，传引用不传原始数据；
+   AI 能看到多少内容由安全等级决定。
+   数据集来源沿用 AI 中台「数据集管理」：自定义数据集、对外开放数据集、外部数据集。 */
+const FIELDS = ["全部", "通用", "地球科学", "合成生物学", "材料科学"]
+const DIRS = {
+  "材料科学": ["合成橡胶", "聚合物复合材料", "配方设计", "多相催化", "均相催化", "反应机理", "电池材料", "光电材料", "多孔材料", "功能分子设计"],
+  "地球科学": ["地震勘探", "储层表征", "油气藏开发", "地质建模", "盆地模拟", "天然地震"],
+  "合成生物学": ["蛋白质设计", "酶工程", "基因线路设计", "代谢工程", "组学分析"]
+}
+// 通用领域不再细分研究方向
+// 数据模态：AI 中台的 表格 / 文本 / 图像 / 音频 / 时序 + 科研扩展（可多选，卡片首标签）
+const MODS = ["表格", "文本", "图像", "音频", "时序", "谱图", "分子结构", "晶体结构", "生物序列", "三维体数据", "仿真场", "知识图谱"]
+const MOD_TIP = {
+  "表格": "行列结构的测量值、物性或配方记录", "文本": "论文、专利、报告等文字语料", "图像": "电镜、岩心、图表等二维图像", "音频": "录音、语音",
+  "时序": "随时间或深度变化的曲线（测井、波形、过程监测）", "谱图": "红外、拉曼、核磁、XRD 等谱图", "分子结构": "SMILES、SDF 等分子结构",
+  "晶体结构": "CIF、POSCAR 等周期性结构", "生物序列": "蛋白、DNA、RNA 序列", "三维体数据": "地震数据体、CT 体数据", "仿真场": "数值仿真输出的网格场（压力、速度、饱和度）",
+  "知识图谱": "实体与关系组成的图数据"
+}
+// 数据类型：按数据怎么产生来分
+const DTYPES = ["实验数据", "计算数据", "观测数据", "生产数据", "文献数据"]
+const DTYPE_TIP = {
+  "实验数据": "实验室测试、表征与评价结果", "计算数据": "第一性原理、分子模拟、数值仿真的计算结果", "观测数据": "野外采集与台站监测数据（地震、测井）",
+  "生产数据": "油田、装置、发酵罐的运行与生产记录", "文献数据": "从论文、专利、公开数据库整理的数据"
+}
+// 应用场景：数据集在科研里拿来做什么
+const SCENES = ["模型训练", "模型评测", "性质检索", "候选筛选", "实验设计", "模拟验证", "文献调研", "知识问答", "专利分析"]
+const SCENE_TIP = {
+  "模型训练": "作为训练集或微调语料", "模型评测": "作为基准测试集评估模型", "性质检索": "按条件查询物性、结构或功能数据", "候选筛选": "在库中按目标性质筛出候选",
+  "实验设计": "作为历史实验，指导下一轮实验方案", "模拟验证": "与计算或仿真结果对比校验", "文献调研": "检索与综述文献", "知识问答": "作为问答的检索知识库", "专利分析": "专利检索与技术路线分析"
+}
+// 安全等级：决定能否下载、能否出域、AI 能看到什么
+const SECS = ["公开", "内部", "敏感", "核心"]
+const SEC_CLS = { "公开": "ok", "内部": "k-mcp", "敏感": "sec-s", "核心": "sec-c" }
+const SEC_TIP = {
+  "公开": "公开数据，可下载、可出域", "内部": "仅限平台内使用，不对外提供", "敏感": "需审批；AI 只能看到字段说明、统计信息和脱敏样例", "核心": "需审批；只能在空间内计算，不可下载，AI 只拿到聚合结果"
+}
+const SEC_POLICY = {
+  "公开": { ai: "原始数据", dl: "允许", out: "允许", appr: "无需审批", audit: "记录访问日志" },
+  "内部": { ai: "原始数据", dl: "允许（仅平台内）", out: "不允许", appr: "无需审批", audit: "记录访问日志" },
+  "敏感": { ai: "字段说明、统计信息、脱敏样例", dl: "审批通过后允许，文件带水印", out: "不允许", appr: "数据负责人审批", audit: "逐次记录查询语句" },
+  "核心": { ai: "只返回聚合结果，不返回原始值", dl: "不允许", out: "不允许", appr: "数据负责人 + 安全管理员审批", audit: "逐次记录，每季度复核授权" }
+}
+const SOURCES = ["自定义数据集", "对外开放数据集", "外部数据集"]
+
+const D = (id, name, field, dirs, mods, dtype, scenes, sec, src, desc, o) => Object.assign({
+  id, name, field, dirs, mods, dtype, scenes, sec, src, desc,
+  owner: src === "外部数据集" ? "数据广场接入" : src === "对外开放数据集" ? "科研数据中心" : "课题组",
+  lic: src === "外部数据集" ? "CC BY 4.0" : "平台内部授权", ver: "V1.0", updated: "2026-09-18", calls: "600", favs: 12, hot: false, recent: false,
+  icon: "db", color: "blue", records: "—", size: "—", fmt: "CSV", models: [], cols: [], rows: [], versions: [], origin: ""
+}, o)
+
+const PAGE_ITEMS = [
+  // ---------- 材料科学 ----------
+  D("d1", "QM9 分子量子化学性质集", "材料科学", ["功能分子设计", "光电材料"], ["分子结构", "表格"], "计算数据", ["模型训练", "模型评测"], "公开", "外部数据集",
+    "13.4 万个小分子的 DFT（B3LYP/6-31G(2df,p)）优化结构与 12 项量子化学性质，是分子性质预测的通用基准。", {
+    hot: true, records: "133,885 个分子", size: "1.2 GB", fmt: "SDF / CSV", calls: "8.6K", favs: 210, icon: "atom", color: "blue", recent: true, ver: "V1.1", updated: "2026-08-20",
+    origin: "Ramakrishnan 等 2014 年发布", models: ["ChemBERTa-v2", "Uni-Mol 分子表示"],
+    cols: ["ID", "SMILES", "分子式", "HOMO (eV)", "LUMO (eV)", "Gap (eV)", "偶极矩 (D)"],
+    rows: [["QM9-001", "C", "CH₄", "-10.55", "3.19", "13.74", "0"], ["QM9-002", "N", "NH₃", "-6.99", "2.26", "9.25", "1.63"], ["QM9-003", "O", "H₂O", "-7.97", "1.87", "9.84", "1.85"], ["QM9-006", "C=O", "CH₂O", "-7.27", "-1.11", "6.16", "2.11"]] }),
+  D("d2", "Materials Project 晶体结构库", "材料科学", ["电池材料", "光电材料", "多孔材料", "多相催化"], ["晶体结构", "表格"], "计算数据", ["性质检索", "候选筛选", "模型训练"], "公开", "外部数据集",
+    "15 万余个无机晶体的结构、形成能、带隙、弹性常数与相稳定性，按月同步官方数据库。", {
+    hot: true, records: "154,718 个结构", size: "38 GB", fmt: "CIF / JSON", calls: "7.9K", favs: 186, icon: "box", color: "purple", ver: "V2026.09", updated: "2026-09-15",
+    origin: "Materials Project 官方 API 同步", models: ["材料力学预测模型"],
+    cols: ["mp-id", "化学式", "空间群", "形成能 (eV/atom)", "带隙 (eV)", "E above hull (eV)"],
+    rows: [["mp-2657", "TiO₂", "P4₂/mnm", "-3.51", "1.78", "0"], ["mp-19017", "LiFePO₄", "Pnma", "-2.52", "3.70", "0"], ["mp-1143", "Al₂O₃", "R-3c", "-3.43", "5.85", "0"], ["mp-22526", "LiCoO₂", "R-3m", "-2.23", "2.19", "0"]],
+    versions: [["V2026.09", "同步 9 月官方更新，新增 1,204 个结构", "154,718", "2026-09-15"], ["V2026.08", "月度同步", "153,514", "2026-08-15"], ["V2026.07", "月度同步", "152,980", "2026-07-15"]] }),
+  D("d3", "OC20 催化吸附能数据集", "材料科学", ["多相催化", "反应机理"], ["晶体结构", "表格"], "计算数据", ["模型训练", "模型评测"], "公开", "外部数据集",
+    "Open Catalyst 2020：约 128 万个表面-吸附物体系的 DFT 弛豫轨迹与吸附能，覆盖 82 种吸附物。", {
+    records: "1,281,040 个体系", size: "1.1 TB", fmt: "LMDB / ASE", calls: "2.4K", favs: 76, icon: "flask", color: "orange",
+    origin: "Meta FAIR 与 CMU 联合发布", models: ["催化剂活性预测"],
+    cols: ["体系 ID", "表面", "吸附物", "吸附能 (eV)", "弛豫步数"],
+    rows: [["OC-4412", "Pt(111)", "*CO", "-1.62", "118"], ["OC-7730", "Cu(100)", "*OH", "-0.94", "86"], ["OC-9021", "Ni₃Al(110)", "*H", "-0.41", "64"]] }),
+  D("d4", "丁苯橡胶配方实验记录", "材料科学", ["合成橡胶", "配方设计"], ["表格"], "实验数据", ["实验设计", "模型训练"], "敏感", "自定义数据集",
+    "近五年丁苯橡胶配方实验：生胶、填料、硫化体系用量与门尼黏度、拉伸强度、耐磨等测试结果。", {
+    hot: true, owner: "林夏", auth: true, records: "12,460 条", size: "86 MB", fmt: "CSV / XLSX", calls: "3.2K", favs: 96, icon: "sliders", color: "green", recent: true, ver: "V3.2", updated: "2026-09-27",
+    origin: "ELN 实验记录同步", models: ["配方优化模型", "高分子性质预测模型", "配方大模型（微调中）"],
+    cols: ["实验号", "SBR (phr)", "炭黑 N330 (phr)", "白炭黑 (phr)", "硫黄 (phr)", "门尼黏度", "拉伸强度 (MPa)"],
+    rows: [["GB-2026-0915", "100", "45", "10", "1.8", "62", "22.4"], ["GB-2026-0916", "100", "40", "15", "1.8", "65", "23.1"], ["GB-2026-0917", "100", "35", "20", "2.0", "68", "21.7"], ["GB-2026-0918", "100", "*", "*", "*", "*", "*"]],
+    versions: [["V3.2", "同步 9 月第 4 周实验 86 条", "12,460", "2026-09-27"], ["V3.1", "统一门尼黏度测试温度字段", "12,374", "2026-09-12"], ["V3.0", "合并历史 XLSX 台账", "12,002", "2026-08-01"]] }),
+  D("d5", "聚合物物性数据库", "材料科学", ["聚合物复合材料", "合成橡胶"], ["表格", "分子结构"], "文献数据", ["性质检索", "模型训练"], "内部", "对外开放数据集",
+    "从文献与手册整理的 1.8 万条聚合物物性：玻璃化转变温度、熔点、密度、溶解度参数、拉伸模量。", {
+    records: "18,420 条", size: "24 MB", fmt: "CSV", calls: "2.7K", favs: 88, icon: "chart", color: "teal",
+    origin: "Polymer Handbook 与近十年文献抽取", models: ["高分子性质预测模型"],
+    cols: ["ID", "聚合物", "重复单元 SMILES", "Tg (°C)", "Tm (°C)", "密度 (g/cm³)"],
+    rows: [["POL-001", "高密度聚乙烯", "*CC*", "-125", "137", "0.95"], ["POL-002", "聚丙烯", "*CC(C)*", "-15", "165", "0.90"], ["POL-003", "聚苯乙烯", "*CC(c1ccccc1)*", "100", "—", "1.05"], ["POL-104", "丁苯橡胶", "*CC=CC*.*CC(c1ccccc1)*", "-55", "—", "0.94"]] }),
+  D("d6", "电池电解液性能数据集", "材料科学", ["电池材料"], ["表格", "分子结构"], "实验数据", ["候选筛选", "模型训练"], "内部", "自定义数据集",
+    "锂盐、溶剂、添加剂组合的电导率、黏度、电化学窗口与库伦效率测试结果。", {
+    records: "4,860 条", size: "12 MB", fmt: "CSV", calls: "1.1K", favs: 40, icon: "chart", color: "blue",
+    origin: "电池材料课题组测试记录",
+    cols: ["ID", "体系", "电导率 (mS/cm)", "黏度 (mPa·s)", "电化学窗口 (V)", "库伦效率 (%)"],
+    rows: [["ELY-001", "1M LiPF₆ / EC:DMC", "10.5", "2.31", "4.5", "99.2"], ["ELY-002", "1M LiFSI / DME", "12.1", "1.82", "4.2", "99.6"], ["ELY-003", "1M LiTFSI / DOL:DME", "8.7", "1.95", "4.0", "98.8"]] }),
+  D("d7", "CoRE MOF 吸附数据集", "材料科学", ["多孔材料"], ["晶体结构", "表格"], "计算数据", ["候选筛选", "性质检索"], "公开", "外部数据集",
+    "1.4 万个金属有机框架的结构、孔径、比表面积，以及 GCMC 计算的 CO₂ / CH₄ / N₂ 吸附量。", {
+    records: "14,142 个结构", size: "3.6 GB", fmt: "CIF / CSV", calls: "940", favs: 38, icon: "box", color: "teal",
+    origin: "CoRE MOF 2019 + 平台 GCMC 补算",
+    cols: ["ID", "名称", "最大孔径 (Å)", "比表面积 (m²/g)", "CO₂ 吸附 (mmol/g, 1 bar)"],
+    rows: [["MOF-0012", "HKUST-1", "13.2", "1850", "4.2"], ["MOF-0457", "ZIF-8", "11.4", "1630", "0.8"], ["MOF-1103", "Mg-MOF-74", "11.9", "1540", "7.9"]] }),
+  D("d8", "固定床催化剂评价数据", "材料科学", ["多相催化"], ["表格", "时序"], "实验数据", ["实验设计", "模型训练"], "核心", "自定义数据集",
+    "固定床微反装置的催化剂评价记录：组成、工艺条件，以及随运行时间变化的转化率与选择性。", {
+    auth: false, records: "2,130 批次", size: "410 MB", fmt: "Parquet", calls: "380", favs: 22, icon: "flask", color: "orange", ver: "V2.0", updated: "2026-09-22",
+    origin: "催化剂评价装置 LIMS 导出", models: ["催化剂活性预测"],
+    cols: ["批次", "催化剂", "温度 (°C)", "压力 (MPa)", "空速 (h⁻¹)", "转化率 (%)", "选择性 (%)"],
+    rows: [["CE-2409-01", "Pt-Sn/Al₂O₃", "*", "*", "*", "*", "*"], ["CE-2409-02", "Pt-Sn/Al₂O₃", "*", "*", "*", "*", "*"], ["CE-2409-03", "Pt-In/Al₂O₃", "*", "*", "*", "*", "*"]] }),
+  D("d9", "红外拉曼标准谱图库", "材料科学", ["聚合物复合材料", "功能分子设计"], ["谱图"], "实验数据", ["性质检索", "模型训练"], "内部", "对外开放数据集",
+    "3.2 万张标准物质 FTIR、拉曼谱图，附官能团与特征峰标注，可做谱图检索和解析模型训练。", {
+    records: "32,600 张谱图", size: "5.8 GB", fmt: "JCAMP-DX", calls: "1.9K", favs: 71, icon: "wave", color: "pink",
+    origin: "分析测试中心谱图库", models: ["谱图解析模型"],
+    cols: ["谱图 ID", "物质", "谱图类型", "波数范围 (cm⁻¹)", "主要特征峰"],
+    rows: [["IR-00123", "聚苯乙烯", "FTIR", "4000–400", "3026, 1601, 1493, 698"], ["IR-00456", "丙烯酸乙酯", "FTIR", "4000–400", "1730, 1190"], ["RA-00078", "二氧化硅", "拉曼", "1200–100", "465"]] }),
+  D("d10", "SEM/TEM 电镜图像集", "材料科学", ["多孔材料", "多相催化", "电池材料"], ["图像"], "实验数据", ["模型训练"], "内部", "自定义数据集",
+    "催化剂、正极材料与多孔材料的电镜图像，含颗粒分割掩膜和粒径标注。", {
+    records: "9,840 张图像", size: "62 GB", fmt: "TIFF + 掩膜 PNG", calls: "720", favs: 30, icon: "eye", color: "blue",
+    origin: "电镜室拍摄，人工标注 2,300 张", models: ["电镜图像分析模型"],
+    cols: ["文件", "样品", "电镜", "放大倍数", "标注"],
+    rows: [["EM-0012.tif", "Pt/C 催化剂", "TEM", "200k", "颗粒掩膜"], ["EM-0845.tif", "NCM811 正极", "SEM", "10k", "颗粒掩膜"], ["EM-2210.tif", "ZSM-5 分子筛", "SEM", "20k", "未标注"]] }),
+  D("d11", "USPTO 化学反应数据集", "材料科学", ["功能分子设计", "反应机理", "均相催化"], ["分子结构", "文本"], "文献数据", ["模型训练", "文献调研"], "公开", "外部数据集",
+    "从美国专利中抽取的 180 万条化学反应，含反应物、产物、试剂与原文条件描述。", {
+    records: "1,808,938 条反应", size: "2.4 GB", fmt: "RXN SMILES / JSON", calls: "1.6K", favs: 64, icon: "atom", color: "purple",
+    origin: "Lowe 专利反应抽取", models: ["逆合成规划模型"],
+    cols: ["反应 ID", "反应 SMILES", "条件", "收率 (%)"],
+    rows: [["US-R-100231", "CC(=O)Cl.OCC>>CC(=O)OCC", "Et₃N, DCM, 0 °C", "92"], ["US-R-204115", "c1ccccc1Br.OB(O)c1ccccc1>>c1ccc(-c2ccccc2)cc1", "Pd(PPh₃)₄, K₂CO₃", "85"]] }),
+  D("d12", "均相催化反应能垒计算集", "材料科学", ["均相催化", "反应机理"], ["分子结构", "表格"], "计算数据", ["模型训练", "模拟验证"], "内部", "自定义数据集",
+    "过渡金属配合物催化反应的 DFT 过渡态结构与能垒，由 NEB 与 IRC 计算得到。", {
+    records: "12,040 条反应", size: "7.2 GB", fmt: "XYZ / CSV", calls: "640", favs: 26, icon: "network", color: "orange",
+    origin: "计算集群 Gaussian / ORCA 作业结果归档", models: ["反应路径预测模型"],
+    cols: ["反应 ID", "催化剂", "反应类型", "能垒 (kcal/mol)", "方法"],
+    rows: [["HC-0021", "Rh(PPh₃)₃Cl", "氢甲酰化", "18.6", "B3LYP-D3/def2-SVP"], ["HC-0544", "Pd(OAc)₂", "C–H 活化", "24.1", "B3LYP-D3/def2-SVP"], ["HC-1182", "Ru-BINAP", "不对称氢化", "15.3", "PBE0-D3/def2-TZVP"]] }),
+  D("d13", "钙钛矿光伏器件数据库", "材料科学", ["光电材料"], ["表格"], "文献数据", ["性质检索", "候选筛选"], "公开", "外部数据集",
+    "Perovskite Database：4.2 万个钙钛矿太阳能电池器件的组成、结构与效率、稳定性数据。", {
+    records: "42,400 个器件", size: "180 MB", fmt: "CSV", calls: "520", favs: 24, icon: "spark", color: "orange",
+    origin: "Perovskite Database Project",
+    cols: ["器件 ID", "钙钛矿组成", "器件结构", "PCE (%)", "Voc (V)"],
+    rows: [["PV-10231", "Cs₀.₀₅FA₀.₈₅MA₀.₁PbI₃", "n-i-p", "23.4", "1.16"], ["PV-22018", "MAPbI₃", "p-i-n", "19.8", "1.08"], ["PV-30442", "FASnI₃", "p-i-n", "12.1", "0.78"]] }),
+  D("d14", "橡胶硫化曲线数据", "材料科学", ["合成橡胶"], ["时序"], "实验数据", ["实验设计", "模型训练"], "敏感", "自定义数据集",
+    "无转子硫化仪测得的扭矩-时间曲线，含焦烧时间 t10、正硫化时间 t90 和最大最小扭矩。", {
+    auth: false, records: "6,280 条曲线", size: "1.4 GB", fmt: "CSV", calls: "430", favs: 18, icon: "chart", color: "green",
+    origin: "硫化仪自动采集", models: ["高分子性质预测模型"],
+    cols: ["曲线 ID", "配方号", "温度 (°C)", "t10 (min)", "t90 (min)", "MH (dN·m)"],
+    rows: [["VC-5501", "GB-2026-0915", "160", "2.1", "*", "*"], ["VC-5502", "GB-2026-0916", "160", "2.3", "*", "*"], ["VC-5503", "GB-2026-0917", "160", "*", "*", "*"]] }),
+  D("d15", "MPtrj 势函数训练轨迹", "材料科学", ["电池材料", "多相催化"], ["晶体结构"], "计算数据", ["模型训练"], "公开", "外部数据集",
+    "Materials Project 弛豫轨迹集：158 万个结构快照的能量、力、应力与磁矩，用于训练通用机器学习势。", {
+    records: "1,580,395 个快照", size: "12 GB", fmt: "extxyz", calls: "880", favs: 42, icon: "atom", color: "teal",
+    origin: "CHGNet 团队整理发布", models: ["MACE-MP-0 通用势", "CHGNet"],
+    cols: ["快照 ID", "化学式", "原子数", "能量 (eV/atom)", "最大力 (eV/Å)"],
+    rows: [["mptrj-000001", "Li₂O", "12", "-4.81", "0.03"], ["mptrj-104231", "Fe₂O₃", "30", "-6.72", "0.41"], ["mptrj-883120", "NaCoO₂", "16", "-5.02", "0.12"]] }),
+
+  // ---------- 地球科学 ----------
+  D("d16", "F3 北海三维地震数据", "地球科学", ["地震勘探", "储层表征"], ["三维体数据"], "观测数据", ["模型训练", "模型评测"], "公开", "外部数据集",
+    "荷兰北海 F3 区块叠后三维地震数据，附地震相人工解释标签，常用作地震解释模型基准。", {
+    hot: true, records: "651 × 951 × 462 采样", size: "1.1 GB", fmt: "SEG-Y", calls: "2.1K", favs: 90, icon: "wave", color: "teal",
+    origin: "dGB Earth Sciences 开放数据", models: ["地震相解释模型"],
+    cols: ["文件", "类型", "Inline 范围", "Crossline 范围", "采样间隔"],
+    rows: [["F3_seismic.sgy", "叠后振幅体", "100–750", "300–1250", "4 ms"], ["F3_facies_labels.sgy", "地震相标签体", "100–750", "300–1250", "4 ms"]] }),
+  D("d17", "X 区块叠前地震数据", "地球科学", ["地震勘探"], ["三维体数据"], "观测数据", ["模拟验证", "模型训练"], "核心", "自定义数据集",
+    "X 区块高密度宽方位采集的叠前道集与观测系统，是反演与成像处理的原始资料。", {
+    auth: false, records: "3,860 km²", size: "46 TB", fmt: "SEG-Y / SPS", calls: "210", favs: 14, icon: "wave", color: "blue", ver: "V1.2", updated: "2026-09-10",
+    origin: "野外采集，经预处理后入库",
+    cols: ["文件", "类型", "炮数", "道数", "采样间隔"],
+    rows: [["X_shot_0001-2000.sgy", "炮集", "2,000", "*", "2 ms"], ["X_geometry.sps", "观测系统", "—", "—", "—"]] }),
+  D("d18", "断层标注样本集", "地球科学", ["地震勘探", "地质建模"], ["三维体数据", "图像"], "计算数据", ["模型训练", "模型评测"], "内部", "对外开放数据集",
+    "正演合成的 200 个带断层地震数据体及其断层标签，加 12 个实际工区人工标注剖面。", {
+    records: "200 个数据体 + 12 个工区", size: "84 GB", fmt: "SEG-Y / NPY", calls: "1.3K", favs: 52, icon: "grid", color: "purple",
+    origin: "正演合成 + 解释人员标注", models: ["断层识别模型"],
+    cols: ["样本", "来源", "尺寸", "断层数"],
+    rows: [["syn_0001", "正演合成", "128³", "3"], ["syn_0142", "正演合成", "128³", "5"], ["field_A_il1200", "A 工区实际剖面", "2D 1200×800", "7"]] }),
+  D("d19", "S 区块测井曲线集", "地球科学", ["储层表征"], ["时序", "表格"], "观测数据", ["模型训练"], "敏感", "自定义数据集",
+    "S 区块 426 口井的常规测井曲线（GR、RHOB、NPHI、DT、RT）与岩性、孔渗解释结论。", {
+    auth: false, records: "426 口井", size: "3.1 GB", fmt: "LAS", calls: "960", favs: 36, icon: "chart", color: "orange",
+    origin: "测井解释库同步", models: ["测井岩性识别模型"],
+    cols: ["井号", "深度 (m)", "GR (API)", "RHOB (g/cm³)", "NPHI", "岩性"],
+    rows: [["S-12", "2340.5", "*", "*", "*", "砂岩"], ["S-12", "2340.6", "*", "*", "*", "砂岩"], ["S-47", "2388.0", "*", "*", "*", "泥岩"]] }),
+  D("d20", "页岩气岩心分析数据", "地球科学", ["储层表征", "油气藏开发"], ["表格"], "实验数据", ["性质检索", "模型训练"], "敏感", "自定义数据集",
+    "页岩岩心的孔隙度、渗透率、TOC、矿物组分和等温吸附含气量测试结果。", {
+    auth: true, records: "12,800 个样品", size: "38 MB", fmt: "CSV", calls: "740", favs: 28, icon: "layers", color: "green",
+    origin: "岩心实验室测试报告录入",
+    cols: ["样品", "岩性", "深度 (m)", "孔隙度 (%)", "渗透率 (mD)", "TOC (%)", "含气量 (m³/t)"],
+    rows: [["YS-23-A", "黑色页岩", "2340.5", "4.82", "0.0234", "3.67", "2.85"], ["YS-24-A", "黑色页岩", "2456.8", "5.34", "0.0312", "5.03", "4.05"], ["SC-08-A", "硅质页岩", "1987.3", "6.21", "0.0421", "6.12", "5.34"]] }),
+  D("d21", "数字岩心 CT 图像库", "地球科学", ["储层表征"], ["三维体数据", "图像"], "实验数据", ["模型训练"], "内部", "对外开放数据集",
+    "砂岩、碳酸盐岩岩心的微米 CT 扫描体数据，附孔隙分割结果与实测渗透率。", {
+    records: "640 个岩心", size: "5.2 TB", fmt: "RAW / TIFF 序列", calls: "310", favs: 17, icon: "image", color: "purple",
+    origin: "岩心 CT 实验室", models: ["数字岩心渗透率预测"],
+    cols: ["岩心", "岩性", "分辨率 (μm)", "体素", "实测渗透率 (mD)"],
+    rows: [["DC-0012", "细砂岩", "2.5", "1000³", "126"], ["DC-0233", "鲕粒灰岩", "5.0", "1000³", "18.4"]] }),
+  D("d22", "油田单井生产动态数据", "地球科学", ["油气藏开发"], ["时序", "表格"], "生产数据", ["模型训练", "模拟验证"], "核心", "自定义数据集",
+    "1,200 口油水井的日度产油、产液、含水、注水量与井口压力，时间跨度 2010 年至今。", {
+    auth: false, records: "1,200 口井 × 5,700 天", size: "2.6 GB", fmt: "Parquet", calls: "560", favs: 20, icon: "chart", color: "orange", ver: "V2026.09", updated: "2026-09-29",
+    origin: "油田生产数据库日同步", models: ["油藏生产动态预测"],
+    cols: ["井号", "日期", "日产油 (t)", "日产液 (t)", "含水 (%)", "井口压力 (MPa)"],
+    rows: [["P-1021", "2026-09-28", "*", "*", "*", "*"], ["P-1022", "2026-09-28", "*", "*", "*", "*"], ["I-0310", "2026-09-28", "—", "—", "—", "*"]],
+    versions: [["V2026.09", "日同步（最近一次 2026-09-29）", "6,840,000", "2026-09-29"], ["V2026.08", "月末快照", "6,804,000", "2026-08-31"]] }),
+  D("d23", "油藏数值模拟结果集", "地球科学", ["油气藏开发"], ["仿真场"], "计算数据", ["模型训练"], "内部", "自定义数据集",
+    "不同井网与注采方案下的油藏数值模拟输出：压力场、饱和度场与单井产量曲线。", {
+    records: "3,200 个方案", size: "9.4 TB", fmt: "HDF5", calls: "420", favs: 19, icon: "globe", color: "green",
+    origin: "油藏模拟器批量计算", models: ["油藏生产动态预测"],
+    cols: ["方案", "网格", "时间步", "输出字段"],
+    rows: [["case_0001", "120×80×30", "240", "压力、含油饱和度、单井产量"], ["case_1580", "120×80×30", "240", "压力、含油饱和度、单井产量"]] }),
+  D("d24", "STEAD 地震波形数据集", "地球科学", ["天然地震"], ["时序"], "观测数据", ["模型训练", "模型评测"], "公开", "外部数据集",
+    "斯坦福地震数据集：120 万条三分量地震与噪声波形，带 P / S 到时人工标注。", {
+    records: "1,265,657 条波形", size: "85 GB", fmt: "HDF5", calls: "1.0K", favs: 44, icon: "wave", color: "pink",
+    origin: "Mousavi 等 2019 年发布", models: ["PhaseNet 震相拾取"],
+    cols: ["波形 ID", "台站", "震级", "P 到时 (s)", "S 到时 (s)"],
+    rows: [["ST-0000102", "CI.PASC", "2.1", "5.12", "8.47"], ["ST-0203311", "NC.KCT", "1.4", "4.86", "7.02"], ["ST-0998001", "噪声样本", "—", "—", "—"]] }),
+  D("d25", "盆地烃源岩地化数据", "地球科学", ["盆地模拟", "地质建模"], ["表格"], "实验数据", ["性质检索", "模拟验证"], "内部", "对外开放数据集",
+    "主要含油气盆地烃源岩的 TOC、Ro、热解参数与地层分层数据，用于盆地模拟参数标定。", {
+    records: "28,600 个样品", size: "46 MB", fmt: "CSV", calls: "380", favs: 15, icon: "layers", color: "teal",
+    origin: "地化实验室与历年报告整理",
+    cols: ["样品", "盆地", "层位", "TOC (%)", "Ro (%)", "S2 (mg/g)"],
+    rows: [["GC-10021", "鄂尔多斯", "长 7", "4.8", "0.92", "12.6"], ["GC-22013", "四川", "龙马溪组", "3.2", "2.41", "0.8"]] }),
+  D("d26", "地震去噪训练样本对", "地球科学", ["地震勘探"], ["三维体数据"], "计算数据", ["模型训练"], "内部", "自定义数据集",
+    "由实际数据与加噪合成数据组成的含噪/干净样本对，覆盖随机噪声、面波与多次波。", {
+    records: "48,000 对", size: "1.8 TB", fmt: "NPY", calls: "460", favs: 21, icon: "wave", color: "blue",
+    origin: "实际数据加噪 + 常规处理结果", models: ["地震去噪模型"],
+    cols: ["样本对", "噪声类型", "尺寸", "信噪比 (dB)"],
+    rows: [["pair_00001", "随机噪声", "256×256", "3.2"], ["pair_20410", "面波", "256×256", "-1.5"], ["pair_41022", "多次波", "256×256", "2.0"]] }),
+
+  // ---------- 合成生物学 ----------
+  D("d27", "PDB 蛋白质结构子集", "合成生物学", ["蛋白质设计", "酶工程"], ["生物序列", "分子结构"], "实验数据", ["模型训练", "性质检索"], "公开", "外部数据集",
+    "PDB 中分辨率优于 2.5 Å 的蛋白质晶体结构与序列，按序列相似度 30% 去冗余。", {
+    hot: true, records: "58,200 个结构", size: "420 GB", fmt: "mmCIF / FASTA", calls: "2.3K", favs: 84, icon: "dna", color: "green",
+    origin: "RCSB PDB 每周同步", models: ["ESM-2"],
+    cols: ["PDB ID", "蛋白", "分辨率 (Å)", "链数", "序列长度"],
+    rows: [["1EMA", "绿色荧光蛋白", "1.90", "1", "238"], ["4OO8", "Cas9–sgRNA–DNA", "2.50", "4", "1368"], ["3CLN", "钙调蛋白", "2.20", "1", "148"]] }),
+  D("d28", "UniProt 酶功能注释集", "合成生物学", ["酶工程", "代谢工程"], ["生物序列", "文本"], "文献数据", ["性质检索", "模型训练"], "公开", "外部数据集",
+    "Swiss-Prot 人工审核的酶序列及 EC 号、底物、辅因子与功能描述。", {
+    records: "272,000 条序列", size: "1.6 GB", fmt: "FASTA / TSV", calls: "1.4K", favs: 58, icon: "dna", color: "purple",
+    origin: "UniProt Swiss-Prot 季度同步", models: ["ProteinLM 蛋白语言模型"],
+    cols: ["UniProt ID", "蛋白", "EC 号", "物种", "长度"],
+    rows: [["P00573", "T7 RNA 聚合酶", "2.7.7.6", "T7 噬菌体", "883"], ["P35510", "苯丙氨酸解氨酶", "4.3.1.24", "R. toruloides", "716"], ["P00366", "谷氨酸脱氢酶", "1.4.1.3", "牛", "501"]] }),
+  D("d29", "酶动力学参数集", "合成生物学", ["酶工程", "代谢工程"], ["生物序列", "表格"], "文献数据", ["模型训练"], "公开", "外部数据集",
+    "整理自 BRENDA 与 SABIO-RK 的 kcat、Km 实测值，附酶序列与底物结构。", {
+    records: "17,010 条", size: "210 MB", fmt: "CSV", calls: "610", favs: 27, icon: "flask", color: "teal",
+    origin: "BRENDA、SABIO-RK 整理", models: ["酶动力学参数预测"],
+    cols: ["ID", "酶", "底物", "kcat (s⁻¹)", "Km (mM)"],
+    rows: [["KC-0012", "己糖激酶", "葡萄糖", "63", "0.05"], ["KC-2210", "脂肪酶 B", "对硝基苯酯", "31", "0.41"]] }),
+  D("d30", "启动子强度文库测序数据", "合成生物学", ["基因线路设计"], ["生物序列", "表格"], "实验数据", ["模型训练", "实验设计"], "内部", "自定义数据集",
+    "大肠杆菌随机启动子文库的序列与荧光报告强度（Sort-seq 测定）。", {
+    records: "86,400 条序列", size: "320 MB", fmt: "FASTA / CSV", calls: "350", favs: 16, icon: "dna", color: "orange",
+    origin: "合成生物学平台高通量测序", models: ["启动子强度预测"],
+    cols: ["序列 ID", "启动子序列（-35 至 +1）", "相对强度"],
+    rows: [["PR-00012", "TTGACA…TATAAT…", "1.00"], ["PR-10233", "TTGACT…TATGAT…", "0.42"], ["PR-55102", "CTGACA…TAAAAT…", "0.18"]] }),
+  D("d31", "ProteinGym 突变扫描基准", "合成生物学", ["蛋白质设计"], ["生物序列", "表格"], "实验数据", ["模型评测"], "公开", "外部数据集",
+    "217 个深度突变扫描实验的突变体适应度数据，用于评测突变效应预测模型。", {
+    records: "2,700,000 个突变体", size: "1.9 GB", fmt: "CSV", calls: "470", favs: 25, icon: "star", color: "pink",
+    origin: "ProteinGym v1.0", models: ["ProteinLM 蛋白语言模型"],
+    cols: ["实验", "蛋白", "突变", "适应度"],
+    rows: [["BLAT_ECOLX", "β-内酰胺酶", "M69L", "0.82"], ["GFP_AEQVI", "绿色荧光蛋白", "S65T", "1.34"]] }),
+  D("d32", "单细胞转录组图谱", "合成生物学", ["组学分析"], ["表格"], "实验数据", ["模型训练"], "公开", "外部数据集",
+    "多物种单细胞 RNA-seq 表达矩阵与细胞类型注释，用于细胞注释模型训练。", {
+    records: "1,200 万个细胞", size: "760 GB", fmt: "h5ad", calls: "290", favs: 13, icon: "grid", color: "green",
+    origin: "CELLxGENE 公开数据", models: ["单细胞表达基础模型"],
+    cols: ["数据集", "物种", "组织", "细胞数", "基因数"],
+    rows: [["CX-0021", "人", "肝脏", "84,210", "33,538"], ["CX-1103", "小鼠", "肠道", "52,800", "31,053"]] }),
+  D("d33", "发酵过程在线监测数据", "合成生物学", ["代谢工程"], ["时序"], "生产数据", ["实验设计", "模型训练"], "敏感", "自定义数据集",
+    "50 L 至 5 m³ 发酵罐的溶氧、pH、温度、尾气与补料在线曲线，附批次终点产物浓度。", {
+    auth: false, records: "1,860 批次", size: "14 GB", fmt: "Parquet", calls: "330", favs: 12, icon: "chart", color: "blue",
+    origin: "发酵车间 DCS 同步",
+    cols: ["批次", "时间 (h)", "溶氧 (%)", "pH", "温度 (°C)", "补料速率 (L/h)"],
+    rows: [["FM-2609-12", "0.0", "*", "*", "*", "*"], ["FM-2609-12", "0.5", "*", "*", "*", "*"]] }),
+  D("d34", "BiGG 代谢网络模型库", "合成生物学", ["代谢工程"], ["知识图谱"], "文献数据", ["模拟验证", "性质检索"], "公开", "外部数据集",
+    "108 个基因组规模代谢模型（GEM）：代谢物、反应、基因及其关联，可直接用 COBRApy 导入做通量分析。", {
+    records: "108 个模型", size: "620 MB", fmt: "SBML / JSON", calls: "260", favs: 11, icon: "network", color: "teal",
+    origin: "BiGG Models 数据库",
+    cols: ["模型", "物种", "代谢物", "反应", "基因"],
+    rows: [["iML1515", "大肠杆菌", "1,877", "2,712", "1,516"], ["iMM904", "酿酒酵母", "1,226", "1,577", "905"]] }),
+
+  // ---------- 通用 ----------
+  D("d35", "科研文献全文语料", "通用", [], ["文本"], "文献数据", ["文献调研", "知识问答", "模型训练"], "内部", "自定义数据集",
+    "已订阅期刊与学位论文的全文切片，支撑科研知识中心语义检索和问答引用。", {
+    hot: true, records: "268 万篇", size: "1.4 TB", fmt: "JSONL", calls: "18.2K", favs: 120, icon: "book", color: "blue", ver: "V2026.09", updated: "2026-09-28",
+    origin: "期刊数据库订阅 + 学位论文库", models: ["bge-m3 文献向量模型", "bge-reranker 重排序模型"],
+    cols: ["文献 ID", "标题", "期刊", "年份", "切片数"],
+    rows: [["LIT-0120331", "白炭黑/炭黑并用补强丁苯橡胶的研究", "合成橡胶工业", "2024", "46"], ["LIT-2203110", "Deep learning for seismic facies classification", "Geophysics", "2023", "61"]] }),
+  D("d36", "化工物性数据库", "通用", [], ["表格"], "文献数据", ["性质检索", "模拟验证"], "敏感", "外部数据集",
+    "2,300 种常用化合物的沸点、临界参数、黏度、热容与二元交互参数（商业授权，限平台内使用）。", {
+    auth: true, lic: "商业授权", records: "2,300 种化合物", size: "140 MB", fmt: "CSV", calls: "2.0K", favs: 66, icon: "flask", color: "orange",
+    origin: "商业物性数据库授权导入", models: ["化工物性预测模型"],
+    cols: ["CAS", "化合物", "沸点 (K)", "临界温度 (K)", "临界压力 (MPa)"],
+    rows: [["71-43-2", "苯", "353.2", "*", "*"], ["67-56-1", "甲醇", "337.7", "*", "*"], ["108-88-3", "甲苯", "383.8", "*", "*"]] }),
+  D("d37", "化工专利全文数据集", "通用", [], ["文本"], "文献数据", ["专利分析", "文献调研"], "公开", "外部数据集",
+    "中、美、欧、日化工与材料领域专利全文，含权利要求、IPC 分类和同族信息。", {
+    records: "420 万件", size: "2.8 TB", fmt: "XML / JSONL", calls: "3.6K", favs: 72, icon: "doc", color: "purple",
+    origin: "各国专利局公开数据",
+    cols: ["公开号", "标题", "IPC", "申请日"],
+    rows: [["CN116789012A", "一种高耐磨溶聚丁苯橡胶组合物及其制备方法", "C08L 9/06", "2023-05-11"], ["US2024012345A1", "Catalyst for propane dehydrogenation", "B01J 23/62", "2023-07-20"]] }),
+  D("d38", "化学知识图谱", "通用", [], ["知识图谱"], "文献数据", ["知识问答", "性质检索"], "内部", "对外开放数据集",
+    "化合物、反应、材料、工艺与性质之间的关系图谱，由文献与专利抽取后人工校核。", {
+    records: "860 万实体 · 3,200 万关系", size: "96 GB", fmt: "RDF / Neo4j", calls: "4.1K", favs: 58, icon: "network", color: "pink",
+    origin: "文献专利抽取 + 专家校核",
+    cols: ["头实体", "关系", "尾实体", "来源"],
+    rows: [["白炭黑", "补强", "丁苯橡胶", "LIT-0120331"], ["Pt-Sn/Al₂O₃", "催化", "丙烷脱氢", "US2024012345A1"]] }),
+  D("d39", "CFD 流场仿真数据集", "通用", [], ["仿真场"], "计算数据", ["模型训练", "模拟验证"], "内部", "自定义数据集",
+    "反应器、换热器与管道在不同几何和工况下的 CFD 流场结果，用于训练代理模型。", {
+    records: "5,600 个工况", size: "12 TB", fmt: "VTK / HDF5", calls: "690", favs: 30, icon: "wave", color: "teal",
+    origin: "CFD 批量计算", models: ["CFD 代理模型"],
+    cols: ["工况", "几何", "雷诺数", "网格数", "输出字段"],
+    rows: [["CFD-0001", "搅拌釜 D=0.5 m", "1.2×10⁴", "2.1M", "速度、压力、湍动能"], ["CFD-3120", "管壳式换热器", "8.6×10³", "4.8M", "速度、温度、压力"]] }),
+  D("d40", "装置运行 DCS 时序数据", "通用", [], ["时序"], "生产数据", ["模型训练"], "核心", "自定义数据集",
+    "中试装置 DCS 采集的温度、压力、流量、液位位号数据，秒级采样。", {
+    auth: false, records: "1,240 个位号", size: "3.4 TB", fmt: "Parquet", calls: "240", favs: 9, icon: "chart", color: "blue",
+    origin: "装置实时数据库同步", models: ["Chronos 时序预测"],
+    cols: ["位号", "描述", "单位", "采样间隔"],
+    rows: [["TI-1021", "反应器入口温度", "°C", "1 s"], ["PI-1033", "反应器压力", "MPa", "1 s"], ["FIC-2001", "进料流量", "t/h", "1 s"]] }),
+  D("d41", "学术报告录音语料", "通用", [], ["音频", "文本"], "实验数据", ["模型评测", "模型训练"], "内部", "自定义数据集",
+    "组会与学术报告录音及人工校对文本，含大量化工、地质、生物专业术语，用于语音转写评测与热词优化。", {
+    records: "1,320 小时", size: "180 GB", fmt: "WAV / SRT", calls: "180", favs: 8, icon: "doc", color: "pink",
+    origin: "内部报告录音 + 人工校对", models: ["Whisper 语音转写"],
+    cols: ["音频", "时长", "场景", "术语领域"],
+    rows: [["AU-0012.wav", "52 min", "组会", "合成橡胶"], ["AU-0340.wav", "38 min", "学术报告", "地震勘探"]] }),
+  D("d42", "论文图表问答数据集", "通用", [], ["图像", "文本"], "文献数据", ["模型训练", "模型评测"], "公开", "外部数据集",
+    "科研论文中的曲线图、柱状图与表格图片，配数据点标注和问答对。", {
+    records: "86,000 张图", size: "42 GB", fmt: "PNG / JSON", calls: "560", favs: 26, icon: "image", color: "purple",
+    origin: "开源科研图表数据集整理", models: ["Qwen2.5-VL 图表理解"],
+    cols: ["图 ID", "图表类型", "问题", "答案"],
+    rows: [["FIG-00121", "折线图", "300 K 时电导率是多少？", "8.2 mS/cm"], ["FIG-10420", "柱状图", "哪种催化剂选择性最高？", "Pt-Sn"]] })
+]
+PAGE_ITEMS.forEach((d) => {
+  if (d.auth === undefined) d.auth = d.sec === "公开" || d.sec === "内部"
+  if (!d.versions.length) d.versions = [[d.ver, d.src === "外部数据集" ? "接入数据集" : "首个版本", d.records, d.updated], ["V0.9", "试运行版本", "—", "2026-06-" + String(10 + d.id.length)]]
+})
+
+const slug = (d) => d.id.toUpperCase()
+const secTag = (d) => [d.sec, "sec " + (SEC_CLS[d.sec] || ""), SEC_TIP[d.sec]]
+const PAGE = {
+  title: "科研数据集",
+  unit: "数据集",
+  items: PAGE_ITEMS,
+  favs: ["d4", "d2"],
+  preload: ["d4", "d5", "d35"],
+  panelIcon: "db",
+  newIcon: "db",
+  hotNote: "常用基准与课题数据，加载后挂载到空间，AI 按安全等级查询",
+  tabs: ["全部数据集", "已加载", "最近使用", "我的收藏", "我创建的"],
+  dims: [
+    ["field", "学科领域", () => FIELDS, (i) => [i.field]],
+    ["dir", "研究方向", () => ["全部", ...dirsFor(state.field)], (i) => i.dirs],
+    ["mod", "数据模态", () => ["全部", ...MODS], (i) => i.mods],
+    ["dtype", "数据类型", () => ["全部", ...DTYPES], (i) => [i.dtype]],
+    ["scene", "应用场景", () => ["全部", ...SCENES], (i) => i.scenes],
+    ["sec", "安全等级", () => ["全部", ...SECS], (i) => [i.sec]]
+  ],
+  dirsOf: (i) => i.dirs,
+  scenesOf: (i) => i.scenes,
+  searchText: (i) => `${i.name} ${i.desc} ${i.field} ${i.dirs.join(" ")} ${i.mods.join(" ")} ${i.dtype} ${i.scenes.join(" ")} ${i.sec} ${i.src} ${i.fmt} ${i.origin} ${i.cols.join(" ")} ${i.models.join(" ")}`,
+  tags: (i) => [[i.mods[0], "kind k-agent", MOD_TIP[i.mods[0]]], [i.dtype, "", DTYPE_TIP[i.dtype]], secTag(i)],
+  status: (i) => i.auth ? "" : `<em class="need">需授权</em>`,
+  cardLine: (i) => `<p class="kit-line" title="${esc(`规模：${i.records}；大小：${i.size}；格式：${i.fmt}`)}">${icon("db", 13)}<b>${esc(i.records)}</b>${esc(i.size)} · ${esc(i.fmt)}</p>`,
+  meta: (i) => `<span class="owner" title="${esc(i.owner)}">${icon("user", 13)}<i>${esc(i.owner)}</i></span>
+    <span title="数据集来源">${esc(i.src.replace("数据集", ""))}</span>
+    <span title="查询次数">${icon("eye", 14)}${esc(i.calls)}</span>
+    <span title="最新版本">${esc(i.ver)}</span>`,
+  chipNote: (i) => i.auth ? (i.sec === "敏感" || i.sec === "核心" ? `<em class="src warn">${esc(i.sec)}</em>` : "") : `<em class="src warn">待审批</em>`,
+  onLoad: (i) => i.auth
+    ? `，已只读挂载到 /data/${slug(i)}${i.sec === "核心" ? "（核心级：AI 只拿到聚合结果）" : i.sec === "敏感" ? "（敏感级：AI 只看到字段、统计和脱敏样例）" : ""}`
+    : `。该数据集为${i.sec}级，已向数据负责人提交使用申请，审批通过前只挂载字段说明`,
+  drawerTabs: () => ["基本信息", "数据预览", "版本列表", "访问方式", "数据血缘"],
+  tabLabel: (i, t) => t === "版本列表" ? `版本列表（${i.versions.length}）` : t,
+  drawerTab(i, tab) {
+    if (tab === "数据预览") {
+      const masked = i.sec === "核心" || (i.sec === "敏感" && !i.auth)
+      return `<p class="kit-note">${masked ? `${esc(i.sec)}级数据集：预览只展示字段和已脱敏的样例，「*」为隐藏值${i.auth ? "" : "；申请授权后可查看完整样例"}。` : `前 ${i.rows.length} 条样例，完整数据共 ${esc(i.records)}。`}</p>
+        <div style="overflow-x:auto"><table class="etable"><thead><tr>${i.cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+        <tbody>${i.rows.map((r) => `<tr>${r.map((v) => `<td>${v === "*" ? `<span class="rc-sub">***</span>` : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+        ${pbox("字段说明", `${i.cols.length} 个字段`, `<div class="kbind">${i.cols.map((c) => `<span class="bchip">${esc(c)}</span>`).join("")}</div>`, "list")}`
+    }
+    if (tab === "版本列表") {
+      return `<div class="code-head"><span>版本列表</span><button class="btn sm ghost" type="button" data-act="newver|${i.id}">${icon("plus", 14, 2)}新建版本</button></div>
+        <table class="etable"><thead><tr><th>版本</th><th>说明</th><th>记录数</th><th>更新时间</th><th>操作</th></tr></thead>
+        <tbody>${i.versions.map((v, n) => `<tr><td><b>${esc(v[0])}</b>${n === 0 ? ` <em class="rs def">默认</em>` : ""}</td><td>${esc(v[1])}</td><td>${esc(v[2])}</td><td>${esc(v[3])}</td>
+          <td>${n === 0 ? `<span class="rc-sub">当前</span>` : `<a class="alink" data-act="setver|${i.id}|${n}" style="margin:0">设为默认</a>`}</td></tr>`).join("")}</tbody></table>
+        <p class="kit-note" style="margin-top:10px">空间挂载默认版本；训练任务会记录所用版本，保证结果可复现。</p>`
+    }
+    if (tab === "访问方式") {
+      const p = SEC_POLICY[i.sec]
+      return `<p class="kit-note">加载到空间后，数据集以只读方式挂载到 <code>/data/${esc(slug(i))}</code>。Research Agent 通过 MCP 工具查询，只传数据集引用和查询条件，不把原始文件塞进对话。</p>
+        ${kv([["挂载路径", `<code>/data/${esc(slug(i))}</code>`, true], ["查询工具", `<code>dataset_query</code> <code>dataset_stats</code>${i.sec === "公开" || i.sec === "内部" ? " <code>dataset_sample</code>" : ""}`, true], ["数据格式", i.fmt], ["授权状态", i.auth ? "已授权" : "未授权（需申请）"]])}
+        ${pbox("安全策略", i.sec + "级", `<table class="etable"><tbody>
+          <tr><th>AI 可见范围</th><td>${esc(p.ai)}</td></tr><tr><th>下载</th><td>${esc(p.dl)}</td></tr><tr><th>出域</th><td>${esc(p.out)}</td></tr>
+          <tr><th>使用审批</th><td>${esc(p.appr)}</td></tr><tr><th>审计</th><td>${esc(p.audit)}</td></tr></tbody></table>`, "star")}
+        <div class="code-head"><span>调用示例</span><button class="btn sm ghost" type="button" data-copytext="d-example">复制</button></div>
+        <pre class="code" id="d-example">${esc(exampleOf(i))}</pre>`
+    }
+    if (tab === "数据血缘") {
+      const node = (t, s, cls) => `<div class="lnode ${cls || ""}"><b>${esc(t)}</b><small>${esc(s)}</small></div>`
+      const arrow = `<span class="larrow">${icon("chev", 16, 2)}</span>`
+      return `<div class="lineage">
+          ${node(i.origin || "原始数据", i.src === "外部数据集" ? "外部来源" : "数据来源", "gray")}
+          ${arrow}${node(i.src === "外部数据集" ? "格式转换" : "清洗入库", i.src === "外部数据集" ? "统一字段与单位" : "去重、单位统一、异常值标记", "gray")}
+          ${arrow}${node(`${i.name} ${i.ver}`, "当前默认版本", "on")}
+          ${arrow}${node(i.models.length ? `${i.models.length} 个模型` : "暂无", "下游模型", i.models.length ? "link" : "gray")}
+        </div>
+        ${pbox("下游模型", i.models.length ? `${i.models.length} 个` : "", i.models.length ? `以本数据集训练或评测：<div class="kbind">${i.models.map((m) => `<a class="bchip" href="科研模型.html" title="在科研模型中查看">${esc(m)}</a>`).join("")}</div>` : "暂无模型使用本数据集训练或评测。", "box")}`
+    }
+    return `<div class="mgrid"><div class="mbox"><b>${esc(i.records)}</b><span>数据规模</span></div><div class="mbox"><b>${esc(i.size)}</b><span>存储大小</span></div><div class="mbox"><b>${esc(i.calls)}</b><span>查询次数</span></div></div>
+      ${kv([["数据集 ID", `<code>${esc(slug(i))}</code>`, true], ["学科领域", i.field], ["研究方向", i.dirs.join("、") || "—"], ["数据模态", i.mods.join("、")], ["数据类型", i.dtype], ["应用场景", i.scenes.join("、")],
+        ["安全等级", `<em class="rs ${i.sec === "核心" || i.sec === "敏感" ? "warn" : i.sec === "公开" ? "def" : ""}">${esc(i.sec)}</em> <span class="kv-note">${esc(SEC_TIP[i.sec])}</span>`, true],
+        ["数据集来源", i.src], ["数据来源", i.origin || "—"], ["数据格式", i.fmt], ["使用许可", i.lic], ["负责人", i.owner], ["最新版本", `${i.ver} · ${i.updated}`]])}`
+  },
+  drawerActions: (i) => i.auth ? `<button class="btn ghost" type="button" data-act="query|${i.id}">${icon("search", 15)}在线查询</button>`
+    : `<button class="btn ghost" type="button" data-act="apply|${i.id}">${icon("check", 15)}申请授权</button>`,
+  action(name, id, n) {
+    const i = findItem(id)
+    if (name === "query") { toast(`已对 ${slug(i)} 执行示例查询，返回 ${i.rows.length} 条（${i.sec === "核心" ? "聚合结果" : "样例"}）`); return }
+    if (name === "apply") { i.auth = true; toast(`已提交「${i.name}」使用申请，原型中直接视为审批通过`) }
+    if (name === "newver") {
+      const v = "V" + (parseFloat(i.ver.replace(/[^\d.]/g, "")) + 0.1).toFixed(1).replace(/^(\d{4})\.\d$/, "$1.10")
+      i.versions.unshift([v, "新建版本（草稿），上传增量数据后发布", "—", "2026-09-30"])
+      i.ver = v; i.updated = "2026-09-30"
+      toast(`已创建 ${v}，上传增量数据后可发布`)
+    }
+    if (name === "setver") {
+      const [v] = i.versions.splice(Number(n), 1)
+      i.versions.unshift(v)
+      i.ver = v[0]
+      toast(`已将 ${v[0]} 设为默认版本`)
+    }
+    render()
+    state.keepScroll = true
+    openDrawer(i)
+  }
+}
+function exampleOf(i) {
+  const col = i.cols[i.cols.length - 1] || "value"
+  if (i.sec === "核心") return `// 核心级：只返回聚合结果\ndataset_stats({ dataset: "${slug(i)}", version: "${i.ver}", metrics: ["count", "mean", "p50"], field: "${col}" })\n// → { count: …, mean: …, p50: … }`
+  if (i.sec === "敏感") return `dataset_query({ dataset: "${slug(i)}", version: "${i.ver}", where: "…", limit: 100 })\n// → 返回脱敏样例 + 统计信息；原始值留在空间内，供计算作业读取 /data/${slug(i)}`
+  return `dataset_query({ dataset: "${slug(i)}", version: "${i.ver}", columns: ${JSON.stringify(i.cols.slice(0, 3))}, limit: 100 })\n// → { rows: [...], total: ${JSON.stringify(i.records)} }`
+}
+
+// ========== 通用列表引擎（科研技能 / 科研模型 / 科研智能体 / 科研数据集 共用，保持一致） ==========
+/* ========== 公共页面逻辑（与科学工具箱同构）==========
+   页面只需提供 PAGE（文案、条目、筛选维度、详情页签、新建表单），其余交给这里。 */
+const ICONS = {
+  db: '<ellipse cx="12" cy="5.5" rx="8" ry="2.8"/><path d="M4 5.5v13c0 1.6 3.6 2.8 8 2.8s8-1.2 8-2.8v-13"/><path d="M4 12c0 1.6 3.6 2.8 8 2.8s8-1.2 8-2.8"/>',
+  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7"/><path d="M5.5 8.8V20.5h13V8.8"/><path d="M10 20.5v-5.5h4v5.5"/>',
+  hub: '<circle cx="12" cy="12" r="2.6"/><path d="M18.4 7.2A8 8 0 1 1 9.7 4.3"/><path d="M5.6 16.8A8 8 0 0 0 20 12"/><circle cx="17.5" cy="5.2" r="1.6"/>',
+  book: '<path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v12a2.8 2.8 0 0 0-2.8-2.8H2.5z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v12a2.8 2.8 0 0 1 2.8-2.8h6.7z"/>',
+  layers: '<path d="m12 3 9.5 4.8L12 12.6 2.5 7.8z"/><path d="m2.5 12.2 9.5 4.8 9.5-4.8"/><path d="m2.5 16.4 9.5 4.8 9.5-4.8"/>',
+  box: '<path d="M20.5 7.5 12 3 3.5 7.5v9L12 21l8.5-4.5z"/><path d="m3.5 7.5 8.5 4.6 8.5-4.6"/><path d="M12 12.1V21"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6.3L4.7 18.1A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.7-2.9L14 9.3V3"/><path d="M7.2 15h9.6"/>',
+  folder: '<path d="M4 20h16a2 2 0 0 0 2-2V8.5a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3.5H4a2 2 0 0 0-2 2V18a2 2 0 0 0 2 2Z"/><path d="M12 10.5v3.5"/><circle cx="12" cy="16.6" r="1.2"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8.2"/><path d="M3 3.5v4.7h4.7"/><path d="M12 7.5V12l3.4 2"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>',
+  doc: '<path d="M14 3H6.5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8.5z"/><path d="M14 3v5.5h5.5"/><path d="M8.5 9.5h2M8.5 13h7M8.5 16.5h7"/>',
+  network: '<rect x="9" y="3" width="6" height="5.5" rx="1"/><rect x="3" y="15.5" width="6" height="5.5" rx="1"/><rect x="15" y="15.5" width="6" height="5.5" rx="1"/><path d="M6 15.5v-2.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2.5"/><path d="M12 12V8.5"/>',
+  chart: '<path d="M7 19v-4.5M12 19v-8M17 19V7.5"/>',
+  sliders: '<path d="M4 8h9M17.5 8H20M4 16h2.5M11 16h9"/><circle cx="15.2" cy="8" r="2.2"/><circle cx="8.8" cy="16" r="2.2"/>',
+  upload: '<path d="M12 15V3.5"/><path d="m7 8 5-4.5L17 8"/><path d="M20.5 15v3.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V15"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  chev: '<path d="m9 6 6 6-6 6"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  grid: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17M12 3.5v17"/>',
+  list: '<path d="M9 6h11.5M9 12h11.5M9 18h11.5"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="2.6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>',
+  heart: '<path d="M19.2 13.8c1.5-1.5 2.8-3.2 2.8-5.4A5.3 5.3 0 0 0 16.7 3c-1.8 0-3 .5-4.7 2.1C10.3 3.5 9.1 3 7.3 3A5.3 5.3 0 0 0 2 8.4c0 2.2 1.3 3.9 2.8 5.4l7.2 7.1Z"/>',
+  dots: '<circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  crown: '<path d="M3 7.5 7.5 11 12 4.5l4.5 6.5L21 7.5 19.2 17H4.8Z"/><path d="M4.8 20h14.4"/>',
+  bell: '<path d="M6 8.5a6 6 0 0 1 12 0c0 6.5 2.8 8.5 2.8 8.5H3.2S6 15 6 8.5"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.5-2.6 2.5"/><path d="M12 16.6h.01" stroke-width="2.4"/>',
+  panel: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9 3.5v17"/><path d="m15.5 14.5-2.5-2.5 2.5-2.5"/>',
+  close: '<path d="M7 7l10 10M17 7 7 17"/>',
+  spark: '<path d="M12 3.5 13.9 9 19.5 11 13.9 13 12 18.5 10.1 13 4.5 11 10.1 9z"/><path d="M19 3.5v3M17.5 5h3M5 17.5v3M3.5 19h3"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  star: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+  code: '<path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5"/>',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx=".8"/><path d="M9.5 3v3M14.5 3v3M9.5 18v3M14.5 18v3M3 9.5h3M3 14.5h3M18 9.5h3M18 14.5h3"/>',
+  wave: '<path d="M2.5 12h3l2-6 3.5 12 3-9 2 5h5.5"/>',
+  dna: '<path d="M7 3c0 6 10 6 10 12s-10 6-10 6M17 3c0 6-10 6-10 12"/><path d="M8.5 6.5h7M8.5 17.5h7M10 12h4"/>',
+  atom: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>',
+  pen: '<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3Z"/>',
+  image: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m20.5 16-5-5-8.5 8.5"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6z"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+}
+function icon(name, size, sw) {
+  const s = size || 18
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.box}</svg>`
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]))
+}
+let toastTimer = 0
+function toast(text) {
+  const el = document.getElementById("toast")
+  el.hidden = false
+  el.textContent = text
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { el.hidden = true }, 2400)
+}
+function paintIcons(root) {
+  root.querySelectorAll("[data-icon]").forEach((el) => {
+    if (el.dataset.ready) return
+    el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 18)
+    el.dataset.ready = "1"
+  })
+}
+function numOf(calls) {
+  const s = String(calls)
+  return s.endsWith("K") ? parseFloat(s) * 1000 : parseFloat(s) || 0
+}
+function checks(name, label, list, on) {
+  return `<div class="field"><span>${esc(label)}<small class="opt">可多选</small></span><div class="checks">${list.map((x) => `<label><input type="checkbox" name="${name}" value="${esc(x)}" ${on && on.includes(x) ? "checked" : ""} /> ${esc(x)}</label>`).join("")}</div></div>`
+}
+const opts = (arr, cur) => arr.filter((x) => x !== "全部").map((x) => `<option ${x === cur ? "selected" : ""}>${esc(x)}</option>`).join("")
+function dirChecks(field) { return (DIRS[field] || []).length ? checks("dirs", "研究方向", DIRS[field]) : "" } // 通用领域不分研究方向
+
+const ITEMS = PAGE.items
+const findItem = (id) => ITEMS.find((row) => row.id === id)
+const DIMS = PAGE.dims // [key, 标签, 全部选项(), 取值(item)=>[]]
+const DIM_LIMIT = 12
+const favs = new Set(PAGE.favs || [])
+const state = { query: "", tab: PAGE.tabs[0], sort: "综合排序", view: "card", space: "配方优化课题", menu: null, lpOpen: false, fOpen: {}, dtab: "" }
+DIMS.forEach(([k]) => { state[k] = "全部" })
+const SPACES = ["全部项目", "配方优化课题", "高性能合成橡胶项目"]
+// 空间（课题）信息由课题管理平台同步，本平台只读；这里只维护每个空间已加载的条目
+const SPACE_INFO = {}
+SPACES.forEach((s) => { SPACE_INFO[s] = { loaded: {} } })
+;(PAGE.preload || []).forEach((id, i) => { SPACE_INFO["配方优化课题"].loaded[id] = { at: i + 1 } })
+const LP_FOLD = 10
+
+function anyFilter() { return DIMS.some(([k]) => state[k] !== "全部") }
+function spaceInfo(name) {
+  const key = name || state.space
+  if (!SPACE_INFO[key]) SPACE_INFO[key] = { loaded: {} }
+  return SPACE_INFO[key]
+}
+function loadedOf(name) { return spaceInfo(name).loaded }
+function isLoaded(id) { return !!loadedOf()[id] }
+function loadBtn(item, big) {
+  const on = isLoaded(item.id)
+  return `<button class="btn ${big ? "" : "sm"} load ${on ? "on" : ""}" type="button" data-load="${item.id}" title="${on ? "从课题空间移除" : "加载到课题空间"}">${icon(on ? "check" : "plus", big ? 15 : 14, 2)}${on ? "已加载" : "加载"}</button>`
+}
+function toggleLoad(item, silent) {
+  const box = loadedOf()
+  if (box[item.id]) {
+    delete box[item.id]
+    if (!silent) toast(`已从「${state.space}」移除「${item.name}」`)
+  } else {
+    box[item.id] = { at: Date.now() }
+    item.recent = true
+    const also = PAGE.onLoad ? PAGE.onLoad(item) : ""
+    if (!silent) toast(`已加载「${item.name}」到「${state.space}」${also}`)
+  }
+}
+
+function chips(group, options, current) {
+  const box = document.querySelector(`[data-group="${group}"]`)
+  const label = box.querySelector(".lbl").outerHTML
+  box.hidden = !options || (group === "dir" && options.length <= 1)
+  if (!options) return
+  const open = state.fOpen[group]
+  const over = options.length - 1 > DIM_LIMIT
+  const shown = over && !open ? options.filter((op, i) => i <= DIM_LIMIT || op === current) : options
+  const last = group === DIMS[DIMS.length - 1][0] && anyFilter()
+  box.innerHTML = label + shown.map((op) => `<button type="button" class="chip ${op === current ? "on" : ""}" data-filter="${group}" data-value="${esc(op)}">${esc(op)}</button>`).join("")
+    + (over ? `<button type="button" class="fmore" data-fmore="${group}">${open ? "收起" : `更多 ${options.length - shown.length}`}${icon("down", 12, 2)}</button>` : "")
+    + (last ? `<button type="button" class="fclear" data-fclear="1">清空筛选</button>` : "")
+}
+// 筛选联动：逐级收窄，首行保留完整选项；研究方向常驻：学科领域为「全部」时列出所有方向，选定领域后只列该领域的方向；「通用」不分研究方向，选中时隐藏该行
+function dirsFor(field) { return field === "全部" ? [...new Set(FIELDS.slice(1).flatMap((f) => DIRS[f] || []))] : (DIRS[field] || []) }
+function cascadeOptions() {
+  const out = {}
+  let pool = ITEMS
+  DIMS.forEach(([key, , all, get]) => {
+    const have = new Set(pool.flatMap(get))
+    const options = key === "field" ? all() : all().filter((op) => op === "全部" || have.has(op))
+    if (!options.includes(state[key])) state[key] = "全部"
+    out[key] = options
+    if (state[key] !== "全部") pool = pool.filter((item) => get(item).includes(state[key]))
+  })
+  return out
+}
+function tabs() {
+  const n = Object.keys(loadedOf()).length
+  document.getElementById("item-tabs").innerHTML = PAGE.tabs.map((tab) => `<button type="button" class="${tab === state.tab ? "on" : ""}" data-tab="${esc(tab)}">${esc(tab)}${tab === "已加载" ? `<i class="n">${n}</i>` : ""}</button>`).join("")
+}
+function tagHtml(item, feature) {
+  const tags = PAGE.tags(item).map(([t, cls, tip]) => `<em class="${cls || ""}" ${tip ? `title="${esc(tip)}"` : ""}>${esc(t)}</em>`).join("")
+  const status = feature ? `<em class="official">精选</em>` : PAGE.status(item)
+  return `<div class="tags">${tags}${status}</div>`
+}
+function loadedPanel() {
+  const info = spaceInfo()
+  const ids = Object.keys(info.loaded).filter((id) => findItem(id)).sort((a, b) => info.loaded[a].at - info.loaded[b].at)
+  const shown = state.lpOpen ? ids : ids.slice(0, LP_FOLD)
+  const chip = (id) => {
+    const item = findItem(id)
+    return `<span class="lchip" title="${esc(item.desc)}">
+      <span class="ic ic-${item.color}">${icon(item.icon, 14, 1.9)}</span>
+      <b data-detail="${id}">${esc(item.name)}</b>
+      ${PAGE.chipNote ? PAGE.chipNote(item) : ""}
+      <button class="x" type="button" data-unload="${id}" aria-label="移除 ${esc(item.name)}">${icon("close", 13, 2)}</button>
+    </span>`
+  }
+  document.getElementById("loaded-panel").innerHTML = `
+    <div class="lp-head">
+      ${icon(PAGE.panelIcon || "layers", 18)}
+      <b>课题空间已加载${PAGE.unit}</b>
+      <span class="lp-space">${esc(state.space)}</span>
+      <span class="lp-count">${ids.length} 个</span>
+      <div class="lp-actions">
+        <button class="btn sm ghost" type="button" data-lp="clear" ${ids.length ? "" : "disabled"}>清空</button>
+      </div>
+    </div>
+    ${ids.length ? `<div class="lp-chips">${shown.map(chip).join("")}${ids.length > LP_FOLD ? `<button class="lp-more" type="button" data-lp="fold">${state.lpOpen ? "收起" : `+${ids.length - LP_FOLD} 展开`}</button>` : ""}</div>`
+      : `<div class="lp-empty">「${esc(state.space)}」还没有加载${PAGE.unit}。点卡片上的「加载」即可。</div>`}`
+}
+function featureCard(item) {
+  return `<article class="card feature" data-detail="${item.id}" style="cursor:pointer">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, true)}
+      <p class="desc">${esc(item.desc)}</p>
+    </div>
+  </article>`
+}
+function itemCard(item) {
+  const open = state.menu === item.id
+  return `<article class="card ${isLoaded(item.id) ? "is-loaded" : ""}">
+    <button class="more" type="button" data-more="${item.id}" aria-label="更多操作">${icon("dots", 18)}</button>
+    ${open ? `<div class="menu more-menu">
+      <button type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+      <button type="button" data-detail="${item.id}">查看详情</button>
+      <button type="button" data-copy="${item.id}">复制${PAGE.unit}名称</button>
+    </div>` : ""}
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, false)}
+      <p class="desc">${esc(item.desc)}</p>
+      ${PAGE.cardLine ? PAGE.cardLine(item) : ""}
+    </div>
+    <footer>
+      <div class="meta">${PAGE.meta(item)}</div>
+      <div class="ops">
+        <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+        ${loadBtn(item)}
+      </div>
+    </footer>
+  </article>`
+}
+function listRow(item) {
+  return `<div class="list-row">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}</div>
+    <div><p class="desc" style="margin:0">${esc(item.desc)}</p>${PAGE.cardLine ? PAGE.cardLine(item) : ""}</div>
+    <div class="ops">
+      <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+      ${loadBtn(item)}
+    </div>
+  </div>`
+}
+function visible() {
+  const q = state.query.trim().toLowerCase()
+  let list = ITEMS.filter((item) => {
+    if (q) { const hay = PAGE.searchText(item).toLowerCase(); if (!q.split(/[\s,，、]+/).filter(Boolean).every((w) => hay.includes(w))) return false }
+    if (!DIMS.every(([k, , , get]) => state[k] === "全部" || get(item).includes(state[k]))) return false
+    if (state.tab === "已加载") return isLoaded(item.id)
+    if (state.tab === "最近使用") return item.recent
+    if (state.tab === "我的收藏") return favs.has(item.id)
+    if (state.tab === "我创建的") return item.owner === "林夏"
+    return true
+  })
+  list = [...list]
+  if (state.sort === "名称") list.sort((a, b) => a.name.localeCompare(b.name, "zh"))
+  if (state.sort === "最近更新") list.sort((a, b) => String(b.updated).localeCompare(String(a.updated)))
+  if (state.sort === "最多使用") list.sort((a, b) => numOf(b.calls) - numOf(a.calls))
+  return list
+}
+function render() {
+  const o = cascadeOptions()
+  DIMS.forEach(([key]) => chips(key, o[key], state[key]))
+  loadedPanel()
+  tabs()
+  document.querySelectorAll("[data-view]").forEach((btn) => btn.classList.toggle("on", btn.dataset.view === state.view))
+  const list = visible()
+  document.getElementById("item-count").textContent = `共 ${list.length} 个${PAGE.unit}`
+  const showHot = state.tab === PAGE.tabs[0] && !state.query && !anyFilter()
+  let html = ""
+  if (showHot) {
+    html += `<section class="hot"><header>${icon("crown", 18)}<b>精选推荐</b><span>${esc(PAGE.hotNote)}</span></header>
+      <div class="grid">${ITEMS.filter((i) => i.hot).slice(0, 3).map(featureCard).join("")}</div></section>`
+  }
+  if (!list.length && state.tab === "已加载") html += `<div class="empty">「${esc(state.space)}」还没有加载${PAGE.unit}，或当前筛选条件下没有已加载的${PAGE.unit}。</div>`
+  else if (!list.length) html += `<div class="empty">没有匹配的${PAGE.unit}，试试更换筛选条件或搜索词。</div>`
+  else if (state.view === "card") html += `<div class="grid tools-grid">${list.map(itemCard).join("")}</div>`
+  else html += `<div class="list">${list.map(listRow).join("")}</div>`
+  document.getElementById("item-results").innerHTML = html
+}
+
+function openDrawer(item) {
+  state.menu = null
+  const box = document.getElementById("drawer")
+  box.hidden = false
+  const list = PAGE.drawerTabs(item)
+  const tab = list.includes(state.dtab) ? state.dtab : list[0]
+  const top = box.querySelector(".drawer") ? box.querySelector(".drawer").scrollTop : 0
+  box.innerHTML = `<aside class="drawer wide" role="dialog" aria-label="${esc(item.name)}" data-open="${item.id}">
+    <header><h3>${esc(PAGE.unit)}详情</h3><button class="icon-btn" type="button" data-close="drawer" aria-label="关闭">${icon("close")}</button></header>
+    <div class="card">
+      <span class="ic ic-${item.color}">${icon(item.icon, 24, 1.8)}</span>
+      <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}<p class="desc" style="-webkit-line-clamp:3">${esc(item.desc)}</p></div>
+    </div>
+    <div class="row-actions" style="margin-top:12px">
+      ${loadBtn(item, true)}
+      ${PAGE.drawerActions ? PAGE.drawerActions(item) : ""}
+      <button class="btn ghost" type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+    </div>
+    <nav class="dtabs">${list.map((t) => `<button type="button" class="${t === tab ? "on" : ""}" data-dtab="${esc(t)}">${esc(PAGE.tabLabel ? PAGE.tabLabel(item, t) : t)}</button>`).join("")}</nav>
+    ${PAGE.drawerTab(item, tab)}
+  </aside>`
+  if (state.keepScroll) box.querySelector(".drawer").scrollTop = top
+  state.keepScroll = false
+}
+function openId() { const d = document.querySelector("#drawer [data-open]"); return d && d.dataset.open }
+function kv(rows) {
+  return `<ul class="kv">${rows.filter((r) => r && r[1] !== undefined && r[1] !== "").map(([k, v, raw]) => `<li><span>${esc(k)}</span><b>${raw ? v : esc(v)}</b></li>`).join("")}</ul>`
+}
+function pbox(title, badge, inner, ic) {
+  return `<div class="pbox"><h4>${icon(ic || "spark", 15)}${esc(title)}${badge ? `<i>${esc(badge)}</i>` : ""}</h4>${inner}</div>`
+}
+
+function openCreate() {
+  const box = document.getElementById("modal")
+  box.hidden = false
+  box.innerHTML = `<div class="modal wide" role="dialog" aria-label="新建${PAGE.unit}">
+    <header><h3>新建${esc(PAGE.unit)}</h3><button class="icon-btn" type="button" data-close="modal" aria-label="关闭">${icon("close")}</button></header>
+    <form id="create-form" class="scroll">
+      ${PAGE.createForm()}
+      <div class="row-actions right" style="padding-bottom:4px">
+        <button class="btn ghost" type="button" data-close="modal">取消</button>
+        <button class="btn" type="submit">确定创建</button>
+      </div>
+    </form>
+  </div>`
+}
+function addItem(extra) {
+  const colors = ["blue", "purple", "green", "orange", "pink", "teal"]
+  const n = ITEMS.length % 6
+  ITEMS.unshift(Object.assign({ owner: "林夏", calls: "0", favs: 0, hot: false, recent: true, updated: "2026-09-30", icon: PAGE.newIcon || "box", color: colors[n], ver: "V1.0" }, extra))
+}
+
+function toggleMenu(id) {
+  ["scope-menu", "bell-menu", "help-menu"].forEach((m) => { if (m !== id) document.getElementById(m).hidden = true })
+  if (id) document.getElementById(id).hidden = !document.getElementById(id).hidden
+}
+
+/* ---------- 初始化与事件 ---------- */
+document.querySelector(".filter-box").innerHTML = DIMS.map(([k, label]) => `<div class="filters ${k === "dir" ? "sub" : ""}" data-group="${k}"><span class="lbl">${esc(label)}：</span></div>`).join("")
+document.getElementById("item-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  state.query = document.getElementById("item-q").value.trim()
+  render()
+})
+document.getElementById("top-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  const text = document.getElementById("top-q").value.trim()
+  document.getElementById("item-q").value = text
+  state.query = text
+  render()
+  toast(text ? `已在${PAGE.title}搜索「${text}」` : "已清除搜索")
+})
+document.getElementById("item-sort").addEventListener("change", (e) => { state.sort = e.target.value; render() })
+// PAGE.createPage：新建在独立配置页完成（如科研智能体），否则用弹窗表单；页面没有新建/导入按钮时（如科研数据集）不绑定
+document.getElementById("open-create")?.addEventListener("click", () => { if (PAGE.createPage) location.href = PAGE.createPage; else openCreate() })
+document.getElementById("rail-btn").addEventListener("click", () => document.getElementById("app").classList.toggle("is-rail"))
+document.getElementById("import-file")?.addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0]
+  e.target.value = ""
+  if (!file) return
+  addItem(PAGE.importItem(file))
+  state.tab = PAGE.tabs[0]
+  toast(`已导入 ${file.name}`)
+  render()
+})
+document.getElementById("scope-btn").addEventListener("click", (e) => {
+  e.stopPropagation()
+  document.getElementById("scope-menu").innerHTML = SPACES.map((name) => `<button type="button" class="${name === state.space ? "on" : ""}" data-space="${esc(name)}">${esc(name)}</button>`).join("")
+  toggleMenu("scope-menu")
+})
+document.getElementById("bell-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("bell-menu") })
+document.getElementById("help-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("help-menu") })
+document.getElementById("user-btn").addEventListener("click", () => toast("这是原型，账号保持登录"))
+
+document.body.addEventListener("click", (e) => {
+  const t = e.target
+  const inMenu = t.closest(".menu")
+  const act = t.closest("[data-act]")
+  if (act) { const [name, arg, arg2] = act.dataset.act.split("|"); PAGE.action(name, arg, arg2); return }
+  const load = t.closest("[data-load]")
+  if (load) {
+    const item = findItem(load.dataset.load)
+    toggleLoad(item)
+    if (!document.getElementById("drawer").hidden) { state.keepScroll = true; openDrawer(item) }
+    render(); return
+  }
+  const unload = t.closest("[data-unload]")
+  if (unload) { toggleLoad(findItem(unload.dataset.unload)); render(); return }
+  const lp = t.closest("[data-lp]")
+  if (lp) {
+    const a = lp.dataset.lp
+    const info = spaceInfo()
+    if (a === "fold") { state.lpOpen = !state.lpOpen; render() }
+    if (a === "clear") {
+      const n = Object.keys(info.loaded).length
+      info.loaded = {}
+      toast(`已清空「${state.space}」的 ${n} 个已加载${PAGE.unit}`)
+      render()
+    }
+    return
+  }
+  const fmore = t.closest("[data-fmore]")
+  if (fmore) { state.fOpen[fmore.dataset.fmore] = !state.fOpen[fmore.dataset.fmore]; render(); return }
+  if (t.closest("[data-fclear]")) { DIMS.forEach(([k]) => { state[k] = "全部" }); render(); return }
+  const filter = t.closest("[data-filter]")
+  if (filter) { state[filter.dataset.filter] = filter.dataset.value; render(); return }
+  const tab = t.closest("[data-tab]")
+  if (tab) { state.tab = tab.dataset.tab; render(); return }
+  const view = t.closest("[data-view]")
+  if (view) { state.view = view.dataset.view; render(); return }
+  const more = t.closest("[data-more]")
+  if (more) { state.menu = state.menu === more.dataset.more ? null : more.dataset.more; render(); return }
+  const detail = t.closest("[data-detail]")
+  if (detail) { state.dtab = ""; openDrawer(findItem(detail.dataset.detail)); render(); return }
+  const dtab = t.closest("[data-dtab]")
+  if (dtab) { state.dtab = dtab.dataset.dtab; openDrawer(findItem(openId())); return }
+  const cp = t.closest("[data-copytext]")
+  if (cp) {
+    const el = document.getElementById(cp.dataset.copytext)
+    if (el && navigator.clipboard) navigator.clipboard.writeText(el.textContent).catch(() => {})
+    toast("已复制"); return
+  }
+  const copy = t.closest("[data-copy]")
+  if (copy) {
+    const name = findItem(copy.dataset.copy).name
+    if (navigator.clipboard) navigator.clipboard.writeText(name).catch(() => {})
+    state.menu = null; render(); toast(`已复制「${name}」`); return
+  }
+  const fav = t.closest("[data-fav]")
+  if (fav) {
+    const id = fav.dataset.fav
+    const item = findItem(id)
+    if (favs.has(id)) { favs.delete(id); item.favs -= 1; toast("已取消收藏") } else { favs.add(id); item.favs += 1; toast("已收藏") }
+    state.menu = null
+    if (!document.getElementById("drawer").hidden) { state.keepScroll = true; openDrawer(item) }
+    render(); return
+  }
+  const close = t.closest("[data-close]")
+  if (close) { document.getElementById(close.dataset.close).hidden = true; return }
+  const space = t.closest("[data-space]")
+  if (space) {
+    state.space = space.dataset.space
+    state.lpOpen = false
+    document.getElementById("scope-label").textContent = state.space
+    toggleMenu(null)
+    document.getElementById("drawer").hidden = true
+    render()
+    const n = Object.keys(loadedOf()).length
+    toast(`课题空间已切换为${state.space}，${n ? `已加载 ${n} 个${PAGE.unit}` : `还没有加载${PAGE.unit}`}`)
+    return
+  }
+  if (t.id === "drawer" || t.id === "modal") t.hidden = true
+  if (!inMenu) {
+    toggleMenu(null)
+    if (state.menu) { state.menu = null; render() }
+  }
+})
+document.body.addEventListener("change", (e) => {
+  if (e.target.name === "field" && e.target.closest("#create-form")) {
+    document.getElementById("dir-checks").innerHTML = dirChecks(e.target.value)
+    return
+  }
+  if (PAGE.onChange) PAGE.onChange(e)
+})
+document.body.addEventListener("submit", (e) => {
+  if (e.target.id !== "create-form") return
+  e.preventDefault()
+  const res = PAGE.createSubmit(new FormData(e.target))
+  if (typeof res === "string") { toast(res); return }
+  addItem(res.item)
+  document.getElementById("modal").hidden = true
+  state.tab = PAGE.tabs[0]
+  toast(res.msg)
+  render()
+})
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return
+  document.getElementById("drawer").hidden = true
+  document.getElementById("modal").hidden = true
+  toggleMenu(null)
+  if (state.menu) { state.menu = null; render() }
+})
+
+paintIcons(document)
+// 从独立配置页发布后回到列表：#created=<JSON>
+;(function takeCreated() {
+  const m = /^#created=(.+)$/.exec(location.hash || "")
+  if (!m || !PAGE.fromCreated) return
+  try {
+    const res = PAGE.fromCreated(JSON.parse(decodeURIComponent(m[1])))
+    addItem(res.item)
+    state.tab = "我创建的"
+    if (location.protocol !== "about:" && history.replaceState) history.replaceState(null, "", location.pathname)
+    setTimeout(() => toast(res.msg), 0)
+  } catch (err) { /* 参数损坏时忽略 */ }
+})()
+render()
+
+</script>
+</body>
+</html>

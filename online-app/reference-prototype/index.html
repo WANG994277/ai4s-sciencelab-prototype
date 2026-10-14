@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><base href="/app/app_17f8q1hymdy/prototype/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>中国石油 ScienceLab · AI for Science 一体化科研平台</title>
+  <link rel="stylesheet" href="assets/science-hub-component.css">
+  <link rel="stylesheet" href="styles.css?v=20261002-task-state-19">
+  <link rel="stylesheet" href="assets/execution-center.css?v=20261002-original-detail">
+  <link rel="stylesheet" href="assets/research-workflow.css?v=20261002-task-session-13">
+  <link rel="stylesheet" href="assets/space-overview.css?v=20261002-overview-1">
+</head>
+<body>
+  <!--
+    ASSUMPTIONS
+    1. Desktop-first at 1440×900; responsive down to 1100px.
+    2. This is a front-end product prototype; AI, compute, data and lab execution are mocked.
+    3. The visual system is derived from the user's blue/white AI4S screenshot.
+    4. Only the supplier research hub content is reused inside our native platform shell.
+
+    FORM REASONING
+    - Narrative role: product architecture prototype with task flows, not a marketing still.
+    - Viewing distance: laptop, 60–90cm.
+    - Temperature: calm, precise, trustworthy.
+    - Density: high-density research UI with a restrained shell.
+    - Motif: a traceable evidence chain from question to asset.
+  -->
+  <div id="app" aria-live="polite"></div>
+  <div id="toast-root" class="toast-root" aria-live="assertive"></div>
+  <div id="overlay-root"></div>
+  <script src="assets/science-hub-component.js"></script>
+  <script src="assets/supplier-resource-catalog.js"></script>
+  <script src="assets/execution-cases.js?v=20261002-original-detail"></script>
+  <script src="assets/execution-center.js?v=20261002-asset-build-14"></script>
+  <script src="assets/research-workflow.js?v=20261002-task-state-19"></script>
+  <script src="assets/vendor-output-visuals.js"></script>
+<script src="assets/space-overview.js?v=20261002-overview-1"></script>
+<script src="app.js?v=20261006-direct-4"></script>
+</body>
+</html>

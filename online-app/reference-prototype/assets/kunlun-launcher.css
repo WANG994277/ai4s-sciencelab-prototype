@@ -1,0 +1,54 @@
+/* Same Kunlun silhouette for portal help and research hub entry points. */
+.portal-assistant,.nexus-launcher {
+  width:52px;height:52px;padding:0;border:0;background:transparent;
+  box-shadow:none;overflow:visible;isolation:isolate;
+  filter:drop-shadow(0 3px 5px rgba(22,119,255,.12));
+  transition:transform .2s ease,filter .2s ease;
+}
+.portal-assistant::before,.nexus-launcher::before {
+  content:none;
+}
+.portal-assistant::after {content:none;}
+.kunlun-orb {display:block;width:100%;height:100%;pointer-events:none;user-select:none;}
+.portal-assistant:hover,.nexus-launcher:hover {
+  background:transparent;transform:translateY(-2px) scale(1.045);
+  filter:drop-shadow(0 4px 7px rgba(22,119,255,.2));
+}
+.portal-assistant:hover .kunlun-orb,.nexus-launcher:hover .kunlun-orb {
+  filter:brightness(1.08) saturate(1.08);
+}
+.kunlun-orb {transition:filter .25s ease;}
+@keyframes kunlun-ambient {
+  0%,100% {transform:scale(.96);opacity:.55;}
+  50% {transform:scale(1.08);opacity:1;}
+}
+html[data-kunlun-motion="paused"] .portal-assistant::before,
+html[data-kunlun-motion="paused"] .nexus-launcher::before {animation:none;}
+.portal-assistant:active,.nexus-launcher:active {transform:scale(.96);}
+.portal-assistant:focus-visible,.nexus-launcher:focus-visible {
+  outline:3px solid #91BDFF;outline-offset:4px;
+}
+.portal-assistant.dragging {transform:scale(1.045);cursor:grabbing;transition:none;}
+.kunlun-tooltip,.nexus-launcher .kunlun-tooltip {
+  position:absolute;top:50%;right:62px;display:block;width:max-content;
+  max-width:240px;padding:9px 13px;border:1px solid #D9E5F3;border-radius:10px;
+  background:#FFF;color:#082B63;box-shadow:0 4px 18px rgba(8,43,99,.08);
+  white-space:nowrap;opacity:0;transform:translate(4px,-50%);
+  pointer-events:none;transition:opacity .18s ease,transform .18s ease;
+}
+.kunlun-tooltip strong {display:block;font-size:13px;font-weight:600;line-height:1.5;}
+.kunlun-tooltip small {display:block;color:#71829C;font-size:11px;font-weight:400;line-height:1.5;}
+.portal-assistant:hover .kunlun-tooltip,.portal-assistant:focus-visible .kunlun-tooltip,
+.nexus-launcher:hover .kunlun-tooltip,.nexus-launcher:focus-visible .kunlun-tooltip {
+  opacity:1;transform:translate(0,-50%);
+}
+.portal-assistant.dragging .kunlun-tooltip {opacity:0;}
+.nexus-top .icon {width:24px;height:24px;}
+@media(max-width:800px) {
+  .portal-assistant,.nexus-launcher {width:48px;height:48px;right:14px;bottom:14px;}
+  .kunlun-tooltip,.nexus-launcher .kunlun-tooltip {right:58px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .portal-assistant,.nexus-launcher,.kunlun-tooltip,.kunlun-orb {transition:none;}
+  .portal-assistant::before,.nexus-launcher::before {animation:none;}
+}

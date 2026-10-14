@@ -1,0 +1,12 @@
+.DS_Store
+**/.DS_Store
+
+online-app/node_modules/
+online-app/dist/
+online-app/logs/
+online-app/.npmrc
+online-app/.spark_project
+*.tsbuildinfo
+
+prototype/research-activity-fixed.jpg
+prototype/resource-routes-fixed.jpg

@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ScienceLab AI4S 原型评审演示手册：科研人员、科研工具创建人员、科研项目管理人员的完整流程、操作与讲解话术。">
+<title>ScienceLab · 三角色原型演示说明</title>
+<style>
+:root{--brand:#085fd7;--brand-soft:#edf5ff;--ink:#0b2146;--body:#31496e;--muted:#526782;--line:#d9e5f3;--canvas:#f5f8fc;--paper:#fff;--good:#116747;--good-bg:#e8f7f1;--warn:#805000;--warn-bg:#fff4dc;--nav:244px;--bar:68px;--base:16px;--r:10px;--mono:"SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box}html{scroll-padding-top:92px}body{margin:0;background:var(--canvas);color:var(--ink);font:var(--base)/1.75 "Avenir Next","PingFang SC","Microsoft YaHei",sans-serif}button,input{font:inherit}button,a,summary{touch-action:manipulation}button,summary{cursor:pointer}a{color:var(--brand)}button{color:inherit}button:disabled{cursor:default;opacity:.48}button,a,input,summary{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--brand)}button{transition:background .18s,border-color .18s,color .18s}p{margin:0 0 16px;text-wrap:pretty}h1,h2,h3,h4{line-height:1.35;letter-spacing:-.02em;margin:0 0 16px}h1{font-size:clamp(32px,3vw,42px)}h2{font-size:28px}h3{font-size:20px}h4{font-size:16px}ul,ol{padding-left:24px}li{margin:8px 0}strong{font-weight:650}code{font-family:var(--mono);font-size:.88em;background:var(--brand-soft);padding:2px 5px;border-radius:3px}blockquote{margin:0}small{font-size:13px}svg{vertical-align:middle}hr{border:0;border-top:1px solid var(--line);margin:32px 0}[hidden]{display:none!important}.skip{position:fixed;z-index:100;left:12px;top:-70px;background:var(--ink);color:white;padding:12px 20px}.skip:focus{top:12px}.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}.muted{color:var(--muted)}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--brand);margin-bottom:14px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:8px 16px;border:1px solid var(--line);border-radius:6px;background:white;text-decoration:none;font-size:14px;white-space:nowrap;font-weight:600}.btn:hover:not(:disabled){background:var(--brand-soft);border-color:var(--brand)}.btn.primary{background:var(--brand);border-color:var(--brand);color:white}.btn.primary:hover{background:var(--ink)}.btn.small{min-height:34px;padding:5px 12px;font-size:13px}.btn[aria-pressed=true]{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}.text-button{border:0;background:none;color:var(--brand);padding:8px 0;font-size:14px;font-weight:600}.badge{display:inline-block;border-radius:4px;padding:3px 8px;background:var(--brand-soft);color:var(--brand);font-size:12px;font-weight:650;white-space:nowrap}.badge.sim{color:var(--good);background:var(--good-bg)}.badge.concept{color:var(--warn);background:var(--warn-bg)}.label{font-size:12px;color:var(--muted);font-weight:650;display:block;margin-bottom:8px}
+.sidebar{width:var(--nav);position:fixed;inset:0 auto 0 0;z-index:30;background:var(--paper);border-right:1px solid var(--line);display:flex;flex-direction:column}.brand{height:94px;padding:25px 25px 16px;border-bottom:1px solid var(--line)}.brand strong{font-size:22px;letter-spacing:-1px}.brand strong span{color:var(--brand)}.brand small{display:block;color:var(--muted);margin-top:3px;font-size:11px;letter-spacing:1px}.nav-group{padding:20px 14px 4px}.nav-group>p{font-size:11px;letter-spacing:1px;color:var(--muted);margin:0 12px 10px}.nav-link{display:flex;align-items:center;gap:12px;padding:11px 12px;min-height:45px;color:var(--body);text-decoration:none;font-size:14px;border-radius:6px;margin:3px 0}.nav-link:hover{background:var(--canvas)}.nav-link[aria-current=page]{background:var(--ink);color:#fff}.nav-num{font:12px var(--mono);opacity:.75}.subnav{flex:1;overflow:auto;min-height:70px;padding:10px 22px}.subnav a{font-size:12px;color:var(--muted);text-decoration:none;display:block;padding:6px 0}.subnav a:hover,.subnav a[aria-current=step]{color:var(--brand)}.side-footer{padding:18px 24px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.8}.side-footer strong{font-size:12px;color:var(--body)}
+.topbar{position:fixed;top:0;left:var(--nav);right:0;height:var(--bar);z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 32px}.crumb{font-size:13px;color:var(--muted);white-space:nowrap}.crumb b{color:var(--ink);margin-left:12px}.tools{display:flex;align-items:center;gap:8px}.search-wrap{position:relative}.search-wrap input{width:210px;height:40px;border:1px solid var(--line);border-radius:6px;padding:0 12px;background:var(--canvas);font-size:13px;color:var(--ink)}.search-wrap input::placeholder{color:var(--muted)}.search-results{position:absolute;right:0;top:49px;width:440px;max-height:65vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 16px 36px #0b214621;padding:8px}.search-results>p{padding:10px;margin:0;font-size:13px;color:var(--muted)}.search-result{display:block;width:100%;border:0;text-align:left;background:white;padding:12px;border-radius:5px}.search-result:hover{background:var(--brand-soft)}.search-result strong{display:block;font-size:14px}.search-result small{color:var(--muted)}
+main{margin-left:var(--nav);padding:calc(var(--bar) + 36px) 40px 100px}.content{max-width:1180px;margin:0 auto}.view{display:none}.view.active{display:block}.hero{padding:12px 0 30px;border-bottom:1px solid var(--line);margin-bottom:28px}.hero .intro{font-size:17px;max-width:800px;color:var(--body);line-height:1.9}.hero-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px}.meta{font-size:12px;color:var(--muted);display:flex;gap:16px}.section{margin:34px 0}.section-lead{max-width:830px;color:var(--body)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:24px}.section-head h2{font-size:23px}.legend{display:flex;gap:8px;flex-wrap:wrap}.role-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.role-card{border:1px solid var(--line);border-radius:var(--r);padding:22px;background:white;display:flex;flex-direction:column}.role-card .role-index{font:12px var(--mono);color:var(--brand);margin-bottom:22px}.role-card h3{font-size:19px;margin-bottom:10px}.role-card p{font-size:14px;color:var(--body);margin-bottom:18px}.role-card .role-question{font-size:15px;color:var(--ink);font-weight:650;flex:1}.role-card footer{border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}.flow-board{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px}.lane{display:grid;grid-template-columns:154px 1fr;gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}.lane:last-child{border-bottom:0}.lane-label strong{font-size:14px;display:block}.lane-label small{color:var(--muted);font-size:11px}.lane-steps{display:flex;align-items:center;gap:10px}.lane-steps span{flex:1;border:1px solid var(--line);background:var(--canvas);border-radius:5px;padding:9px 10px;text-align:center;font-size:13px;line-height:1.55}.lane-steps i{color:var(--muted);font-style:normal}.bridge{font-size:13px;color:var(--body);padding:16px 0 0;margin:0}.agenda{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:var(--ink);color:white;border-radius:var(--r);padding:24px 12px;margin:24px 0}.agenda>div{padding:0 14px;border-right:1px solid #ffffff38}.agenda>div:last-child{border:0}.agenda b{font:21px var(--mono);display:block;margin:7px 0}.agenda small{display:block;color:#d5e1f1;font-size:11px}.agenda span{font-size:12px}.note{padding:18px 20px;background:var(--brand-soft);border-radius:6px;color:var(--body);font-size:14px;margin:20px 0}.note p:last-child{margin-bottom:0}.note.warn{background:var(--warn-bg);color:var(--warn)}.split{display:grid;grid-template-columns:1fr 1fr;gap:24px}.panel{background:#fff;border:1px solid var(--line);padding:24px;border-radius:var(--r)}.panel p{font-size:14px;color:var(--body)}.panel p:last-child{margin:0}.panel h3{font-size:18px}.panel ul{font-size:14px;color:var(--body);margin-bottom:0}.table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:8px}table{border-collapse:collapse;width:100%;font-size:14px;text-align:left}th{background:var(--canvas);font-size:12px;color:var(--muted);font-weight:650}th,td{padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top}td{color:var(--body);overflow-wrap:anywhere}tr:last-child td{border-bottom:0}td:first-child{font-weight:600;color:var(--ink)}table p{margin:0}td .badge{margin-right:4px}
+.role-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:24px 0}.role-summary p{font-size:14px;color:var(--body);margin:0}.route-strip{display:flex;flex-wrap:wrap;gap:8px;padding:16px 0 24px}.route-strip button{display:flex;gap:7px;align-items:center;border:1px solid var(--line);background:#fff;border-radius:5px;padding:8px 10px;font-size:12px;min-height:38px}.route-strip button:hover{border-color:var(--brand);color:var(--brand)}.route-strip .mono{color:var(--brand)}.role-actions{display:flex;gap:8px;margin:10px 0 22px}.step{border:1px solid var(--line);background:white;border-radius:var(--r);margin-bottom:16px;scroll-margin-top:90px;overflow:clip}.step summary{list-style:none;display:flex;align-items:center;gap:16px;padding:23px 25px}.step summary::-webkit-details-marker{display:none}.step-no{display:grid;place-items:center;width:38px;height:38px;background:var(--brand-soft);color:var(--brand);border-radius:5px;font:14px var(--mono);flex-shrink:0}.step-title{flex:1;min-width:0}.step-title h3{font-size:19px;margin:0 0 4px}.step-title p{font-size:13px;color:var(--muted);margin:0}.step-chevron{font-size:20px;color:var(--muted);display:inline-block;transition:transform .18s}.step[open] .step-chevron{transform:rotate(90deg)}.step-body{border-top:1px solid var(--line);padding:24px 26px 28px}.path{font-size:13px;color:var(--body);background:var(--canvas);padding:12px 16px;border-radius:5px;margin-bottom:24px;overflow-wrap:anywhere}.path strong{margin-right:12px;color:var(--ink)}.step-columns{display:grid;grid-template-columns:1.06fr 1fr;gap:28px}.step-columns h4{font-size:14px;letter-spacing:0}.ops{margin:0;padding-left:21px;color:var(--body);font-size:15px}.ops li{padding-left:3px;margin:0 0 12px}.script{background:var(--brand-soft);border-radius:6px;padding:20px;position:relative}.script .label{color:var(--brand)}.script blockquote{color:var(--ink);font-size:15px;line-height:1.95}.script-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px}.script-footer span{color:var(--muted);font-size:11px}.copy{min-height:32px;border:1px solid var(--line);background:white;border-radius:4px;padding:4px 10px;font-size:12px;white-space:nowrap}.copy:hover{border-color:var(--brand)}.outcome{border-top:1px solid var(--line);padding-top:20px;margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:24px}.outcome p{font-size:14px;color:var(--body);margin:0}.fallback{font-size:13px;background:var(--warn-bg);color:var(--warn);padding:12px 15px;border-radius:5px;margin-top:20px}.sample{margin-top:20px}.sample summary{padding:10px 0;font-size:14px;display:list-item;list-style:disclosure-closed;color:var(--brand)}.sample[open] summary{list-style:disclosure-open}.sample pre{font:13px/1.9 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;background:var(--canvas);border:1px solid var(--line);padding:18px;border-radius:6px}.step .sample th{width:24%}.handoff-end{border-top:2px solid var(--ink);padding-top:22px;margin:32px 0}.handoff-end p{color:var(--body)}.role-after{margin-top:30px}.speak-footer{position:fixed;bottom:0;left:var(--nav);right:0;background:white;border-top:1px solid var(--line);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:25}.speak-footer .group{display:flex;gap:8px}.speak-status{font-size:13px;color:var(--muted)}.presenting .role-hero,.presenting .role-summary,.presenting .route-strip,.presenting .role-actions,.presenting .role-after,.presenting .handoff-end{display:none}.presenting .step{display:none}.presenting .step.stage-current{display:block}.presenting .step.stage-current summary{pointer-events:none}.presenting main{padding-top:calc(var(--bar) + 28px)}.presenting .step-title h3{font-size:27px}.presenting .script blockquote{font-size:18px}.presenting .ops{font-size:17px}.presenting .step-body{padding:28px 30px}.large-text{--base:18px}.large-text .ops,.large-text .script blockquote{font-size:18px}.large-text td,.large-text .panel p,.large-text .outcome p{font-size:16px}.checklist{list-style:none;padding:0;margin:0}.checklist li{margin:0;border-bottom:1px solid var(--line)}.checklist li:last-child{border:0}.checklist label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding:14px 0;font-size:14px}.checklist input{margin-top:5px;accent-color:var(--brand);width:17px;height:17px;flex-shrink:0}.checklist input:checked+span{color:var(--muted);text-decoration:line-through}.check-progress{font-size:13px;color:var(--brand);font-weight:600}.faq{padding:20px 0;border-bottom:1px solid var(--line)}.faq summary{font-weight:650;font-size:16px}.faq p{margin:14px 0 0;color:var(--body);font-size:14px}.footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:20px;margin-top:42px;display:flex;justify-content:space-between;gap:20px}.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);padding:11px 20px;border-radius:6px;background:var(--ink);color:#fff;font-size:13px;z-index:90;max-width:600px}.print-title{display:none}
+@media(max-width:1200px){:root{--nav:218px}.topbar{padding:0 24px}main{padding-right:26px;padding-left:26px}.search-wrap input{width:180px}.role-card{padding:18px}.role-card h3{font-size:17px}.step-columns{gap:20px}.agenda>div{padding:0 10px}.lane{grid-template-columns:134px 1fr;gap:12px}.crumb .crumb-first{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+@media print{@page{size:A4;margin:16mm}html,body{background:white;font-size:11pt;color:#142442}.sidebar,.topbar,.speak-footer,.role-actions,.route-strip,.copy,.toast,.script-footer,.hero-bottom .btn,.skip,.search-results,.text-button{display:none!important}main{margin:0;padding:0}.content{max-width:none}.view,.view.active,.presenting .role-hero,.presenting .role-summary,.presenting .role-after,.presenting .handoff-end,.presenting .step{display:block!important}.print-title{display:block!important}.view{break-before:page}.view:first-child{break-before:auto}h1{font-size:26pt}h2{font-size:19pt}h3{font-size:15pt}.hero{padding-top:0}.role-grid,.split,.step-columns,.outcome,.role-summary{display:block}.role-card,.panel{margin-bottom:12px}.step{overflow:visible;break-inside:auto}.step summary{padding:16px 0}.step-body{padding:16px 0}.step-title h3,.presenting .step-title h3{font-size:16pt}.script{margin-top:16px;background:#f4f7fb}.ops,.script blockquote,.presenting .ops,.presenting .script blockquote{font-size:11pt}.outcome>div{margin-bottom:12px}.step-chevron{display:none}.table-wrap{overflow:visible}table{font-size:10pt}thead{display:table-header-group}tr{break-inside:avoid}.agenda{background:#eef3fb;color:var(--ink)}.agenda small{color:var(--body)}.lane{grid-template-columns:130px 1fr}.lane-steps{gap:5px}.badge{white-space:normal}.footer{display:block}.checklist input{appearance:none;width:12px;height:12px;border:1px solid #526782}.checklist input:checked:after{content:'✓';line-height:12px;display:block}.sample pre{white-space:pre-wrap}p,li{orphans:3;widows:3}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<aside class="sidebar" aria-label="演示手册目录">
+ <div class="brand"><strong>Science<span>Lab</span></strong><small>AI4S · 原型评审演示手册</small></div>
+ <nav class="nav-group" aria-label="章节"><p>演示导航</p><a class="nav-link" href="#overview" data-view="overview"><span class="nav-num">00</span>整体演示流程</a><a class="nav-link" href="#researcher" data-view="researcher"><span class="nav-num">01</span>科研人员</a><a class="nav-link" href="#builder" data-view="builder"><span class="nav-num">02</span>科研工具创建人员</a><a class="nav-link" href="#manager" data-view="manager"><span class="nav-num">03</span>科研项目管理人员</a><a class="nav-link" href="#handoff" data-view="handoff"><span class="nav-num">04</span>角色交接与评审</a><a class="nav-link" href="#prepare" data-view="prepare"><span class="nav-num">05</span>会前准备与兜底</a></nav>
+ <nav class="subnav" id="subnav" aria-label="当前角色步骤"></nav>
+ <div class="side-footer"><strong>桌面 Web · 离线可阅</strong><br>建议 35 分钟演示 + 10 分钟讨论<br>原型核对：2026.10.09</div>
+</aside>
+<header class="topbar"><div class="crumb"><span class="crumb-first">演示说明 /</span><b id="page-label">整体演示流程</b></div><div class="tools"><div class="search-wrap"><label class="label" for="search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">搜索步骤或话术</label><input id="search" type="search" placeholder="搜索步骤或话术…" autocomplete="off" aria-controls="search-results" aria-expanded="false"><div id="search-results" class="search-results" hidden></div></div><button class="btn small" id="font-btn" aria-pressed="false">大字模式</button><button class="btn small" id="print-btn">打印全部</button></div></header>
+<main id="main" tabindex="-1"><div class="content">
+<section class="view active" id="overview" aria-labelledby="overview-heading">
+ <header class="hero"><div class="eyebrow">SCIENCELAB / DEMONSTRATION GUIDE</div><h1 id="overview-heading">三种角色，一条科研协作链</h1><p class="intro">以高性能合成橡胶课题为例，完整讲述如何开展研究、创建科研工具，以及组织项目过程与成果评审。</p><div class="hero-bottom"><a class="btn primary" href="#researcher">从科研人员开始 <span aria-hidden="true">→</span></a><a class="btn" href="#prepare">查看会前准备</a><div class="meta"><span>单文件 · 无需联网</span><span>流程 / 操作 / 话术 / 交接</span></div></div></header>
+ <div class="role-grid"><article class="role-card"><span class="role-index">ROLE 01 / 12 MIN</span><h3>科研人员</h3><p class="role-question">这个科学问题，下一步怎样验证？</p><p>明确假设，组织研究任务，复核计算与实验证据，形成下一轮验证安排。</p><footer><span>8 个演示步骤</span><a href="#researcher" class="text-button">查看流程 →</a></footer></article><article class="role-card"><span class="role-index">ROLE 02 / 9 MIN</span><h3>科研工具创建人员</h3><p class="role-question">如何把方法交付为可复用工具？</p><p>定义能力，填写输入输出与测试要求，保存草稿、演示测试，并管理发布状态。</p><footer><span>7 个演示步骤</span><a href="#builder" class="text-button">查看流程 →</a></footer></article><article class="role-card"><span class="role-index">ROLE 03 / 8 MIN</span><h3>科研项目管理人员</h3><p class="role-question">研究是否可推进，项目如何决策？</p><p>关注里程碑和风险，核查研究依据，组织评审，形成管理决策与归档要求。</p><footer><span>7 个演示步骤</span><a href="#manager" class="text-button">查看流程 →</a></footer></article></div>
+ <section class="section"><div class="section-head"><h2>用同一个场景，串起三个视角</h2></div><p class="section-lead">候选配方 B 的预测结果与实验观察不一致。科研人员需要补充验证；工具创建人员需要让批量预测和数据检查可以被稳定复用；管理人员需要判断本阶段交付是否充分，并安排下一节点。三种角色是演示视角，当前原型没有真实的三账号权限切换。</p><div class="flow-board"><div class="lane"><div class="lane-label"><strong>科研人员</strong><small>提出需求与验证判断</small></div><div class="lane-steps"><span>问题与假设</span><i>→</i><span>任务与会话</span><i>→</i><span>证据复核</span><i>→</i><span>下一轮验证</span></div></div><div class="lane"><div class="lane-label"><strong>工具创建人员</strong><small>交付版本与使用边界</small></div><div class="lane-steps"><span>承接能力需求</span><i>→</i><span>工具配置</span><i>→</i><span>测试与记录</span><i>→</i><span>发布与交接</span></div></div><div class="lane"><div class="lane-label"><strong>项目管理人员</strong><small>跟踪过程与组织评审</small></div><div class="lane-steps"><span>立项与节点</span><i>→</i><span>风险与变更</span><i>→</i><span>核查与评审</span><i>→</i><span>验收与归档</span></div></div><p class="bridge"><strong>交接关系：</strong>研究需求交给工具创建者；工具版本回到科研任务；阶段材料交给管理人员；管理反馈再回到下一轮研究。当前页面之间存在手动转场，不代表后台已经自动贯通。</p></div></section>
+ <section class="section"><h2>35 分钟整场节奏</h2><div class="agenda"><div><small>00–02 分钟</small><b>02′</b><span>开场与场景</span></div><div><small>02–14 分钟</small><b>12′</b><span>科研人员</span></div><div><small>14–23 分钟</small><b>09′</b><span>工具创建人员</span></div><div><small>23–31 分钟</small><b>08′</b><span>项目管理人员</span></div><div><small>31–34 分钟</small><b>03′</b><span>角色交接</span></div><div><small>34–35 分钟</small><b>01′</b><span>评审决策</span></div></div><div class="split"><div class="panel"><h3>开场可以这样讲</h3><p>“今天围绕高性能合成橡胶课题，分别从使用能力、建设能力和管理项目三个角色演示。请大家重点判断：角色各自的工作是否完整，交接材料是否明确，以及哪些环节应由人确认。模型、数据和执行均为原型示意，我们会在具体步骤说明已实现的交互边界。”</p></div><div class="panel"><h3>合理的演示终点</h3><p>本案例仍有证据分歧。演示终点是形成有依据的下一轮验证、可检查的工具交付信息，以及明确的管理反馈。无需把场景演成“已经发现最优配方”或“已经通过项目验收”。</p></div></div></section>
+ <section class="section"><h2>先统一几个关键概念</h2><div class="table-wrap"><table><thead><tr><th scope="col">对象</th><th scope="col">负责回答</th><th scope="col">本例</th></tr></thead><tbody><tr><td>课题与科学问题</td><td>为什么研究，最终要验证什么</td><td>湿抓、滚阻与耐磨如何协同改善</td></tr><tr><td>科研任务与执行会话</td><td>持续做什么，本次具体怎么推进</td><td>候选筛选任务 → 首次分析 / 候选复核两次会话</td></tr><tr><td>科研工具与专业执行</td><td>能调用什么能力，这次如何配置和运行</td><td>配方批量预测工具 → 输入快照、执行记录与输出</td></tr><tr><td>材料、证据与判断</td><td>结果来自哪里，是否支持假设</td><td>实验记录 → 具体观察与条件 → 仍有分歧</td></tr><tr><td>科研资产与项目成果</td><td>如何复用，是否满足项目交付要求</td><td>可复用工具版本 ≠ 科研结论成立 ≠ 项目验收通过</td></tr></tbody></table></div></section>
+ <div class="note"><strong>如何使用本手册：</strong>左侧切换角色；点击角色流程可定位具体步骤。每步包含“进入哪里、怎样操作、怎么讲、看到什么、如何交接”。“逐步演示”适合讲解时单步阅读，“打印全部”会包含三个角色及附录。这里的按钮操作演示说明本身，不会操控科研原型。</div>
+</section>
+<section class="view role-view" id="researcher" aria-labelledby="researcher-heading"></section>
+<section class="view role-view" id="builder" aria-labelledby="builder-heading"></section>
+<section class="view role-view" id="manager" aria-labelledby="manager-heading"></section>
+<section class="view" id="handoff" aria-labelledby="handoff-heading"></section>
+<section class="view" id="prepare" aria-labelledby="prepare-heading"></section>
+<footer class="footer"><span>ScienceLab · AI4S 原型评审演示说明<br>基于工作区原型及 2026 年 10 月 9 日走查，建议正式评审使用同一版本彩排。</span><span>研究执行 / 能力建设 / 项目治理<br>所有示例内容均须与真实科研数据区分。</span></footer>
+</div></main>
+<div class="speak-footer" id="speak-footer" hidden><div><strong id="speak-role"></strong><div class="speak-status" id="speak-status"></div></div><div class="group"><button class="btn" id="prev-step">← 上一步</button><button class="btn primary" id="next-step">下一步 →</button><button class="btn" id="exit-demo">退出演示</button></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p style="padding:30px">本文件的角色步骤和搜索需要启用 JavaScript。当前没有任何联网依赖；请使用正常启用 JavaScript 的桌面浏览器打开。</p></noscript>
+<script>
+'use strict';
+const ROLES = {
+researcher:{
+ name:'科研人员',tag:'01 / RESEARCH',minutes:12,headline:'围绕科学问题，推进一轮可复核的研究',
+ intro:'从个人工作台进入高性能合成橡胶课题，明确假设、组织会话、检查来源，并把预测与实验分歧转成下一轮验证。',
+ input:'研究目标、已有文献与数据、候选配方及实验观察。会前加载课题演示案例。',
+ output:'阶段材料、复核意见、验证计划与待补证据；当前不确认最优配方。',
+ boundary:'负责人确定研究目标与判断；AI 提出计划并辅助整理。原型只模拟执行和状态。',
+ handoff:'交给工具创建人员：待解决的能力需求、输入格式与评价条件；交给项目管理人员：阶段材料、证据缺口和下一轮计划。',
+ steps:[
+ {id:'r1',title:'从工作台找到当前研究',short:'定位课题',min:1,status:'view',goal:'让评审者知道科研人员每天从哪里开始。',
+ entry:'门户首页 → 进入科研工作台 → 我的课题与最近工作 → 高性能合成橡胶',
+ ops:['指向“待我处理”和“我的研究任务”，说明哪些事项需要本人确认、哪些仍在运行。','展示研究输入区与 AI 研究建议，说明可以发起探索、继续研究或采纳建议。','点击“高性能合成橡胶”课题卡片，核对空间名称，再进入空间概览。'],
+ talk:'我今天先看需要自己处理的事项，再进入正在推进的合成橡胶课题。工作台聚合跨课题工作，空间内保存持续研究的上下文。本次沿用已开展的课题，重点看遇到证据分歧后怎样继续推进。',
+ result:'进入高性能合成橡胶空间，看到目标、成员、研究阶段及当前判断。',
+ handoff:'接下来把研究目标转换为具体问题和可检验假设。',
+ fallback:'找不到课题卡片时使用“管理课题空间”或“全部课题空间”目录；具体名称以目标版本为准。不要为演示另建一个空课题。'},
+ {id:'r2',title:'明确问题、假设与判定标准',short:'问题与假设',min:2,status:'view',goal:'把“想提升性能”转换为可验证的研究对象。',
+ entry:'空间概览 → 科学问题 → 假设与验证清单',
+ ops:['指出核心问题：“如何在降低滚阻的同时提升湿抓与耐磨性能？”','说明问题的来源、确认人及版本；候选问题需要人工确认后才能成为正式问题。','查看预置假设；若为空，可点“从当前假设开始”查看字段，再按会前准备加载案例。','说明验证标准、适用边界与关联任务。阈值、单位和评价方法应由课题确定，当前文字为示意。'],
+ talk:'问题定义我们最终要回答什么。假设把它拆成能被证据检验的判断，例如调整填料网络与偶联剂用量是否能改善目标表现。我们先约定评价条件与通过标准，再看结果；证据反驳或仍有分歧也是有效的研究状态。',
+ result:'同一页面能看到核心问题、假设、验证标准和任务关联。',
+ handoff:'研究人员负责确认这些条件，工具创建人员后续据此定义能力边界与测试要求。',
+ fallback:'“从当前假设开始”仅打开假设表单，不会自动产生证据。加载三条证据需展开下方“证据研判与复核”中的演示案例。',
+ fields:[['假设示例','调整填料网络和偶联剂用量可能改善湿抓与滚阻；耐磨变化需对照验证。'],['验证条件','同批次、同评价方法；明确基线及重复验证安排。'],['当前判断','仍有分歧，不能确认候选方案满足全部约束。']]},
+ {id:'r3',title:'用任务组织研究，用会话推进一次执行',short:'任务与上下文',min:2,status:'view',goal:'说明科研任务、会话及材料之间的关系。',
+ entry:'科学问题 → 配方性能冲突机理与候选筛选 → 候选方案复核',
+ ops:['指向左侧任务名称及两条会话：“首次证据与参数分析”和“候选方案复核”。','切到“候选方案复核”，查看本次输入和拟定的四步研究计划。','桌面右侧查看“目标规划”“任务上下文”“沙盒文件”；任务上下文跨会话使用，沙盒对应单次执行。','说明材料来源、数据版本、模型能力；若显示“输入：待添加”，明确还有缺口，正式执行应先补齐。'],
+ talk:'任务保存持续的研究目标，会话记录其中一次具体探索。我们可以先做证据分析，再补充数据或复核候选方案。长期材料在任务中复用，每次运行的输入、过程与输出单独留在会话里，便于比较和回溯。',
+ result:'能够辨认任务目标、本次会话计划及输入的归属，不把会话等同于一个计算作业。',
+ handoff:'交给 AI 的是带目标、材料和约束的一次研究请求，关键输入仍由人员核对。',
+ fallback:'窗口过窄时右侧上下文可能收起。使用完整桌面宽度；找不到侧栏时只讲左侧任务层级及中央计划，不现场改页面。'},
+ {id:'r4',title:'确认计划并查看执行过程',short:'计划与执行',min:1,status:'sim',goal:'指出 AI 执行前后的人工介入位置。',
+ entry:'候选方案复核 → 确认并启动；标准演示切换首次证据与参数分析 → 轨迹',
+ ops:['在待执行会话指出“确认并启动”，讲清核对输入、能力和参数后才启动。','标准路线切换已完成的“首次证据与参数分析”，点击“轨迹”检查已有过程记录。','需要协作时打开右上角“协同”，展示会话成员及“共同研究 / 结果评审 / 只读查看”，随后关闭。','只有在同版本彩排过启动过程时，才现场运行演示。'],
+ talk:'中枢先提出计划，科研人员确认执行边界，再看过程记录。执行结束只是本次工作产生了阶段材料。会话参与、文件评审和最终科学判断各有用途，邀请同事参与也不会自动扩大原始数据和模型权限。',
+ result:'看到已完成的示例会话及执行轨迹；“协同”侧栏展示参与方式。',
+ handoff:'将阶段产物交给科研人员复核，必要时邀请同课题成员参与。',
+ fallback:'模拟执行卡住就切回预置完成态。“协同”是会话邀请，不是指定文件版本已送审或通过评审。'},
+ {id:'r5',title:'检查产物和来源',short:'产出与溯源',min:2,status:'view',goal:'让科研结果可以追到已有输入与过程。',
+ entry:'首次证据与参数分析 → 产出视图 → 阶段报告 → 文件溯源',
+ ops:['展示产物画廊及“任务汇总 / 当前会话”的范围差异。','优先点击“首次证据与参数分析阶段报告.md”，再打开“文件溯源”。','核对来源会话、输入版本、模型 / 工具、关联执行和生成依赖。','指出生成命令、环境、哈希等未记录项；复现入口当前用于生成检查计划。'],
+ talk:'我们既要看到产物，也要知道它引用了什么材料、来自哪次会话、关联哪个工具版本。这里区分了引用关系与直接生成依赖。缺少命令、环境或输入时，只能追溯已有记录，还不能保证完整复现。',
+ result:'能查看文件来源与缺失项，并定位来源会话或轨迹。',
+ handoff:'将有来源的阶段材料交给证据复核；缺失的执行条件反馈给工具创建人员。',
+ fallback:'文件当前可能只有元信息和类型示意。不要把示例结构图或空白全文描述为真实科研成果。'},
+ {id:'r6',title:'对照预测与实验，记录人工复核',short:'证据研判',min:2,status:'sim',goal:'展示平台如何保留证据冲突与不确定性。',
+ entry:'左侧科学问题 → 下方展开证据研判与复核 → 选择证据 → 人工复核',
+ ops:['选中会前加载的假设，依次查看预测支持证据与实验反向观察。','比较原文定位、方法、条件、局限，不用证据条数决定假设成立。','打开“人工复核”，展示复核结果、与假设关系、复核人和判断依据。','标准路线查看预存意见；现场保存时用“需补充”，并核对页面是否出现复核记录。'],
+ talk:'预测提示候选方案可能改善指标，实验观察却没有复现相同方向。需要先对齐批次、测量方法和模型适用范围。人工复核可以记录需补充及原因，支持或反向证据也各自保留条件。当前结论是仍有分歧。',
+ result:'不同方向的证据与适用条件可并列查看；保存后有复核意见，且不自动把假设改成成立。',
+ handoff:'将具体证据缺口交给后续验证任务和工具创建人员。',
+ fallback:'顶部“查看证据与材料”进入空间资产；要看证据研判，必须展开科学问题页下方区域。',
+ sample:'当前预测结果与实验观察方向不一致，尚未完成样品批次、评价方法和模型适用范围核对。需补充同条件对照及重复验证，暂不确认候选 B 满足课题全部约束。'},
+ {id:'r7',title:'将证据缺口转换为下一轮验证',short:'下一轮验证',min:1,status:'sim',goal:'让复核意见变成可承接的工作。',
+ entry:'证据研判工作区 → 建立验证计划 → 复核与验证 → 打开承接任务',
+ ops:['展示“验证问题、关键缺口、对照方案、判定标准、承接科研任务”。','使用会前准备的验证计划，承接任务选“A/B 对照实验方案”。','点击“打开承接任务”，核对归属；下一轮可通过新会话或新任务继续。','如需更新判断，回科学问题的“编辑 / 更新判断”，保留“仍有分歧”和依据。'],
+ talk:'这一步明确还缺什么、怎样控制条件、按什么标准判断，以及由哪个任务接住。关联计划不代表实验已经下发，任务也不会自动重开。下一轮研究从明确的缺口开始。',
+ result:'验证计划有来源证据、判定条件和承接任务。',
+ handoff:'工具创建者接收输入与能力需求；项目管理者接收下一轮计划、依赖与潜在节点影响。',
+ fallback:'保存与跳转需会前彩排。现有任务若标为已完成，说明上一轮任务状态；不能把新计划关联说成自动变为进行中。',
+ fields:[['验证问题','候选 B 是否能在满足耐磨约束时改善湿抓与滚阻'],['关键缺口','预测与实验方向不一致，批次与适用域未核对'],['对照方案','同批次、同评价方法，候选 B 与基线 A 重复验证'],['判定标准','沿用课题确认的指标、单位和阈值；未确认的先补齐']]},
+ {id:'r8',title:'保存研究材料并准备角色交接',short:'沉淀与交接',min:1,status:'view',goal:'保留过程，并明确需要交付给他人的内容。',
+ entry:'空间资产 → 空间文件 → 科研资产',
+ ops:['在“空间文件”找到来源为 RU-101-S01 的阶段报告，查看路径、任务与会话。','切换“科研资产”，展示已有数据集、模型或方案的版本与归属。','说明“文件已记录、证据已采纳、资产已发布、项目已验收”是不同状态。','以“预测输入与评价条件需要统一”为交接点，转入工具创建人员流程。'],
+ talk:'本轮材料先留在课题内，便于后续核对。具有复用价值的工具或方法可以再整理为资产，带上版本和使用边界。已有资产是预置示例，不是刚才自动生成。当前有争议的最优配方结论仍需继续验证。',
+ result:'过程文件与科研资产分开管理，能够说明每一项的来源和状态。',
+ handoff:'交接包包括能力需求、样例输入、输出要求、条件约束、阶段报告、复核意见和验证计划。',
+ fallback:'资源列表中的发布状态是本地示例，不代表已完成真实审批。不要在主线发布仍有争议的科研结论。'}
+ ]},
+builder:{
+ name:'科研工具创建人员',tag:'02 / CAPABILITY',minutes:9,headline:'把研究方法，整理为有边界的可复用能力',
+ intro:'以“配方批量预测工具（评审演示）”为例，展示从能力定义到草稿、测试计划、版本发布与使用交接的过程。创建者视角沿用当前示例账号。',
+ input:'科研人员提出的预测或质检需求、样例数据、字段单位、适用条件和验收用例。',
+ output:'工具配置、输入输出说明、测试依据、版本与复用说明。正式运行仍依赖服务接入。',
+ boundary:'创建人员负责工具能力和交付质量；科研人员负责研究适用性。发布按钮不证明测试已通过。',
+ handoff:'交给科研人员：明确的工具版本、样例输入输出、限制与测试记录；交给管理人员：交付清单、质量缺口和维护责任。',
+ steps:[
+ {id:'b1',title:'确认需求，检查已有能力',short:'需求与复用',min:1,status:'view',goal:'先说明为什么需要这个工具，以及是否可以复用已有能力。',
+ entry:'高性能合成橡胶 → 空间资产 → 科研资产 → 类型筛选：科研工具',
+ ops:['查看已有“配方批量预测工具（演示）”及其版本、归属和来源。','结合科研人员的需求，说明要解决批量输入一致性、边界检查或结果输出标准化中的哪一项。','判断复用、扩展还是新建；本次为了演示创建流程，使用带“评审演示”的独立名称。'],
+ talk:'工具建设从科研需求出发。先检查现有工具是否覆盖输入数据、模型边界和输出格式。这里已有预置工具，我们新增一份独立演示配置，用来说明创建者需要交付哪些信息。',
+ result:'能区分已有能力与本次演示的新配置，明确预期用户和使用场景。',
+ handoff:'科研人员确认研究用途，创建人员形成明确的能力说明。',
+ fallback:'资源中心详情可能依赖其他服务，标准主线使用课题内的科研资产列表。不要把工具需求理解成必须现场开发代码。'},
+ {id:'b2',title:'选择类型，定义工具配置与输入输出',short:'定义工具',min:2,status:'view',goal:'展示一个工具被他人使用之前必须说明什么。',
+ entry:'空间资产 → 科研资产 → 新建科研资产 ▾ → 科研工具',
+ ops:['打开“新建科研工具”表单，确认归属仍为高性能合成橡胶。','填写资产名称、程序 / 服务入口、输入输出契约与依赖、测试用例与验收指标。','补充适用场景与边界、复用步骤 / 依赖条件、质量检查与局限。','说明工具、模型、技能 / 工作流、智能体的区别；本次选择科研工具，不额外切换类型。'],
+ talk:'工具不能只交付一个名字或程序文件。使用者需要知道输入哪些字段、返回什么结果、依赖哪个服务，以及哪些条件下不能使用。测试要求和质量局限也要同时交付。当前表单保存这些建设说明，并不会部署程序。',
+ result:'出现并能填写七项配置字段；当前没有独立版本号输入框，保存后以列表实际显示版本为准。',
+ handoff:'把配置变成可供科研人员和管理人员检查的能力交付说明。',
+ fallback:'没有真实服务地址时明确写“待接入”，不要填写密钥，也不要演示一个不存在的可运行接口。',
+ fields:[['资产名称','配方批量预测工具（评审演示）'],['程序 / 服务入口','待接入的课题内预测服务；这里只登记配置说明'],['输入输出契约与依赖','输入：样本 ID、配方组分、配比与评价条件；输出：预测指标、异常标记、输入版本与模型版本。字段单位待与课题约定。'],['测试用例与验收指标','正常样例、缺失必填字段、单位不一致、适用域外输入；核对输出结构、来源版本和错误提示。预测质量阈值由课题专家确认。'],['适用场景与边界','仅供课题内候选方案筛选；预测不替代实验，不向未经验证的材料体系外推。'],['复用步骤 / 依赖条件','取得授权 → 核对输入与单位 → 指定版本 → 执行 → 复核异常与输出。'],['质量检查与局限','当前无真实测试结果；需补齐服务运行、适用域检查与真实评测记录。']]},
+ {id:'b3',title:'保存建设草稿并核对归属',short:'保存草稿',min:1,status:'sim',goal:'区分“创建了配置”与“工具已可用”。',
+ entry:'新建科研工具 → 保存建设草稿 → 科研资产列表',
+ ops:['会前准备一份草稿；现场可展示保存动作，使用专门的演示名称。','在科研资产列表找到该项，核对名称、类型、实际归属、创建者和版本。','确认显示“草稿 · 未上架”；查看“编辑”“测试 / 验证”“发布”等操作。','打开详情核对内容；需要修改时用“编辑”。'],
+ talk:'现在创建的是建设草稿，归属于这个课题。保存让其他有权限的人员能够理解配置内容；它还没有经过真实运行验证。下一步要留下测试依据，再决定是否形成可发布版本。',
+ result:'草稿可以被列表或搜索定位，上架按钮在草稿状态下不可用。',
+ handoff:'创建人员负责补充配置与测试，不能让使用者误认为草稿已可用于正式研究。',
+ fallback:'保存只落到当前浏览器本地。更换地址、端口或浏览器可能看不到草稿；使用同一演示环境，并避免重复保存多个同名草稿。'},
+ {id:'b4',title:'建立测试计划，查看执行与输出要求',short:'测试与验证',min:2,status:'sim',goal:'让测试有输入、配置、验收条件和可检查记录。',
+ entry:'工具草稿所在行 → 测试 / 验证 → 科研活动中的建设验证记录',
+ ops:['选择会前准备的工具草稿，点击“测试 / 验证”；源码实现会生成建设验证计划。','核对计划中的资产关联、输入配置、运行依赖和状态；只有目标环境已彩排通过才继续展示详情。','说明正常、缺字段、越界输入等测试用例如何检查，不展示编造的真实通过率。','记录缺项，回到资产编辑说明；完成测试并不自动形成科学结论。'],
+ talk:'测试要验证能否按约定执行、输出能否被解释，以及错误输入是否被正确处理。科研模型的有效性还需要独立评测。当前原型把建设配置连接到一条验证计划，实际服务、日志和指标仍需真实接入。',
+ result:'预期得到一条“建设验证”的关联执行记录；当前不保证自动通过，也不自动更新为已发布。',
+ handoff:'将测试记录、失败样例和剩余限制提供给科研使用者与项目评审者。',
+ fallback:'部分专业执行页面依赖本地嵌入服务。打不开时停留在草稿和配置，明确“验证计划位置待正式环境确认”，用已核对截图说明，不称测试成功。'},
+ {id:'b5',title:'检查发布条件，形成可识别的版本',short:'版本发布',min:1,status:'sim',goal:'说明发布前需要交付什么以及原型的实际约束。',
+ entry:'空间资产 → 科研资产 → 工具草稿 → 编辑 / 发布',
+ ops:['查看适用边界、复用说明、质量检查信息是否完整。','核对真实产品应具备的测试依据、维护责任和授权条件；这些不是当前按钮已经实现的审批。','演示本地发布时使用明确标记的演示草稿，并指向列表中的版本与“已发布”状态。','有测试缺口时保留草稿，使用预置已发布条目讲后续状态，不为完成流程而宣布通过。'],
+ talk:'发布意味着形成一个可供引用的版本，需要一起交付使用说明和限制。当前原型主要检查部分说明字段，不会强制验证测试通过，也没有完整审核引擎。正式产品还需要把质量要求与发布条件落实到流程中。',
+ result:'本地演示发布后显示“已发布 · 未上架”；没有证明服务已上线或科研质量已达标。',
+ handoff:'工具交付包必须写清版本、输入输出、测试结果和剩余缺口，供后续人员决定是否使用。',
+ fallback:'发布失败先查看字段缺项；不要把填完说明字段等同于完成质量验收。'},
+ {id:'b6',title:'区分发布、上架与访问授权',short:'上架与发现',min:1,status:'sim',goal:'避免把目录可见性、服务可用性和权限混为一谈。',
+ entry:'科研资产列表 → 已发布条目 → 上架',
+ ops:['比较草稿、已发布未上架、已发布已上架的预置条目。','解释“发布”形成资产状态，“上架”让资源可以被目录发现。','若现场演示“上架”，明确它只改变本地状态，并核对提示。','说明正式平台还要验证共享范围、数据与服务的实际访问授权。'],
+ talk:'发布和上架分别解决版本交付与目录发现。上架不会自动授予数据、模型或服务权限，也不会把尚未部署的程序变成可运行工具。这里展示的是状态设计，真实资源广场联动仍需接入。',
+ result:'看到状态变化或预置差异；不承诺新条目已同步到全局科学工具箱。',
+ handoff:'向科研人员交付查找方式、版本及授权要求；共享范围由相应责任人确认。',
+ fallback:'当前没有完整跨目录实时同步。找不到新上架工具时返回空间资产的已发布条目，展示可检查内容。'},
+ {id:'b7',title:'交付使用说明，收集问题并迭代',short:'使用交接',min:1,status:'concept',goal:'把创建流程闭合到科研人员实际使用。',
+ entry:'科研资产详情 → 手动回到科研任务 → 任务上下文 / 已关联能力',
+ ops:['打开工具详情，指向版本、输入输出、依赖、边界和复用步骤。','以口头交接或本说明中的清单说明科研人员如何引用该版本并复核结果。','回到既有科研任务查看预置能力引用；新建工具自动进入任务的流程未确认时，不宣称已经完成关联。','说明出现字段错误、异常输出或适用域问题时，如何记录失败样例、影响版本和期望行为。'],
+ talk:'工具建设的完成点是让科研人员知道如何使用、何时不能用，以及出现问题找谁处理。科研人员在任务中记录所用版本和结果来源；创建者根据具体失败样例改进能力。当前版本迭代与跨任务自动绑定还需要正式实现。',
+ result:'形成可交接的说明包；无需假设原型具有完整版本升级、回滚或问题单系统。',
+ handoff:'科研人员接收能力并判断适用性；项目管理人员核对工具交付是否满足约定范围。',
+ fallback:'本步骤中的维护记录和新版本发布为业务流程说明，当前静态版不作为完整工程部署或版本管理演示。',
+ fields:[['交付最小包','工具名称与版本、维护人、用途、依赖、输入输出、测试记录、边界与访问要求'],['反馈最小包','使用任务 / 会话、工具版本、输入样例、错误或异常、影响范围、期望结果']] }
+ ]},
+manager:{
+ name:'科研项目管理人员',tag:'03 / GOVERNANCE',minutes:8,headline:'从项目节点出发，组织有依据的评审与决策',
+ intro:'重点演示管理入口、风险识别、查看课题依据、组织阶段评审和成果归档。管理页面多数按钮当前只提示入口，手册将业务流程与真实可点路径分别说明。',
+ input:'项目目标、阶段交付要求、里程碑、课题进展、工具交付材料与评审依据。',
+ output:'继续推进 / 补充验证 / 调整计划的明确意见，责任人、待办和归档要求。',
+ boundary:'管理人员确认流程和项目决策；领域专家判断科学有效性；管理智能体仅提供检查与建议。',
+ handoff:'向科研人员明确待补证据与下一节点；向工具创建人员明确质量或交付缺项；验收与共享由对应授权责任人确认。',
+ steps:[
+ {id:'m1',title:'进入集团科研管理，识别角色范围',short:'管理总览',min:1,status:'view',goal:'说明项目管理入口与个人工作台的职责差异。',
+ entry:'门户首页 → 顶部科研管理',
+ ops:['回到门户所在标签页，点击顶部“科研管理”；推荐会前单独打开管理标签页。','看待处理事项、风险预警、今日节点和管理简报，说明这是集团治理视角。','指出立项、过程、成果、外协、人才、考核、日程七个管理域，重点沿过程与成果展开。','说明页面中的数量和日期是预置样例，不解释为当前真实项目数据。'],
+ talk:'项目管理人员先看哪个节点需要处理、哪些项目存在风险，以及哪些事项需要组织评审。这里是集团级科研管理入口，个人科研工作和课题研究分别有自己的上下文。今天重点沿一个课题的过程管理与阶段评审展开。',
+ result:'看到科研管理总览及七个管理域；不发生真实身份权限切换。',
+ handoff:'管理人员按项目授权定位需要核查的课题和阶段事项。',
+ fallback:'工作区侧栏没有独立管理域入口时，使用会前保留的门户标签页。不要把个人工作台当作集团项目台账。'},
+ {id:'m2',title:'讲清立项如何约定目标与验收',short:'目标与验收',min:1,status:'concept',goal:'用最少时间交代后续评审依据从哪里来。',
+ entry:'科研管理 → 立项管理卡片',
+ ops:['指出指南匹配、申报论证和预算校核的职责。','点击“进入立项管理”一次，确认当前仅显示模块入口提示，随后留在总览。','以本课题说明需约定的目标、范围、阶段交付、里程碑和验收依据。','强调目前没有可演示的完整申报、预算审批和立项流转表单。'],
+ talk:'后续管理判断要依据立项时约定的目标与阶段交付。对于合成橡胶课题，需要明确本阶段是完成机理分析、候选筛选还是实验验证，各自验收材料不同。当前原型展示管理域位置，正式申报与审批流程还未接入。',
+ result:'评审者知道需定义哪些管理依据，也知道页面目前停留在入口示意。',
+ handoff:'把阶段目标、交付清单和责任分工传给课题负责人。',
+ fallback:'点击只出现提示是当前原型行为，不是加载故障；无需等待出现审批台账。'},
+ {id:'m3',title:'识别节点风险，定位需要核查的事项',short:'风险与节点',min:1,status:'concept',goal:'说明管理人员为什么要进入课题查看依据。',
+ entry:'科研管理 → 今日管理简报 / 重点事项 → 过程管理',
+ ops:['指出“重点事项”和“近日关键节点”，以高性能合成橡胶专家评审作为转场场景。','点击“进入过程管理”或相关事项，展示入口提示。','说明预测与实验分歧可能影响验证计划，但不能仅凭演示比例认定延期或完成。','切换到已打开的课题标签页，手动进入空间概览；不要把切标签称为系统自动下钻。'],
+ talk:'风险提示需要对应具体的项目依据。看到节点或交付有疑问后，管理人员要核查课题当前判断、材料和后续安排。当前事项入口尚未自动进入完整台账，我们手动回到课题空间展示应核查的内容。',
+ result:'管理视角与课题依据建立可理解的关系，转场方式明确。',
+ handoff:'要求负责人提供与当前阶段相关的材料，不以任务数量或 AI 运行次数代替研究进展。',
+ fallback:'当前重点事项包含其他课题，不将其数据移植到橡胶课题；只沿明确标注的场景说明。'},
+ {id:'m4',title:'查看课题依据，组织阶段评审',short:'核查与评审',min:2,status:'view',goal:'让管理判断能够追到研究材料和复核意见。',
+ entry:'课题空间 → 空间概览 → 科学问题 → 科研任务 / 证据研判',
+ ops:['看研究目标和当前判断，确认哪些结论仍在验证中。','查看相关任务的阶段报告与来源，以及科学问题中的复核意见和下一轮验证计划。','明确当前评审对象，例如“候选筛选阶段报告及下一轮 A/B 实验方案”，与项目最终验收区分。','需要多人参与时查看会话“协同”；指定版本送审仅在目标环境找到稳定入口并彩排通过后演示。'],
+ talk:'管理人员要判断材料是否覆盖当前阶段要求、关键缺口有没有责任人、下一轮安排是否清楚。科学证据是否充分，需要科研负责人和领域专家判断。我可以要求补充材料或调整计划，但不会把一次 AI 输出直接确认为科学结论。',
+ result:'找到对应阶段材料、来源与待验证问题，而非只看任务状态。',
+ handoff:'科研负责人和专家提供证据判断；管理人员组织反馈和项目层面的后续安排。',
+ fallback:'当前“协同”入口主要是会话邀请。不能把选择“结果评审”说成某一版本已审定，也不能凭“已完成”任务宣布项目验收。'},
+ {id:'m5',title:'形成决策意见，明确后续责任',short:'决策与跟进',min:1,status:'concept',goal:'让评审产生可以执行的管理结果。',
+ entry:'课题评审材料 → 管理决策清单；可用任务内已有记录展示依据',
+ ops:['围绕继续推进、补充验证或调整计划，说明本次建议选“补充验证”。','给出待补材料、责任角色、复核条件及下一节点的确定方式。','将涉及工具适用域、数据规范的问题交给工具创建人员；实验条件与证据问题交给科研负责人。','说明审批单、会签、真实通知和自动督办目前尚未完整接入。'],
+ talk:'本例建议先补充验证：科研负责人对齐实验条件，工具创建者补齐适用域和异常输入检查，随后再进行阶段复核。截止时间由项目责任人结合实际资源确认。管理意见需要说明依据、责任和下次如何判断完成。',
+ result:'形成一条可复述的管理意见；现有原型不代表已提交正式审批或发送通知。',
+ handoff:'将决策传回任务和工具建设流程，后续复核追踪同一批材料与版本。',
+ fallback:'当前没有正式决策录入页面时，用本手册的决策清单说明业务字段，不虚构一个“审批通过”按钮。',
+ sample:'建议：补充验证后进行阶段复核。\n依据：预测与实验观察存在分歧，评价条件和适用边界尚未核对。\n科研负责人：补充同条件对照、原始实验记录与判断依据。\n工具创建人员：补齐输入规范、异常校验与适用域说明。\n项目管理人员：确认下一复核节点及所需资源。\n复核条件：关键材料与版本齐全，由责任人说明剩余不确定性。'},
+ {id:'m6',title:'区分成果验收、资产发布与归档',short:'成果与归档',min:1,status:'concept',goal:'明确项目交付与平台资产是不同管理对象。',
+ entry:'科研管理 → 成果管理；说明时参考课题空间资产',
+ ops:['回到门户管理标签页，指出成果登记、鉴定、转化与归档入口；进入按钮当前仅提示。','对照课题的报告、工具版本、数据来源和评审意见，说明成果验收应检查什么。','明确一个工具发布版本不自动代表项目成果验收；文件上架也不自动代表允许对外披露。','说明通过验收后应归档的材料清单；本案例尚未完成最终验收。'],
+ talk:'成果验收需要对照阶段或项目约定的交付要求。空间资产保存可复用内容，项目成果管理还要核对验收依据、责任确认和归档完整性。发布、上架和验收分别记录，不能互相替代。',
+ result:'评审者理解“资产发布成功”不能作为“科研项目已验收”的证明。',
+ handoff:'归档包由科研人员和工具创建者提供，管理人员按职责核查与组织确认。',
+ fallback:'当前成果登记与验收台账未展开，展示范围停留在管理入口与材料对应关系。',
+ fields:[['阶段归档包','目标与约束、阶段报告、原始数据或受控引用、工具与模型版本、执行记录、复核意见、遗留问题'],['工具交付包','配置、输入输出、测试依据、适用边界、版本、维护责任与授权'],['决策记录','评审对象及版本、意见与依据、责任人、复核条件、时间节点']]},
+ {id:'m7',title:'补充外协、专家、日程与规范边界',short:'配套治理',min:1,status:'view',goal:'展示完整管理范围，但不展开所有业务台账。',
+ entry:'科研管理 → 外协 / 人才 / 考核 / 日程 → 门户顶部科研规范',
+ ops:['用一句话说明外协交付验收、专家匹配、评价依据和日程冲突各自管理什么。','说明管理智能体的“调用”当前显示提示，不产生真实分析或审批决定。','打开科研规范，查看 AI 辅助科研、数据分级、实验记录、知识产权与成果发布等分类。','收尾提出首期要真实打通的管理节点及所需数据来源。'],
+ talk:'管理能力还需要覆盖外协、专家、考核和日程。智能体帮助检查和整理建议，责任人做关键确认。科研规范为数据使用、实验记录和发布行为提供指引；本次展示的是分类入口，正式规则和审批流程需要与组织制度对接。',
+ result:'管理角色的范围完整，同时清楚哪些入口只作示意。',
+ handoff:'形成首期范围：先打通一个真实课题的阶段材料、评审反馈与下一节点，再按需要扩展其他管理域。',
+ fallback:'不要逐项等待智能体结果；当前按钮仅提示入口。规范条目不等于已经实施技术权限控制。'}
+ ]}
+};
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LABELS={overview:'整体演示流程',researcher:'科研人员',builder:'科研工具创建人员',manager:'科研项目管理人员',handoff:'角色交接与评审',prepare:'会前准备与兜底'};
+const STATUS={view:['当前可查看',''],sim:['本地模拟交互','sim'],concept:['业务讲解 / 入口示意','concept']};
+const flatSteps=Object.entries(ROLES).flatMap(([key,role])=>role.steps.map((step,index)=>({...step,role:key,index})));
+function table(headers,rows){return '<div class="table-wrap"><table><thead><tr>'+headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';}
+function renderStep(s,i,key){
+ const status=STATUS[s.status];
+ return '<details class="step" id="'+s.id+'" '+(i===0?'open':'')+' data-role="'+key+'"><summary><span class="step-no">'+String(i+1).padStart(2,'0')+'</span><span class="step-title"><h3>'+esc(s.title)+'</h3><p>'+esc(s.goal)+'</p></span><span class="badge '+status[1]+'">'+status[0]+'</span><span class="mono muted" style="font-size:12px">'+s.min+'′</span><span class="step-chevron" aria-hidden="true">›</span></summary><div class="step-body"><div class="path"><strong>进入哪里</strong>'+esc(s.entry)+'</div><div class="step-columns"><div><h4>在原型中这样操作</h4><ol class="ops">'+s.ops.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></div><div class="script"><span class="label">现场讲解话术</span><blockquote id="talk-'+s.id+'">'+esc(s.talk)+'</blockquote><div class="script-footer"><span>可直接照读，按现场节奏调整</span><button class="copy" data-copy="talk-'+s.id+'">复制话术</button></div></div></div><div class="outcome"><div><span class="label">这一步应看到什么</span><p>'+esc(s.result)+'</p></div><div><span class="label">如何转场或交接</span><p>'+esc(s.handoff)+'</p></div></div>'+(s.fields?'<details class="sample"><summary>展开可填写的演示样例</summary>'+table(['字段','建议演示内容'],s.fields)+'</details>':'')+(s.sample?'<details class="sample"><summary>展开可复制的填写示例</summary><pre id="sample-'+s.id+'">'+esc(s.sample)+'</pre><button class="copy" data-copy="sample-'+s.id+'">复制示例</button></details>':'')+'<div class="fallback"><strong>边界与兜底：</strong>'+esc(s.fallback)+'</div></div></details>';
+}
+Object.entries(ROLES).forEach(([key,role])=>{
+ document.getElementById(key).innerHTML='<header class="hero role-hero"><div class="eyebrow">'+role.tag+'</div><h1 id="'+key+'-heading">'+esc(role.name)+'</h1><h2 style="font-size:23px;color:var(--body)">'+esc(role.headline)+'</h2><p class="intro">'+esc(role.intro)+'</p><div class="hero-bottom"><span class="badge">'+role.steps.length+' 步 · 建议 '+role.minutes+' 分钟</span><span class="muted" style="font-size:13px">同一课题 · 逐步操作 · 可照读话术</span></div></header><div class="role-summary"><div><span class="label">开始前准备</span><p>'+esc(role.input)+'</p></div><div><span class="label">角色最终交付</span><p>'+esc(role.output)+'</p></div><div><span class="label">职责与能力边界</span><p>'+esc(role.boundary)+'</p></div></div><nav class="route-strip" aria-label="'+role.name+'演示流程">'+role.steps.map((s,i)=>'<button data-go="'+s.id+'"><span class="mono">'+String(i+1).padStart(2,'0')+'</span>'+esc(s.short)+'</button>').join('')+'</nav><div class="role-actions"><button class="btn primary" data-present="'+key+'">逐步演示</button><button class="btn" data-expand="'+key+'">展开全部步骤</button><button class="btn" data-collapse="'+key+'">收起全部步骤</button></div>'+role.steps.map((s,i)=>renderStep(s,i,key)).join('')+'<div class="handoff-end"><span class="label">完成这个角色后的交接</span><p>'+esc(role.handoff)+'</p><a class="btn" href="#handoff">查看角色交接清单 →</a></div>';
+});
+document.getElementById('handoff').innerHTML=
+ '<header class="hero"><div class="eyebrow">04 / COLLABORATION</div><h1 id="handoff-heading">把三种角色的工作接起来</h1><p class="intro">交接具体问题、材料、版本与责任。操作时可以手动转场；是否自动联动要以目标环境已经验证的行为为准。</p></header>'+
+ '<section class="section"><h2>整场演示的三个交接点</h2>'+table(['交接点','交出什么','接收者如何确认','现场转场话术'],[
+ ['科研人员 → 工具创建人员','研究任务、样例输入、输出需求、适用条件、失败或缺口描述','确认已有能力能否复用；定义要新建或扩展的能力和验收用例','“研究人员已经把问题缩小到输入规范和适用边界，接下来由能力创建者说明怎样交付一个可复用工具。”'],
+ ['工具创建人员 → 科研人员 / 管理人员','工具名称与版本、输入输出、依赖、测试依据、局限、维护责任','科研人员判断能否用于当前任务；管理人员核查交付范围与质量缺项','“工具交付的不只是入口，还包括可以在哪些条件下使用、如何验证、出现问题由谁处理。”'],
+ ['项目管理人员 → 科研人员 / 工具创建人员','评审对象与版本、意见依据、待补材料、责任人、复核条件和下一节点','研究人员与创建人员分别确认承接任务；后续追踪同一版本与证据','“管理意见回到具体研究和建设工作，形成下一轮可检查的安排。”']
+ ])+'</section>'+
+ '<section class="section"><h2>六种状态，分别回答六个问题</h2>'+table(['状态','可以说明','不能据此说明'],[
+ ['会话执行完成','这次执行记录结束并形成阶段产物','科学问题已解决、结论已确认'],
+ ['证据已采纳 / 已复核','人员审阅了具体证据并留下判断','所有假设都成立，或模型已被证明正确'],
+ ['某个产物版本已确认','指定对象在规定范围内被责任人确认','其他版本、整个课题或项目全部通过'],
+ ['科研资产已发布','资产具有当前发布状态和可识别版本','真实服务已部署、测试已充分或审核已完成'],
+ ['资源已上架','资源进入可发现的目录状态','所有人都有数据和工具的调用权限'],
+ ['项目阶段验收通过','授权责任人确认满足阶段交付条件','每个科学假设都获得支持，或最终项目已经结题']
+ ])+'</section>'+
+ '<section class="section"><h2>角色之间的职责边界</h2>'+table(['决策或工作','科研人员','工具创建人员','科研项目管理人员'],[
+ ['研究问题与验证标准','提出并由负责人确认','提供能力限制与可执行性意见','对齐项目目标与阶段范围'],
+ ['工具配置、接口和测试','提供业务样例并验证适用性','负责建设、测试与维护说明','核查是否满足约定交付要求'],
+ ['科研证据与结论','科研负责人和专家承担判断','解释工具边界及异常来源','组织评审，检查过程与材料完整性'],
+ ['进度、节点与变更','报告进展、缺口和资源需求','说明能力交付进度与依赖','按授权组织项目决策和跟踪'],
+ ['成果归档与共享','提交研究材料和依据','提交版本、测试和使用说明','按职责组织验收、归档和共享确认']
+ ])+'<div class="note">同一位科研人员也可能创建工具或担任课题负责人。角色划分用于澄清责任，不能推断原型已经实施了独立角色账号、完整权限矩阵或跨系统审批。</div></section>'+
+ '<section class="section"><h2>科研项目管理七个域怎么讲</h2>'+table(['管理域','对应科研场景','本轮适合展示到哪里'],[
+ ['立项管理','约定目标、范围、阶段材料与验收标准','指出入口，解释字段和流程；完整申报审批待接入'],
+ ['过程管理','跟踪里程碑、风险、变更与关键决策','看简报和重点事项，手动转到课题核查依据'],
+ ['成果管理','登记、鉴定、转化和归档','解释与课题资产的关系；真实验收台账待接入'],
+ ['外协管理','采购或外部科研服务的交付验收','使用高通量材料测试服务样例说明职责'],
+ ['人才管理','选择专家、组建团队、匹配能力','展示专家匹配的管理域入口'],
+ ['考核管理','对照目标、节点与成果证据进行评价','说明依据，避免以工具调用量代替研究成效'],
+ ['日程管理','会议、评审、实验资源与关键时间冲突','看预置关键节点；不宣称已真实预约或发送邀请']
+ ])+'</section>'+
+ '<section class="section"><h2>收尾应形成的四项决定</h2><div class="split"><div class="panel"><h3>产品结构与角色责任</h3><p>是否认可问题、任务、会话、工具、证据与资产的层级？哪些字段必须由哪个角色填写和确认？记录需要调整的入口和责任，不只讨论页面样式。</p></div><div class="panel"><h3>首期真实闭环与验收</h3><p>选定一个真实课题、一组真实资源和一个管理节点。约定输入授权、执行记录、人工复核、工具交付和管理反馈的验收条件，不预设未经测试的效率提升比例。</p></div></div><div class="note"><strong>可直接使用的结束语：</strong>“我们已经分别看过使用科研能力、建设科研能力和管理项目的流程。请确认三类角色的交付与责任，再选择首期真实打通的研究场景和管理节点。当前有分歧的结果继续验证，能力和项目状态各自按依据确认。”</div></section>'+
+ '<section class="section"><h2>常见追问</h2>'+[
+ ['AI 结果不可信时，用户还能做什么？','检查来源、输入版本、模型边界和执行条件；将证据记录为需补充或不采用，保留理由，建立下一轮验证计划。当前原型展示这一交互结构，真实结果质量需正式评测。'],
+ ['为什么需要任务与会话两层？','任务承载持续研究目标，会话承载一次具体执行。多次会话可以补材料、比较方案或复核结果，避免把长期课题工作放进一个无法区分版本和输入的聊天记录。'],
+ ['工具、技能、工作流和智能体怎么区分？','在本原型的产品口径中，工具提供基础执行能力；技能表达可调用的科研能力；工作流组合步骤；智能体根据目标规划和调用能力。本次以科研工具为主线，其余类型只说明扩展方式。'],
+ ['可以在管理页面直接审批吗？','当前科研管理的模块入口与管理智能体按钮主要显示提示，尚无完整审批台账和真实流转。演示可以说明审批所需依据与角色，但不能演成已经审批完成。'],
+ ['发表或上架是不是代表可以对外共享？','不是。目录发现、实际资源授权、科研结果确认与对外披露属于不同条件。原型的本地状态不证明真实安全与审核机制已经完成。'],
+ ['怎样证明产品有效？','试点时记录任务是否完成、证据来源是否齐全、人工返工原因、工具失败样例、结果采纳或不采纳原因，以及管理反馈是否被承接。指标定义和目标值由实际试点场景确定。']
+ ].map(([q,a])=>'<details class="faq"><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>').join('')+'</section>';
+const CHECKS=[
+ ['version','确定唯一演示版本、浏览器和访问地址；三种角色使用同一课题上下文。'],
+ ['desktop','检查投屏后的桌面窗口与文字大小，任务的左右栏可读。'],
+ ['tabs','预开研究课题和门户科研管理两个标签页，彩排手动切换。'],
+ ['sessions','确认 RU-101 的首次证据与参数分析、候选方案复核和阶段报告可打开。'],
+ ['evidence','在科学问题下展开证据研判，加载内置课题案例，检查支持与反向证据。'],
+ ['review','准备一条需补充的复核记录，明确这是预置示例；核对判断依据。'],
+ ['plan','准备验证计划并关联 A/B 对照实验方案，验证打开承接任务的路径。'],
+ ['draft','准备一个独立的科研工具建设草稿，填写七项说明，区分草稿与已发布示例。'],
+ ['test','在目标环境确认测试 / 验证入口；无法加载时准备同版本截图和停留位置。'],
+ ['manager','确认管理域与管理智能体仅提示的行为，准备角色转场与项目决策讲法。'],
+ ['backup','准备问题、任务、溯源、证据、工具配置和管理总览的备份画面。'],
+ ['rehearse','完整彩排一次；现场要做的保存、启动、发布和上架操作已验证预期与恢复方式。']
+];
+document.getElementById('prepare').innerHTML=
+ '<header class="hero"><div class="eyebrow">05 / BEFORE THE REVIEW</div><h1 id="prepare-heading">会前准备与现场兜底</h1><p class="intro">先把最重要的研究、工具和管理画面准备好。现场以已核对路径推进，未完成的接入环节有明确讲解口径。</p></header>'+
+ '<section class="section"><div class="section-head"><h2>彩排检查清单</h2><span class="check-progress" id="check-progress"></span></div><div class="panel"><ul class="checklist">'+CHECKS.map(([id,label])=>'<li><label><input type="checkbox" data-check="'+id+'"><span>'+esc(label)+'</span></label></li>').join('')+'</ul></div><p class="muted" style="font-size:12px;margin-top:12px">勾选仅保存在本浏览器的演示手册中，不会改变科研原型。浏览器禁用本地存储时仅在当前页面有效。</p></section>'+
+ '<section class="section"><h2>首次打开空状态怎么准备</h2><div class="split"><div class="panel"><h3>研究案例</h3><ol class="ops"><li>工作台 → 高性能合成橡胶 → 科学问题。</li><li>展开下方“证据研判与复核”，点击“加载课题演示案例”。</li><li>确认假设和机理、预测、实验三条证据；按钮消失时先检查已有记录，避免重复。</li><li>准备“需补充”的意见及一条有承接任务的验证计划。讲解时明确是预置材料。</li></ol></div><div class="panel"><h3>工具与管理案例</h3><ol class="ops"><li>空间资产 → 科研资产 → 新建科研资产 → 科研工具。</li><li>按工具创建步骤填写独立演示草稿，保留可编辑状态。</li><li>真实测试和发布行为未验证时，使用草稿与预置已发布条目分别说明。</li><li>门户打开科研管理，准备总览、过程管理入口提示和科研规范页面。</li></ol></div></div><div class="note warn">原型各模块可能分别使用页面状态与 localStorage。刷新并不保证全部重置，主机名、端口、浏览器变化也可能让预置记录不可见。使用专用演示环境，避免清除日常工作数据。</div></section>'+
+ '<section class="section"><h2>当前可讲到哪里</h2><div class="legend" style="margin-bottom:16px"><span class="badge">当前可查看</span><span class="badge sim">本地模拟交互</span><span class="badge concept">业务讲解 / 入口示意</span></div>'+table(['内容','核对与演示范围','不能承诺'],[
+ ['科研人员主线','已查看工作台、课题、问题、任务、产物溯源、证据工作区；保存与跨页联动仍需目标环境彩排','已调用真实模型、生成真实科研报告或完成科学验证'],
+ ['工具配置','本次已查看科研资产列表、新建类型与科研工具表单；草稿、发布、上架逻辑已核对实现','程序自动部署、真实服务鉴权、测试通过后才允许发布的完整门禁'],
+ ['建设测试','实现中可生成关联验证计划；部分执行页面依赖嵌入服务，目标环境需验证','已取得真实日志、指标或可运行交付物'],
+ ['科研项目管理','本次查看管理总览并确认过程管理点击仅显示入口提示；其余管理域同类实现','真实立项、审批、预算流转、自动督办与验收完成'],
+ ['版本评审与协同','会话协同入口已查看；指定版本送审实现存在，但当前默认页面稳定入口待确认','邀请参与等于指定版本已确认，或真实消息已经发送'],
+ ['权限与跨角色交接','原型中展示范围和职责；用同一示例账号解释不同角色，跨页面部分手动转场','完整 RBAC、三账号真实身份切换、跨系统自动同步']
+ ])+'</section>'+
+ '<section class="section"><h2>发生中断时这样处理</h2>'+table(['现场情况','下一步动作','讲解话术'],[
+ ['专业执行 / 资源嵌入页空白','停止等待，切同版本备份画面，再回任务或工具草稿','“这里是专业执行的配置与回传位置，当前环境未加载出内容，我用备份说明衔接。”'],
+ ['工具测试无法打开','保留草稿和测试说明，继续讲版本交付条件','“当前能形成建设验证计划，实际运行还需要接通底层服务。”'],
+ ['管理模块点击后只有提示','留在管理总览，说明职责，再手动转到课题','“本版展示入口与职责，正式业务台账和审批流程尚待接入。”'],
+ ['产物没有真实全文或部分溯源字段为空','展示元信息、已有来源与缺口','“目前能检查这些记录，缺少的生成条件需要补齐后才能复现。”'],
+ ['模拟运行迟迟不结束','使用首次证据与参数分析完成态','“切到已完成的示例记录，继续看结果复核。”'],
+ ['评审讨论偏离主线','记入待评审项，讲完交接再返回','“这个问题先记录下来，我们把下一角色如何承接展示完，再集中讨论。”']
+ ])+'</section>'+
+ '<section class="section"><h2>15 分钟压缩路线</h2>'+table(['用时','保留内容','省略内容'],[
+ ['1 分钟','统一课题、角色与边界','门户全景逐项介绍'],
+ ['6 分钟','科研问题 → 任务会话 → 溯源 → 证据冲突 → 下一轮计划','现场新建、模拟长时间运行'],
+ ['4 分钟','已有能力 → 科研工具表单 → 草稿 → 版本与复用边界','现场测试运行、发布和上架'],
+ ['3 分钟','管理总览 → 过程入口提示 → 课题依据 → 决策分工','七个管理域逐一点击'],
+ ['1 分钟','三角色交付与首期决策','延展分支与长问答']
+ ])+'</section>'+
+ '<section class="section"><h2>使用本 HTML 文件</h2><div class="panel"><p>直接用桌面浏览器打开即可。内容、样式和交互均在本文件内，不依赖网络、原型服务或外部字体。角色步骤可折叠，搜索覆盖三个角色的步骤、操作和话术。</p><p>“逐步演示”一次显示一个步骤，可用底部按钮或左右方向键切换，按 Esc 退出；输入框聚焦时方向键保持输入行为。“打印全部”包含全部角色及附录，并展开所有步骤与示例。</p><p>本说明中的“进入哪里”是原型操作路径，不会自动控制原型。为了避免破坏预置状态，建议原型与说明分别使用标签页，切换由演示人完成。</p></div></section>'+
+ '<section class="section"><h2>原型版本与来源</h2><p class="section-lead">本手册以工作区 prototype 静态原型为主要演示对象，参考原型评审演示说明、README、产品架构与导航说明、任务与证据工作流、资产建设和科研管理实现。online-app 中存在另一套资产页面，不在同一条演示路线中混用。</p><p class="muted" style="font-size:13px">当前界面名称为“科研超级中枢”“科研活动”“空间资产”；早期文档中的“AI 科研中枢”“计算与实验”应统一到现场版本。日期与状态按演示记录理解。没有经过真实科学验证的数据不用于科研决策。</p></section>';
+let currentView='overview',currentStep=0,presenting=false,toastTimer,printState=null;
+const main=document.getElementById('main'),search=document.getElementById('search'),results=document.getElementById('search-results');
+function notify(message){const node=document.getElementById('toast');clearTimeout(toastTimer);node.textContent=message;node.hidden=false;toastTimer=setTimeout(()=>{node.hidden=true;},3200);}
+function updateSidebar(){
+ document.querySelectorAll('[data-view]').forEach(a=>{if(a.dataset.view===currentView)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+ const role=ROLES[currentView];document.getElementById('subnav').innerHTML=role?'<span class="label">本角色演示步骤</span>'+role.steps.map((s,i)=>'<a href="#'+s.id+'" '+(presenting&&currentStep===i?'aria-current="step"':'')+'><span class="mono">'+String(i+1).padStart(2,'0')+'</span>　'+esc(s.short)+'</a>').join(''):'<span class="label">本手册结构</span><p class="muted" style="font-size:12px">选择角色后，可定位每个演示步骤。<br><br>先看整场路线，再按角色展开；每一步都标明原型能力边界。</p>';
+}
+function updatePresentation(){
+ document.body.classList.toggle('presenting',presenting);document.getElementById('speak-footer').hidden=!presenting;
+ document.querySelectorAll('.step').forEach(n=>n.classList.remove('stage-current'));
+ if(presenting&&ROLES[currentView]){
+ const role=ROLES[currentView],step=role.steps[currentStep],node=document.getElementById(step.id);node.open=true;node.classList.add('stage-current');
+ document.getElementById('speak-role').textContent=role.name;document.getElementById('speak-status').textContent='第 '+(currentStep+1)+' / '+role.steps.length+' 步 · 本步建议 '+step.min+' 分钟 · ← → 切换，Esc 退出';
+ document.getElementById('prev-step').disabled=currentStep===0;document.getElementById('next-step').disabled=currentStep===role.steps.length-1;
+ }
+ updateSidebar();
+}
+function routeHash(){
+ let id;try{id=decodeURIComponent(location.hash.slice(1))||'overview';}catch{id='overview';}
+ const step=flatSteps.find(s=>s.id===id),view=step?step.role:(LABELS[id]?id:'overview');
+ if(presenting&&(!ROLES[view]||view!==currentView))presenting=false;
+ currentView=view;if(step)currentStep=step.index;else currentStep=0;
+ document.querySelectorAll('.view').forEach(n=>n.classList.toggle('active',n.id===view));
+ document.getElementById('page-label').textContent=LABELS[view];document.title='ScienceLab · '+LABELS[view]+' · 原型演示说明';updatePresentation();
+ if(step){const node=document.getElementById(step.id);node.open=true;requestAnimationFrame(()=>{window.scrollTo({top:presenting?0:Math.max(0,node.getBoundingClientRect().top+window.scrollY-90),behavior:'instant'});node.querySelector('summary').focus({preventScroll:true});});}
+ else{window.scrollTo({top:0,behavior:'instant'});main.focus({preventScroll:true});}
+}
+function go(id){if(location.hash==='#'+id)routeHash();else location.hash=id;}
+function closeSearch(){results.hidden=true;search.setAttribute('aria-expanded','false');}
+function searchSteps(){
+ const query=search.value.trim().toLocaleLowerCase();if(!query){closeSearch();return;}
+ const matches=flatSteps.filter(s=>JSON.stringify(s).toLocaleLowerCase().includes(query));
+ results.innerHTML='<p>'+matches.length+' 个匹配步骤'+(!matches.length?'。试试“验证”“工具”或“管理”。':'')+'</p>'+matches.map(s=>'<button class="search-result" data-search-go="'+s.id+'"><strong>'+esc(s.title)+'</strong><small>'+ROLES[s.role].name+' · 第 '+(s.index+1)+' 步 · '+STATUS[s.status][0]+'</small></button>').join('');
+ results.hidden=false;search.setAttribute('aria-expanded','true');
+}
+async function copyText(id){
+ const node=document.getElementById(id);if(!node)return;
+ try{if(!navigator.clipboard)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(node.innerText);notify('已复制，可粘贴到演示备忘或原型表单。');}
+ catch{const range=document.createRange();range.selectNodeContents(node);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);notify('浏览器未允许直接复制，已选中文字，请按 Ctrl / Command + C。');}
+}
+function loadChecks(){let saved={};try{saved=JSON.parse(localStorage.getItem('sciencelab-role-guide-checks-v1')||'{}');}catch{}
+ document.querySelectorAll('[data-check]').forEach(n=>n.checked=Boolean(saved[n.dataset.check]));updateChecks(false);}
+function updateChecks(save=true){const nodes=[...document.querySelectorAll('[data-check]')],done=nodes.filter(n=>n.checked).length;document.getElementById('check-progress').textContent=done+' / '+nodes.length+' 项已准备';if(save){try{localStorage.setItem('sciencelab-role-guide-checks-v1',JSON.stringify(Object.fromEntries(nodes.map(n=>[n.dataset.check,n.checked]))));}catch{notify('勾选仅在当前页面有效，浏览器没有提供本地保存。');}}}
+document.addEventListener('click',event=>{
+ const anchor=event.target.closest('a[href^="#"]');
+ if(anchor&&anchor.classList.contains('skip')){event.preventDefault();main.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});return;}
+ if(anchor){event.preventDefault();go(anchor.getAttribute('href').slice(1));return;}
+ const searchGo=event.target.closest('[data-search-go]');if(searchGo){search.value='';closeSearch();presenting=false;go(searchGo.dataset.searchGo);return;}
+ const target=event.target.closest('[data-go]');if(target){go(target.dataset.go);return;}
+ const present=event.target.closest('[data-present]');if(present){currentView=present.dataset.present;presenting=true;currentStep=0;go(ROLES[currentView].steps[0].id);return;}
+ const expand=event.target.closest('[data-expand]'),collapse=event.target.closest('[data-collapse]');
+ if(expand||collapse){const key=(expand||collapse).dataset[expand?'expand':'collapse'];document.querySelectorAll('#'+key+' details').forEach(n=>n.open=Boolean(expand));return;}
+ const copy=event.target.closest('[data-copy]');if(copy){copyText(copy.dataset.copy);return;}
+ if(!event.target.closest('.search-wrap'))closeSearch();
+});
+document.addEventListener('change',event=>{if(event.target.matches('[data-check]'))updateChecks();});
+search.addEventListener('input',searchSteps);search.addEventListener('focus',()=>{if(search.value.trim())searchSteps();});
+document.getElementById('font-btn').addEventListener('click',event=>{const large=document.body.classList.toggle('large-text');event.currentTarget.setAttribute('aria-pressed',String(large));});
+document.getElementById('print-btn').addEventListener('click',()=>window.print());
+function shiftStep(delta){const role=ROLES[currentView];if(!presenting||!role)return;const next=currentStep+delta;if(next>=0&&next<role.steps.length)go(role.steps[next].id);}
+document.getElementById('prev-step').addEventListener('click',()=>shiftStep(-1));document.getElementById('next-step').addEventListener('click',()=>shiftStep(1));
+function exitPresentation(){presenting=false;go(currentView);}
+document.getElementById('exit-demo').addEventListener('click',exitPresentation);
+document.addEventListener('keydown',event=>{
+ const editing=/INPUT|TEXTAREA|SELECT/.test(event.target.tagName)||event.target.isContentEditable;
+ if(event.key==='Escape'){closeSearch();if(presenting)exitPresentation();return;}
+ if(editing||event.altKey||event.ctrlKey||event.metaKey)return;
+ if(presenting&&(event.key==='ArrowRight'||event.key==='ArrowLeft')){event.preventDefault();shiftStep(event.key==='ArrowRight'?1:-1);}
+});
+window.addEventListener('beforeprint',()=>{if(!printState){printState=[...document.querySelectorAll('details')].map(n=>[n,n.open]);printState.forEach(([n])=>n.open=true);}});
+window.addEventListener('afterprint',()=>{if(printState){printState.forEach(([n,open])=>n.open=open);printState=null;}});
+document.querySelectorAll('.step').forEach(node=>node.addEventListener('toggle',()=>{if(presenting&&node.classList.contains('stage-current')&&!node.open)node.open=true;}));
+window.addEventListener('hashchange',routeHash);loadChecks();routeHash();
+</script>
+</body>
+</html>

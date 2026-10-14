@@ -1,0 +1,2101 @@
+<!doctype html>
+<!--
+  集团 AI 科研驾驶舱 · 大屏原型（1920 × 1080 × 6 屏）
+  由 OD web-prototype 种子（assets/template.html）改写：
+  · 保留种子的卡片 / 栅格 / 表格 / 数字（.num）/ 胶囊（.pill）/ 标签（.tag）类语义
+  · 六枚 :root 令牌扩展为需求方指定的完整深蓝色板，全文件不出现 :root 之外的裸色值
+  · 布局由「滚动页面」改为「固定画布多屏」，用 .page 承接种子 .section 的角色
+  图表全部为内联 SVG + CSS 绘制，无任何远程依赖。
+-->
+<html lang="zh-CN">
+<head><base href="/app/app_17f8q1hymdy/prototype/assets/">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>集团 AI 科研驾驶舱</title>
+<style>
+  /* ─── tokens ──────────────────────────────────────────────────────────
+     全文件唯一的颜色定义处。画布 / 玻璃 / 品牌 / 语义 / 文字 / 参考线
+     全部在此登记，组件一律 var() 引用。 */
+  :root {
+    /* 画布与栅格 */
+    --canvas-w: 1920px; --canvas-h: 1080px;
+    --pad: 32px; --gap: 20px; --nav-h: 64px; --page-top: 96px;
+    --radius: 16px; --radius-sm: 10px; --radius-pill: 999px;
+
+    /* 背景：多层科幻渐变 —— 中心科技蓝 → 中段深蓝 → 边缘深海军蓝（非纯黑）
+       底部地平线辉光 + 左下青 / 右上紫氛围光，营造座舱空间纵深 */
+    --bg-center:    #133763;                    /* 中心光核（保持原色调，避免冲淡玻璃卡） */
+    --bg-mid:       #0C1F45;                    /* 中段过渡 */
+    --bg-edge:      #0A1734;                    /* 边缘：深海军蓝，不再是纯黑 */
+    --horizon-glow: rgba(46, 139, 255, 0.18);   /* 底部地平线辉光 */
+    --glow-cyan:    rgba(0, 229, 255, 0.13);    /* 左下青色氛围光 */
+    --glow-violet:  rgba(124, 92, 255, 0.15);   /* 右上紫色氛围光 */
+    --vignette:     rgba(5, 14, 32, 0.40);      /* 暗角（减弱，保留角落辉光） */
+
+    /* 玻璃拟态卡片 */
+    --glass:        rgba(20, 45, 85, 0.45);
+    --glass-deep:   rgba(14, 34, 68, 0.72);
+    --glass-nav:    rgba(12, 30, 58, 0.78);
+    --stroke:       rgba(90, 170, 255, 0.22);
+    --stroke-hi:    #2E8BFF;
+    --shadow:       0 8px 32px rgba(0, 0, 0, 0.35);
+    --shadow-hi:    0 16px 44px rgba(0, 0, 0, 0.55);
+    --glow:         0 0 14px rgba(46, 139, 255, 0.55);
+    --glow-soft:    0 0 24px rgba(46, 139, 255, 0.28);
+
+    /* 品牌主色 / 图表色板（按顺序取用） */
+    --c1: #2E8BFF;  --c2: #00E5FF;  --c3: #7C5CFF;  --c4: #00D68F;  --c5: #FFB020;
+    /* 语义色：进度 ≥80 绿 / 50–79 蓝 / <50 橙 */
+    --ok: #00D68F;  --mid: #2E8BFF;  --low: #FFB020;  --danger: #FF4D6D;
+
+    /* 文字 */
+    --fg:    #E8F1FF;
+    --muted: #8FA8CC;
+    --faint: #5A7396;
+    --on-accent: #FFFFFF;
+
+    /* 结构 */
+    --hair:  rgba(90, 170, 255, 0.15);
+    --grid:  rgba(90, 170, 255, 0.10);
+    --track: rgba(255, 255, 255, 0.08);
+    --ref:   rgba(255, 255, 255, 0.25);
+    --scrim: rgba(4, 10, 24, 0.62);
+    --mask-solid: #000;
+    --arc-glow: drop-shadow(0 0 6px rgba(46, 139, 255, 0.5));
+    --stripe: repeating-linear-gradient(45deg,
+                rgba(90, 170, 255, 0.10) 0 6px,
+                rgba(90, 170, 255, 0.03) 6px 12px);
+
+    /* 字体：中文思源黑体优先；数字 Orbitron / DIN(Alternate、Bahnschrift) */
+    --font-body: 'Source Han Sans CN', 'HarmonyOS Sans SC', 'Microsoft YaHei',
+                 'PingFang SC', system-ui, sans-serif;
+    --font-num:  'Orbitron', 'DIN Alternate', 'Bahnschrift', 'DIN Condensed',
+                 'Segoe UI', system-ui, sans-serif;
+
+    /* 字号阶梯 */
+    --fs-title: 22px; --fs-mod: 15px; --fs-num-xl: 52px; --fs-num: 40px;
+    --fs-num-sm: 26px; --fs-body: 13px; --fs-label: 12px; --fs-micro: 11px;
+
+    --ease: cubic-bezier(0.22, 0.8, 0.3, 1);
+  }
+
+  /* ─── reset & base ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg-edge); }
+  body {
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 { margin: 0; font-weight: 600; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  table { border-collapse: collapse; }
+  :where(button, select, a, [tabindex]):focus-visible {
+    outline: 2px solid var(--c2);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+  .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+
+  /* ─── stage：1920×1080 固定画布，等比缩放铺满视口（永不出现页面滚动条） ── */
+  #stage {
+    position: absolute; top: 0; left: 0;
+    width: var(--canvas-w); height: var(--canvas-h);
+    transform-origin: top left;
+    overflow: hidden;
+    /* 图层自上而下：底部辉光 → 青色氛围 → 紫色氛围 → 中央光核 → 深色基底 */
+    background:
+      radial-gradient(86% 34% at 50% 106%, var(--horizon-glow) 0%, transparent 72%),
+      radial-gradient(48% 40% at 6% 98%, var(--glow-cyan) 0%, transparent 70%),
+      radial-gradient(46% 42% at 96% 2%, var(--glow-violet) 0%, transparent 68%),
+      radial-gradient(128% 108% at 50% 38%, var(--bg-center) 0%, var(--bg-mid) 42%, var(--bg-edge) 82%),
+      var(--bg-edge);
+  }
+  /* 唯一的一处视觉修辞：极淡科技网格 + 暗角，只压背景、不压内容 */
+  #stage::before {
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    -webkit-mask-image: radial-gradient(90% 80% at 50% 42%, var(--mask-solid) 20%, transparent 100%);
+    mask-image: radial-gradient(90% 80% at 50% 42%, var(--mask-solid) 20%, transparent 100%);
+  }
+  #stage::after {
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(122% 102% at 50% 40%, transparent 52%, var(--vignette) 100%);
+  }
+
+  /* ─── topnav：64px 玻璃长条 + 胶囊 Tab ─────────────────────────────── */
+  .nav {
+    position: absolute; inset: 0 0 auto 0; height: var(--nav-h); z-index: 40;
+    display: flex; align-items: center; gap: 24px;
+    padding: 0 var(--pad);
+    background: linear-gradient(180deg, var(--glass-nav), var(--glass));
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--stroke);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+  .brand-mark {
+    width: 32px; height: 32px; display: grid; place-items: center;
+    border: 1px solid var(--stroke); border-radius: var(--radius-sm);
+    background: var(--glass-deep); color: var(--c2);
+  }
+  .brand-mark svg { width: 18px; height: 18px; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+  .brand-text strong { font-size: var(--fs-title); font-weight: 600; letter-spacing: 0.02em; }
+  .brand-text em { font-style: normal; font-size: var(--fs-micro); color: var(--faint); letter-spacing: 0.06em; }
+
+  .tabs {
+    display: flex; gap: 4px; margin: 0 auto;
+    padding: 4px; border-radius: var(--radius-pill);
+    background: var(--glass-deep); border: 1px solid var(--hair);
+  }
+  .tab {
+    padding: 7px 15px; border-radius: var(--radius-pill);
+    font-size: var(--fs-body); color: var(--muted); white-space: nowrap;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .tab:hover { color: var(--fg); background: color-mix(in oklch, var(--c1) 20%, transparent); }
+  .tab[aria-selected="true"] {
+    background: var(--c1); color: var(--on-accent); box-shadow: var(--glow); font-weight: 500;
+  }
+  .tab[aria-selected="true"]:hover { background: color-mix(in oklch, var(--c1) 86%, var(--c2)); }
+
+  .nav-right { display: flex; align-items: center; gap: 16px; flex: 0 0 auto; }
+  .year {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px; border-radius: var(--radius-pill);
+    border: 1px solid var(--stroke); background: var(--glass-deep);
+    font-family: var(--font-num); font-size: var(--fs-body); color: var(--fg);
+  }
+  .year:hover { border-color: var(--stroke-hi); }
+  .year select {
+    appearance: none; background: none; border: 0; color: inherit;
+    font: inherit; padding-right: 12px; cursor: pointer;
+  }
+  .year select option { background: var(--bg-edge); color: var(--fg); }
+  .year::after { content: '▾'; color: var(--muted); margin-left: -10px; pointer-events: none; }
+  .refresh { font-size: var(--fs-micro); color: var(--faint); letter-spacing: 0.04em; }
+  .refresh b { color: var(--muted); font-weight: 500; }
+
+  /* ─── page：一屏一页，绝对铺满，切换用淡入 + 轻微上移 ───────────────── */
+  .page {
+    position: absolute; inset: 0; z-index: 1;
+    padding: var(--page-top) var(--pad) var(--pad);
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), visibility 0.3s;
+  }
+  .page.is-active { opacity: 1; visibility: visible; transform: none; }
+
+  .rows { display: grid; gap: var(--gap); height: 100%; min-height: 0; }
+  .rows-4 { grid-template-rows: 316px 116px 128px 332px; }
+  .rows-3 { grid-template-rows: 140px 380px 392px; }
+  .r { display: grid; gap: var(--gap); min-height: 0; min-width: 0; }
+  .r-3a { grid-template-columns: 360px 1fr 556px; }       /* 总览 1 行 */
+  .r-5  { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .r-6  { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .r-a  { grid-template-columns: 1230px 1fr; }             /* 总览 4 行 */
+  .r-b  { grid-template-columns: 400px 1fr; }              /* 详情 1 行 */
+  .r-c  { grid-template-columns: 520px 1fr; }              /* 专业数据集 1 行 */
+  .r-d  { grid-template-columns: 420px 1fr; }              /* 示范应用 1 行 */
+  .r-e  { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .r-f  { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .r-1100 { grid-template-columns: 1100px 1fr; }
+  .r-half { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .r-2-3 { grid-template-columns: 2fr 3fr; }
+  .r-2-1 { grid-template-columns: 2fr 1fr; }
+
+  /* ─── card：统一玻璃拟态 ───────────────────────────────────────────── */
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    min-width: 0; min-height: 0;
+    padding: 20px 22px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--stroke); border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease),
+                transform 0.2s var(--ease), background 0.2s var(--ease);
+  }
+  .card::before {
+    content: ''; position: absolute; left: 22px; right: 22px; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--stroke-hi), transparent);
+    opacity: 0.6; pointer-events: none;
+  }
+  .card:hover, .kpi:hover, .dir:hover, .scene:hover {
+    border-color: var(--stroke-hi); box-shadow: var(--shadow-hi); transform: translateY(-2px);
+  }
+  .card.is-clickable { cursor: pointer; }
+
+  /* 模块标题：4px 主色竖条 + 标题 + 右侧说明 / 更多 */
+  .mhead { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex: 0 0 auto; }
+  .mhead::before {
+    content: ''; width: 4px; height: 14px; border-radius: 2px;
+    background: var(--c1); box-shadow: var(--glow);
+  }
+  .mhead h3 { font-size: var(--fs-mod); letter-spacing: 0.02em; }
+  .mhead .note { margin-left: auto; font-size: var(--fs-micro); color: var(--faint); letter-spacing: 0.02em; }
+  .mhead .more {
+    margin-left: auto; padding: 3px 6px; border-radius: 6px;
+    font-size: var(--fs-micro); color: var(--muted); transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  }
+  .mhead .more:hover { color: var(--fg); background: color-mix(in oklch, var(--c1) 18%, transparent); }
+  .mhead .seg { margin-left: auto; }
+
+  /* ─── KPI 卡片 ─────────────────────────────────────────────────────── */
+  .kpi {
+    position: relative; display: flex; flex-direction: column; justify-content: center;
+    padding: 14px 18px 14px 22px; overflow: hidden;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--stroke); border-radius: var(--radius); box-shadow: var(--shadow);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .kpi::before {
+    content: ''; position: absolute; left: 0; top: 16px; bottom: 16px; width: 3px;
+    border-radius: 0 3px 3px 0; background: var(--kc, var(--c1));
+    box-shadow: 0 0 10px var(--kc, var(--c1));
+  }
+  .k-label { font-size: var(--fs-label); color: var(--muted); letter-spacing: 0.04em; }
+  .k-line { display: flex; align-items: baseline; gap: 4px; margin: 2px 0 1px; }
+  .k-num { font-family: var(--font-num); font-size: var(--fs-num); font-weight: 700; line-height: 1.05; }
+  .k-unit { font-size: var(--fs-body); color: var(--muted); font-weight: 500; }
+  .k-sub { font-size: var(--fs-micro); color: var(--faint); }
+  .k-sub .up { color: var(--c4); }
+
+  /* ─── 方向进度卡（总览第 2 行） ────────────────────────────────────── */
+  .dir {
+    position: relative; display: flex; flex-direction: column; justify-content: center; gap: 4px;
+    padding: 14px 18px; background: var(--glass);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--stroke); border-radius: var(--radius); box-shadow: var(--shadow);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .d-top { display: flex; align-items: baselines; gap: 8px; font-size: var(--fs-label); color: var(--muted); }
+  .d-num { font-family: var(--font-num); font-size: 34px; font-weight: 700; line-height: 1.05; }
+  .d-num small { font-size: 15px; font-weight: 500; color: var(--muted); margin-left: 2px; }
+
+  /* ─── 进度条 ───────────────────────────────────────────────────────── */
+  .prog { position: relative; height: 6px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .prog.lg { height: 8px; }
+  .prog > i {
+    position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 4px;
+    background: var(--pc, var(--c1)); box-shadow: 0 0 10px color-mix(in oklch, var(--pc, var(--c1)) 55%, transparent);
+    transition: width 0.8s var(--ease);
+  }
+  .prog-row { display: flex; align-items: center; gap: 10px; }
+  .prog-row .prog { flex: 1; }
+  .pct { font-family: var(--font-num); font-size: var(--fs-label); min-width: 46px; text-align: right; }
+
+  /* ─── 图表通用 ─────────────────────────────────────────────────────── */
+  .chart { position: relative; flex: 1; min-height: 0; min-width: 0; display: flex; }
+  .chart > svg { width: 100%; height: 100%; overflow: visible; }
+  .chart-note { flex: 0 0 auto; font-size: var(--fs-micro); color: var(--faint); margin-top: 8px; }
+
+  /* 行距由 justify-content: space-between 统一分配；此处不再叠加 gap ——
+     否则「行高 × 行数 + gap」会超出卡片高度，把末尾几行和刻度轴挤出卡片外沿。 */
+  .bars { display: flex; flex-direction: column; justify-content: space-between; flex: 1; min-height: 0; width: 100%; }
+  .bar-row { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .bar-row.inline { display: grid; grid-template-columns: var(--bl, 168px) 1fr 52px; align-items: center; gap: 12px; }
+  /* 密集模式（14 条数据集）：压缩行高，为 14 行留出呼吸余量 */
+  .bars.compact .bar-top .n { font-size: 11.5px; line-height: 1.32; }
+  .bars.compact .bar-val { font-size: 11.5px; }
+  .bars.compact .bar-row.inline .bar-track { height: 6px; }
+  .bar-top { display: flex; align-items: baseline; gap: 8px; font-size: var(--fs-label); }
+  .bar-top .n { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-top .v { margin-left: auto; font-family: var(--font-num); font-size: var(--fs-body); color: var(--fg); }
+  .bar-track { position: relative; height: 10px; border-radius: 5px; background: var(--track); }
+  .bar-row.inline .bar-track { height: 7px; }
+  .bar-fill {
+    position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 5px;
+    background: linear-gradient(90deg, color-mix(in oklch, var(--bc) 45%, transparent), var(--bc));
+    box-shadow: 0 0 12px color-mix(in oklch, var(--bc) 45%, transparent);
+    transition: width 0.8s var(--ease);
+  }
+  .bar-ref { position: absolute; top: -5px; bottom: -5px; width: 0; border-left: 1px dashed var(--ref); }
+  .bar-val { font-family: var(--font-num); font-size: var(--fs-label); text-align: right; color: var(--fg); }
+  .axis { position: relative; height: 14px; width: 100%; font-family: var(--font-num); font-size: 10px; color: var(--faint); }
+  .axis span { position: absolute; top: 0; transform: translateX(-50%); }
+  .axis span:first-child { transform: none; }
+  .axis span:last-child { transform: translateX(-100%); }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: var(--fs-micro); color: var(--muted); }
+  .legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+
+  /* ─── 环形 / 仪表盘卡 ─────────────────────────────────────────────── */
+  .dial-card { flex-direction: row; align-items: center; gap: 18px; }
+  .card.dial-card { padding: 14px 22px; }
+  .dial-card .chart { flex: 0 0 auto; }
+  .dial-meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .dial-meta h3 { font-size: var(--fs-mod); letter-spacing: 0.02em; }
+  .dial-meta .dial-note { font-size: var(--fs-micro); color: var(--faint); }
+  .dial-legend { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; font-size: var(--fs-label); color: var(--muted); }
+  .dial-legend .dl { display: flex; align-items: center; gap: 8px; line-height: 1.4; }
+  .dial-legend .dl i { width: 8px; height: 8px; border-radius: 2px; flex: 0 0 auto; }
+  .dial-legend .dl b { margin-left: auto; font-family: var(--font-num); font-weight: 500; color: var(--fg); }
+
+  /* ─── 能力模块矩阵 ─────────────────────────────────────────────────── */
+  .caps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: var(--gap); flex: 1; min-height: 0; }
+  .cap {
+    display: flex; flex-direction: column; justify-content: center; gap: 8px;
+    padding: 14px 16px; text-align: left;
+    background: color-mix(in oklch, var(--c1) 8%, transparent);
+    border: 1px solid var(--hair); border-radius: var(--radius-sm);
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .cap:hover { border-color: var(--stroke-hi); background: color-mix(in oklch, var(--c1) 16%, transparent); transform: translateY(-2px); }
+  .cap .cap-top { display: flex; align-items: baseline; gap: 8px; font-size: var(--fs-body); }
+  .cap .cap-top b { font-weight: 500; }
+  .cap .cap-top span { margin-left: auto; font-family: var(--font-num); font-size: var(--fs-label); color: var(--fg); }
+  .cap .cap-hint { font-size: var(--fs-micro); color: var(--faint); }
+  .cap-empty {
+    display: flex; flex-direction: column; justify-content: center; gap: 6px;
+    padding: 14px 16px; border: 1px dashed var(--hair); border-radius: var(--radius-sm);
+    background: var(--stripe); color: var(--faint); font-size: var(--fs-micro);
+  }
+
+  /* ─── 时间轴 ───────────────────────────────────────────────────────── */
+  .tl { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; flex: 1; min-height: 0; align-items: stretch; }
+  .tl-node { position: relative; padding: 0 14px; display: flex; flex-direction: column; min-width: 0; }
+  .tl-track { position: relative; height: 26px; flex: 0 0 auto; }
+  .tl-track::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 12px; height: 2px; background: var(--grid);
+  }
+  .tl-node:first-child .tl-track::before { left: 50%; }
+  .tl-node:last-child .tl-track::before { right: 50%; }
+  .tl-dot {
+    position: absolute; left: 50%; top: 4px; width: 18px; height: 18px; margin-left: -9px;
+    border-radius: 50%; border: 2px solid var(--faint); background: var(--glass-deep);
+  }
+  .tl-node.done .tl-dot { border-color: var(--c4); background: var(--c4); box-shadow: 0 0 14px var(--c4); }
+  .tl-node.now .tl-dot { border-color: var(--c1); background: var(--c1); box-shadow: var(--glow); }
+  .tl-dot::after {
+    content: ''; position: absolute; inset: 4px; border-radius: 50%; background: var(--glass-deep); opacity: 0.5;
+  }
+  .tl-node.done .tl-dot::after, .tl-node.now .tl-dot::after { opacity: 0; }
+  .tl-body {
+    flex: 1; min-height: 0; margin-top: 6px; padding: 18px 18px;
+    background: color-mix(in oklch, var(--c1) 8%, transparent);
+    border: 1px solid var(--hair); border-radius: var(--radius-sm);
+    display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  }
+  .tl-body .yr { font-family: var(--font-num); font-size: 19px; color: var(--c1); letter-spacing: 0.04em; }
+  .tl-node.now .tl-body { border-color: var(--stroke-hi); }
+  .tl-body p { font-size: var(--fs-label); color: var(--muted); line-height: 1.6; }
+  .tl-body .tag { align-self: flex-start; }
+
+  /* ─── 待补数占位 ───────────────────────────────────────────────────── */
+  .tbd {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: var(--radius-pill);
+    border: 1px solid var(--hair); background: var(--stripe);
+    font-size: var(--fs-micro); color: var(--faint); letter-spacing: 0.04em;
+  }
+  .tbd-block {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 64px; border-radius: var(--radius-sm);
+    border: 1px dashed var(--hair); background: var(--stripe);
+    color: var(--faint); font-size: var(--fs-label); letter-spacing: 0.06em;
+  }
+
+  /* ─── 进展卡列表 ───────────────────────────────────────────────────── */
+  .pick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); flex: 1; min-height: 0; }
+  .pick-card {
+    display: flex; flex-direction: column; justify-content: center; gap: 12px;
+    padding: 22px 20px; text-align: left;
+    background: color-mix(in oklch, var(--c1) 7%, transparent);
+    border: 1px solid var(--hair); border-radius: var(--radius-sm);
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .pick-card:hover { border-color: var(--stroke-hi); background: color-mix(in oklch, var(--c1) 15%, transparent); transform: translateY(-2px); }
+  .pick-card h4 { font-size: var(--fs-mod); display: flex; align-items: center; gap: 8px; }
+  .pick-card h4 i { width: 6px; height: 6px; border-radius: 50%; background: var(--pc, var(--c1)); box-shadow: 0 0 8px var(--pc, var(--c1)); }
+  .pick-card p { font-size: var(--fs-label); color: var(--muted); line-height: 1.7; }
+  .pick-big { font-family: var(--font-num); font-size: 34px; font-weight: 700; line-height: 1; }
+  .pick-big small { font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 3px; }
+  .pick-foot { display: flex; align-items: center; gap: 8px; font-size: var(--fs-micro); color: var(--faint); }
+
+  /* ─── 模型开发进度：整行列表 ───────────────────────────────────────── */
+  .mlist { display: flex; flex-direction: column; gap: var(--gap); flex: 1; min-height: 0; }
+  .mrow {
+    display: grid; grid-template-columns: 200px 96px 1fr 200px;
+    grid-template-rows: auto auto; align-items: center;
+    gap: 6px 20px; padding: 12px 18px; text-align: left;
+    background: color-mix(in oklch, var(--c1) 7%, transparent);
+    border: 1px solid var(--hair); border-radius: var(--radius-sm);
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .mrow:hover { border-color: var(--stroke-hi); background: color-mix(in oklch, var(--c1) 15%, transparent); transform: translateY(-2px); }
+  .mrow .m-name { font-size: var(--fs-body); font-weight: 500; }
+  .mrow .m-num { font-family: var(--font-num); font-size: 28px; font-weight: 700; line-height: 1; }
+  .mrow .prog { height: 8px; }
+  .mrow .m-cta { justify-self: end; font-size: var(--fs-micro); color: var(--muted); }
+  .mrow:hover .m-cta { color: var(--fg); }
+  .mrow .m-desc { grid-column: 1 / -1; font-size: var(--fs-micro); color: var(--faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mrow { align-content: center; }
+
+  /* ─── 成效卡（竖向居中，避免高卡片顶部堆叠） ───────────────────────── */
+  .res-card { justify-content: center; gap: 10px; }
+
+  /* ─── 表格 ─────────────────────────────────────────────────────────── */
+  .ds-table { width: 100%; font-size: var(--fs-label); }
+  .ds-table th {
+    padding: 9px 12px; text-align: left; font-weight: 500; color: var(--faint);
+    font-size: var(--fs-micro); letter-spacing: 0.08em; border-bottom: 1px solid var(--hair);
+    white-space: nowrap;
+  }
+  .ds-table td { padding: 9px 12px; border-bottom: 1px solid var(--hair); color: var(--fg); }
+  .ds-table tbody tr { cursor: pointer; transition: background 0.18s var(--ease); }
+  .ds-table tbody tr:hover { background: color-mix(in oklch, var(--c1) 14%, transparent); }
+  .ds-table tbody tr:hover td { color: var(--fg); }
+  .ds-table .c-idx { width: 56px; font-family: var(--font-num); color: var(--faint); }
+  .ds-table .c-name { font-weight: 500; }
+  .ds-table .c-mag { font-family: var(--font-num); color: var(--muted); }
+  .ds-table .c-prog { width: 240px; }
+  .ds-table .c-status { width: 110px; }
+  .table-wrap { flex: 1; min-height: 0; overflow: hidden; }
+  .seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: var(--radius-pill); background: var(--glass-deep); border: 1px solid var(--hair); }
+  .seg-btn { padding: 4px 12px; border-radius: var(--radius-pill); font-size: var(--fs-label); color: var(--muted); transition: all 0.2s var(--ease); }
+  .seg-btn:hover { color: var(--fg); background: color-mix(in oklch, var(--c1) 18%, transparent); }
+  .seg-btn.is-on { background: var(--c1); color: var(--on-accent); box-shadow: var(--glow); }
+  .pager { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; padding-top: 12px; font-size: var(--fs-micro); color: var(--faint); }
+  .pager-btns { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .pg-btn {
+    padding: 4px 10px; border-radius: 8px; border: 1px solid var(--hair);
+    font-family: var(--font-num); font-size: var(--fs-micro); color: var(--muted);
+    transition: all 0.18s var(--ease);
+  }
+  .pg-btn:hover:not(:disabled) { color: var(--fg); border-color: var(--stroke-hi); background: color-mix(in oklch, var(--c1) 18%, transparent); }
+  .pg-btn.is-on { background: var(--c1); color: var(--on-accent); border-color: var(--c1); }
+  .pg-btn:disabled { color: var(--faint); opacity: 0.5; cursor: not-allowed; }
+
+  .status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--radius-pill); font-size: var(--fs-micro); border: 1px solid; }
+  .status i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .status.done { color: var(--c4); border-color: color-mix(in oklch, var(--c4) 45%, transparent); background: color-mix(in oklch, var(--c4) 12%, transparent); }
+  .status.run  { color: var(--c1); border-color: color-mix(in oklch, var(--c1) 45%, transparent); background: color-mix(in oklch, var(--c1) 12%, transparent); }
+  .status.late { color: var(--c5); border-color: color-mix(in oklch, var(--c5) 45%, transparent); background: color-mix(in oklch, var(--c5) 12%, transparent); }
+  .status.wait { color: var(--faint); border-color: var(--hair); background: var(--stripe); }
+
+  /* ─── 播报滚动列表 ─────────────────────────────────────────────────── */
+  .news { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+  .news-track { transition: transform 0.6s var(--ease); }
+  .news-item {
+    height: 61px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--hair); font-size: var(--fs-body);
+  }
+  .news-item .dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: var(--pc, var(--c1)); box-shadow: 0 0 10px var(--pc, var(--c1)); }
+  .news-item .t { color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .news-item .v { margin-left: auto; font-family: var(--font-num); font-size: var(--fs-mod); color: var(--pc, var(--c1)); flex: 0 0 auto; }
+  .news-item:last-child { border-bottom: 0; }
+
+  /* ─── 场景卡 ───────────────────────────────────────────────────────── */
+  .scene {
+    position: relative; display: flex; flex-direction: column; gap: 6px; padding: 16px 18px;
+    background: var(--glass); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--stroke); border-radius: var(--radius); box-shadow: var(--shadow);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+    text-align: left;
+  }
+  .scene h4 { font-size: var(--fs-mod); }
+  .scene p { font-size: var(--fs-micro); color: var(--faint); }
+  .scene .status { position: absolute; right: 16px; bottom: 14px; }
+
+  /* ─── 图片占位（几何 + 渐变，非真实照片，按需方要求） ──────────────── */
+  .shot {
+    position: relative; flex: 1; min-width: 0; border-radius: var(--radius-sm); overflow: hidden;
+    border: 1px solid var(--hair);
+    background: linear-gradient(150deg, color-mix(in oklch, var(--c1) 30%, var(--bg-center)), var(--bg-edge));
+    display: flex; align-items: flex-end; padding: 12px;
+    transition: border-color 0.2s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .shot::after {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 26px 26px; opacity: 0.9;
+  }
+  .shot .geo { position: absolute; inset: 0; display: grid; place-items: center; color: color-mix(in oklch, var(--c2) 70%, transparent); }
+  .shot .geo svg { width: 54px; height: 54px; }
+  .shot .cap {
+    position: relative; z-index: 1; font-size: var(--fs-label); color: var(--fg);
+    background: var(--glass-deep); border: 1px solid var(--stroke);
+    padding: 4px 10px; border-radius: var(--radius-pill);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  .shot.is-on { border-color: var(--stroke-hi); box-shadow: var(--glow-soft); transform: translateY(-3px); }
+  .shot.is-tbd { background: var(--stripe), var(--glass-deep); }
+  .shot.is-tbd .geo { color: var(--faint); }
+  .dots { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex: 0 0 auto; }
+  .dots button { width: 8px; height: 8px; border-radius: 50%; background: var(--track); transition: all 0.25s var(--ease); }
+  .dots button:hover { background: var(--muted); }
+  .dots button.is-on { width: 22px; border-radius: var(--radius-pill); background: var(--c1); box-shadow: var(--glow); }
+
+  /* ─── 瀑布 / 对比柱 ────────────────────────────────────────────────── */
+  .cols { display: flex; align-items: flex-end; gap: 46px; flex: 1; min-height: 0; padding: 8px 12px 0; }
+  .col { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+  .col .col-bar {
+    width: 100%; border-radius: 6px 6px 0 0; height: 0;
+    background: linear-gradient(180deg, var(--cc), color-mix(in oklch, var(--cc) 28%, transparent));
+    border: 1px solid color-mix(in oklch, var(--cc) 60%, transparent); border-bottom: 0;
+    transition: height 0.8s var(--ease);
+  }
+  .col .col-cap { margin-top: 10px; text-align: center; font-size: var(--fs-label); color: var(--muted); }
+  .col .col-val { text-align: center; font-family: var(--font-num); font-size: var(--fs-num-sm); color: var(--fg); margin-bottom: 6px; }
+  .bridge {
+    position: absolute; left: 0; right: 0; height: 0;
+    border-top: 1px dashed var(--c4); opacity: 0; transition: opacity 0.4s var(--ease) 0.6s;
+  }
+  .bridge span {
+    position: absolute; left: 50%; top: -30px; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+    padding: 4px 12px; border-radius: var(--radius-pill);
+    background: color-mix(in oklch, var(--c4) 18%, var(--bg-edge));
+    border: 1px solid color-mix(in oklch, var(--c4) 55%, transparent);
+    color: var(--c4); font-family: var(--font-num); font-size: var(--fs-mod);
+  }
+  .col-axis { display: flex; gap: 46px; padding: 0 12px; margin-top: 4px; }
+  .col-axis div { flex: 1; text-align: center; font-size: var(--fs-micro); color: var(--faint); }
+
+  /* ─── 压缩对比行 ───────────────────────────────────────────────────── */
+  .compress { display: flex; flex-direction: column; justify-content: space-between; flex: 1; min-height: 0; padding: 4px 0; }
+  .cz-row { display: grid; grid-template-columns: 132px 1fr; gap: 16px; align-items: center; }
+  .cz-row .cz-name { font-size: var(--fs-label); color: var(--muted); }
+  .cz-bars { display: flex; flex-direction: column; gap: 8px; }
+  .cz-line { display: grid; grid-template-columns: 1fr 176px; gap: 12px; align-items: center; }
+  .cz-bar { position: relative; height: 13px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .cz-bar > i { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 4px; transition: width 0.8s var(--ease); }
+  .cz-txt { font-family: var(--font-num); font-size: var(--fs-micro); color: var(--fg); letter-spacing: 0.01em; }
+  .cz-line.after .cz-txt { color: var(--c4); }
+
+  /* ─── 抽屉 ─────────────────────────────────────────────────────────── */
+  .scrim {
+    position: absolute; inset: 0; z-index: 55; background: var(--scrim);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s var(--ease);
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: absolute; top: 0; right: 0; z-index: 60;
+    width: 580px; height: var(--canvas-h); padding: 30px 32px;
+    display: flex; flex-direction: column; gap: 18px;
+    background: linear-gradient(180deg, var(--glass-nav), var(--glass-deep));
+    -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+    border-left: 1px solid var(--stroke); box-shadow: -24px 0 64px rgba(0, 0, 0, 0.55);
+    transform: translateX(102%); transition: transform 0.34s var(--ease);
+  }
+  .drawer.open { transform: none; }
+  .drawer-head { display: flex; align-items: flex-start; gap: 14px; }
+  .drawer-head .dh-txt { display: flex; flex-direction: column; gap: 6px; }
+  .drawer-head h2 { font-size: var(--fs-title); letter-spacing: 0.02em; }
+  .drawer-close {
+    margin-left: auto; width: 34px; height: 34px; border-radius: 10px;
+    border: 1px solid var(--hair); color: var(--muted); display: grid; place-items: center;
+    transition: all 0.2s var(--ease);
+  }
+  .drawer-close:hover { color: var(--fg); border-color: var(--stroke-hi); background: color-mix(in oklch, var(--c1) 18%, transparent); }
+  .drawer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+  .dbox {
+    padding: 16px 18px; border-radius: var(--radius-sm);
+    background: color-mix(in oklch, var(--c1) 8%, transparent); border: 1px solid var(--hair);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .dbox h4 { font-size: var(--fs-label); color: var(--c1); letter-spacing: 0.06em; }
+  .dbox p { font-size: var(--fs-label); color: var(--muted); line-height: 1.7; }
+  .drawer-foot { margin-top: auto; font-size: var(--fs-micro); color: var(--faint); border-top: 1px solid var(--hair); padding-top: 14px; }
+
+  /* ─── 水印 + 轻提示 ────────────────────────────────────────────────── */
+  .watermark {
+    position: absolute; right: 12px; bottom: 6px; z-index: 45;
+    padding: 2px 8px; border-radius: var(--radius-pill);
+    border: 1px solid var(--hair); background: var(--glass-deep);
+    font-size: 10px; letter-spacing: 0.14em; color: var(--faint);
+  }
+  .toast {
+    position: absolute; left: 50%; bottom: 28px; transform: translate(-50%, 12px); z-index: 70;
+    padding: 10px 18px; border-radius: var(--radius-pill);
+    background: var(--glass-nav); border: 1px solid var(--stroke);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    box-shadow: var(--shadow); font-size: var(--fs-body); color: var(--fg);
+    opacity: 0; pointer-events: none; transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+  }
+  .toast.open { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+
+/* AI4S workspace theme; original metrics, charts and interactions retained. */
+:root{--bg-edge:#0a1734;--bg-mid:#0c1f45;--bg-center:#133763;--glass:#122d52;--glass-deep:#102747;--glass-nav:#102747;--stroke:#dce6f3;--stroke-hi:#0969f6;--fg:#17365f;--muted:#627c9e;--faint:#748aa6;--c1:#0969f6;--c2:#169ab5;--c3:#7863c8;--c4:#09a57b;--c5:#e99820;--ok:#09a57b;--mid:#0969f6;--low:#e99820;--danger:#d94463;--hair:#e3ebf5;--grid:#e5edf7;--track:#e7eef8;--ref:#90a6c2;--shadow:0 2px 10px #23447208;--shadow-hi:0 4px 14px #23447214;--glow:none;--glow-soft:none;--arc-glow:none;--font-body:'PingFang SC','Microsoft YaHei',Arial,sans-serif;--font-num:Arial,sans-serif;--radius:12px}
+html,body{height:auto;min-height:100%;overflow:auto;background:var(--bg-edge)}
+#stage{position:relative;width:100%;height:auto;min-height:100vh;transform:none!important;background:var(--bg-edge)}
+#stage:before,#stage:after,.card:before{display:none}
+.nav{position:relative;height:auto;min-height:76px;flex-wrap:wrap;padding:18px 24px;gap:16px;backdrop-filter:none;background:#fff}
+.brand-text em{font-size:12px}.tabs{order:3;width:100%;justify-content:flex-start;margin:0;border-radius:0;border:0;border-bottom:1px solid var(--stroke);background:transparent;overflow:auto;padding:0;gap:20px}
+.tab{border-radius:0;padding:12px 4px;border-bottom:3px solid transparent;font-size:14px}.tab[aria-selected="true"]{background:transparent;color:var(--c1);border-bottom-color:var(--c1);font-weight:650;box-shadow:none}.tab[aria-selected="true"]:hover{background:transparent}
+.nav-right{margin-left:auto}.page{position:relative;inset:auto;padding:24px;display:none;opacity:1;visibility:visible;transform:none}.page.is-active{display:block}
+.rows{height:auto}.rows-4,.rows-3{grid-template-rows:none}.rows> .r,.rows>.card{min-height:220px}.rows>.r.r-5,.rows>.r.r-6{min-height:120px}
+.r-3a{grid-template-columns:1fr 2.1fr 1.55fr}.r-a{grid-template-columns:2fr 1fr}.r-b{grid-template-columns:1fr 3fr}.r-c{grid-template-columns:1fr 2.5fr}.r-d{grid-template-columns:1fr 3fr}.r-1100{grid-template-columns:1.8fr 1fr}
+.card{backdrop-filter:none;min-height:240px}.r-5 .card,.r-6 .card{min-height:110px}.card:hover,.kpi:hover,.dir:hover,.scene:hover{transform:none}.chart{min-height:180px}.mhead h3{font-size:15px}.num{letter-spacing:0}.table-wrap{overflow:auto}
+@media(max-width:1100px){.r-3a,.r-a,.r-b,.r-c,.r-d,.r-1100,.r-2-3,.r-2-1{grid-template-columns:1fr 1fr}.r-3a>:last-child{grid-column:1/-1}.r-5,.r-6{grid-template-columns:repeat(3,minmax(0,1fr))}.brand-text strong{font-size:20px}}
+@media(max-width:700px){.page{padding:16px}.nav{padding:16px}.r,.r-half,.r-e,.r-f,.r-3a,.r-a,.r-b,.r-c,.r-d,.r-1100,.r-2-3,.r-2-1{grid-template-columns:1fr}.r-5,.r-6{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:16px}.brand-text strong{font-size:18px}.nav-right{margin-left:0}.tab{font-size:13px}.mhead{flex-wrap:wrap}.mhead .note{margin-left:0}}
+
+
+/* Group executive dashboard: compact, calm and consistent with ScienceLab. */
+:root{--gap:10px;--radius:8px;--radius-sm:6px;--fs-num-lg:42px;--fs-num:30px;--fs-num-sm:24px}
+#stage{background:linear-gradient(135deg,#edf4fcbb,#f7faffdd),url('cockpit-texture.svg') center top/cover fixed}
+.nav{padding:12px 18px 0;gap:8px;border-bottom:1px solid #d5e2f2;background:linear-gradient(110deg,#fff,#eef5ff);box-shadow:0 2px 8px #23447208}
+.brand-text strong{font-size:21px;letter-spacing:.4px}.brand-text em{font-size:11px}.tab{padding:9px 4px;font-size:12px}.tabs{gap:24px}.page{padding:14px 18px}.rows{gap:10px}.rows>.r,.rows>.card{min-height:0}.rows>.r.r-5,.rows>.r.r-6{min-height:0}
+.card{min-height:0;padding:12px 14px;background:#ffffffed;border-color:#d7e3f1;box-shadow:0 2px 6px #1c426609}.card.dial-card{padding:10px 14px}.chart{min-height:145px;height:170px}.mhead{margin-bottom:8px}.mhead h3{font-size:13px;font-weight:650}.mhead .note{font-size:10px}.kpi{padding:12px 14px;border-radius:8px;background:#ffffffed}.dir{padding:12px 14px;border-radius:8px;background:#ffffffed}.k-val{font-size:28px}.k-label{font-size:11px}.k-unit{font-size:11px}.news{max-height:180px}.ds-table td,.ds-table th{padding:8px 10px}.scene{padding:12px 14px}.legend{font-size:10px;gap:12px}
+@media(min-width:1101px){.rows-4{grid-template-rows:210px auto auto 205px}.rows-4>.r .card{height:100%}.rows-4 .chart{min-height:0;height:145px}.r-5 .card,.r-6 .card{min-height:0}}
+@media(max-width:700px){.page{padding:10px}.nav{padding:10px 12px 0}.card{padding:10px}.chart{height:160px}}
+
+
+.chart{overflow:hidden;flex:1;min-height:0;max-height:190px}.chart svg{display:block;width:100%;height:100%;max-height:190px}.dial-card .chart{flex:none;height:145px}.dial-card .chart svg{max-height:145px}
+@media(min-width:900px){.r-3a{grid-template-columns:.85fr 1.4fr 1fr}.r-3a>:last-child{grid-column:auto}.r-a{grid-template-columns:1.7fr 1fr}.r-5{grid-template-columns:repeat(5,minmax(0,1fr))}.r-6{grid-template-columns:repeat(6,minmax(0,1fr))}.rows-4{grid-template-rows:205px auto auto 205px}.rows-4>.r .card{height:100%;overflow:hidden}.rows-4 .chart{height:145px;max-height:145px}.rows-4 .chart svg{max-height:145px}}
+[data-od-id="overview-direction-bars"] .bar-row{gap:2px}.rows-4 .bar-row{gap:2px}.rows-4 .bar-top{font-size:10px;line-height:13px}.rows-4 .bar-top .v{font-size:11px}.rows-4 .bar-track{height:6px}.rows-4 .bars{gap:3px}
+
+/* Unified ScienceLab light theme; retain compact charts and navigation. */
+:root{--bg-edge:#f5f8fd;--bg-mid:#f5f8fd;--bg-center:#f5f8fd;--glass:#fff;--glass-deep:#f0f5fc;--glass-nav:#fff;--fg:#17365f;--muted:#627c9e;--faint:#748aa6;--stroke:#d7e3f1;--hair:#e3ebf5;--track:#e7eef8;--c1:#0969f6;--c2:#169ab5;--ok:#09a57b;--ref:#90a6c2;--vignette:transparent;--grid:rgba(91,130,184,.04)}
+#stage{background:linear-gradient(135deg,#f5f8fdf5,#f5f8fdee),url('cockpit-texture.svg') center/cover}
+.nav{background:#fff;border-color:var(--stroke);box-shadow:none}.card,.kpi,.dir,.scene{background:#fff;border-color:var(--stroke)}.tabs{border-color:var(--stroke)}.tab{color:var(--muted)}.tab[aria-selected="true"]{color:var(--c1)}.card{box-shadow:0 2px 6px #1c426609}
+@media(min-width:900px){.rows-4{grid-template-rows:minmax(240px,29vh) auto auto minmax(240px,28vh)}.rows-4 .chart{height:auto;max-height:none}.rows-4 .chart svg{max-height:220px}.rows-4 .bar-row{gap:5px}.rows-4 .bar-top{font-size:11px;line-height:16px}.page{padding:16px 18px}.rows{gap:14px}}
+
+/* Keep detail gauges and labels inside their own grid cell. */
+.r>*{min-width:0}.rows-3{grid-template-rows:auto auto auto}.rows-3>.r:first-child{min-height:160px}.card.dial-card{display:flex;flex-direction:row;min-width:0;gap:12px;height:170px;overflow:hidden}.card.dial-card>.chart{flex:0 1 145px;width:145px;min-width:100px;height:140px;max-height:140px}.card.dial-card>.chart>svg{width:100%;height:100%;max-height:140px}.dial-meta{flex:1;min-width:0}.dial-meta h3{font-size:14px;white-space:normal}.dial-note{line-height:1.5;overflow-wrap:anywhere}.chart[data-chart="rings3"]{width:100%!important;flex:1!important;gap:12px!important}.chart[data-chart="rings3"]>svg{flex:0 0 130px;width:130px;height:130px}.chart[data-chart="rings3"]>.dial-meta{flex:1;min-width:0}.rows-3>.r:first-child{grid-template-columns:minmax(320px,1.2fr) minmax(0,3fr)}.rows-3>.r:not(:first-child) .chart{height:280px;max-height:none;flex:none}.rows-3>.r:not(:first-child) .chart>svg{max-height:none}.rows-3 .card{overflow:hidden}.rows-3 .kpi{min-height:160px}.rows-3 .tl{min-height:200px}
+@media(max-width:800px){.rows-3>.r:first-child{grid-template-columns:1fr}.card.dial-card{height:170px}.rows-3 .kpi{min-height:110px}}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ══ 顶部导航（6 页共用） ══════════════════════════════════════════ -->
+  <header class="nav" data-od-id="cockpit-nav">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2.6 20.4 7v10L12 21.4 3.6 17V7z" />
+          <circle cx="12" cy="12" r="2.6" />
+          <path d="M12 2.6v6.8M20.4 7l-5.9 3.4M3.6 17l5.9-3.4" />
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong>集团 AI 科研驾驶舱</strong>
+        <em>数据截至 2026-09</em>
+      </span>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="驾驶舱页面">
+      <button class="tab" role="tab" aria-selected="true"  data-target="overview" data-od-id="tab-overview">总览</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="cloud"    data-od-id="tab-cloud">AI科研实验云</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="dataset"  data-od-id="tab-dataset">专业数据集</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="model"    data-od-id="tab-model">模型与算法</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="auto"     data-od-id="tab-auto">实验表征及自动化</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="app"      data-od-id="tab-app">示范应用</button>
+    </nav>
+
+    <div class="nav-right">
+      <span class="year">
+        <select id="yearSel" aria-label="年度筛选">
+          <option value="2026" selected>2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+        </select>
+      </span>
+      <span class="refresh">刷新 <b class="num" id="clock">--:--</b></span>
+    </div>
+  </header>
+
+  <!-- ══ P0 总览 ═══════════════════════════════════════════════════════ -->
+  <section class="page is-active" id="page-overview" role="tabpanel" aria-labelledby="tab-overview" data-od-id="page-overview">
+    <div class="rows rows-4">
+
+      <div class="r r-3a">
+        <div class="card" data-od-id="overview-overall-gauge">
+          <div class="mhead"><h3>整体进度</h3><span class="note">五大任务</span></div>
+          <div class="chart" data-chart="gauge" data-value="58"></div>
+          <p class="chart-note" style="text-align:center">五大任务整体进度</p>
+        </div>
+        <div class="card" data-od-id="overview-direction-bars">
+          <div class="mhead"><h3>五大方向进度对比</h3><span class="note">降序 · 虚线为 100% 目标</span></div>
+          <div class="chart" data-chart="hbars" data-key="dirsDesc" data-max="110" data-axis="1"></div>
+        </div>
+        <div class="card" data-od-id="overview-balance-radar">
+          <div class="mhead"><h3>五方向达成均衡度</h3><span class="note">满分 100</span></div>
+          <div class="chart" data-chart="radar" data-key="balance" data-max="100" data-ref="100"></div>
+        </div>
+      </div>
+
+      <div class="r r-5" data-od-id="overview-direction-cards" id="dirCards"></div>
+
+      <div class="r r-6" data-od-id="overview-kpis" id="kpiOverview"></div>
+
+      <div class="r r-a">
+        <div class="card" data-od-id="overview-bullet">
+          <div class="mhead"><h3>目标 vs 进度</h3>
+            <span class="note">实际进度条 · 竖线为 100% 目标</span></div>
+          <div class="chart" data-chart="bullet" data-key="dirs" data-max="110"></div>
+          <div class="legend" style="margin-top:10px">
+            <span><i style="background:var(--c1)"></i>实际进度</span>
+            <span><i style="background:var(--ok)"></i>≥80% 达标</span>
+            <span><i style="background:var(--low)"></i>&lt;50% 待追赶</span>
+            <span><i style="background:var(--ref);border-radius:1px;height:9px;width:2px"></i>目标 100%</span>
+          </div>
+        </div>
+        <div class="card" data-od-id="overview-news">
+          <div class="mhead"><h3>典型成果播报</h3><span class="note">每 3 秒轮播</span></div>
+          <div class="news"><div class="news-track" id="newsTrack"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ P1 AI 科研实验云 ══════════════════════════════════════════════ -->
+  <section class="page" id="page-cloud" role="tabpanel" aria-labelledby="tab-cloud" data-od-id="page-cloud">
+    <div class="rows rows-3">
+      <div class="r r-b">
+        <div class="card dial-card" data-od-id="cloud-ring">
+          <div class="chart" data-chart="ring" data-value="52" data-size="100"></div>
+          <div class="dial-meta">
+            <h3>方向总体进度</h3>
+            <p class="dial-note">AI 科研实验云</p>
+          </div>
+        </div>
+        <div class="r r-e" id="kpiCloud" data-od-id="cloud-kpis"></div>
+      </div>
+
+      <div class="r r-half">
+        <div class="card" data-od-id="cloud-capability">
+          <div class="mhead"><h3>五大能力模块成熟度</h3><span class="note">点击卡片查看模块详情</span></div>
+          <div class="caps" id="capGrid"></div>
+        </div>
+        <div class="card" data-od-id="cloud-roadmap">
+          <div class="mhead"><h3>三年目标</h3><span class="note">2026 – 2028</span></div>
+          <div class="tl" id="roadmap"></div>
+        </div>
+      </div>
+
+      <div class="card" data-od-id="cloud-progress">
+        <div class="mhead"><h3>当前进展</h3><button class="more" data-toast="更多进展明细将在下一版本开放">更多 ›</button></div>
+        <div class="pick" id="cloudPick"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ P2 专业数据集 ═════════════════════════════════════════════════ -->
+  <section class="page" id="page-dataset" role="tabpanel" aria-labelledby="tab-dataset" data-od-id="page-dataset">
+    <div class="rows rows-3">
+      <div class="r r-c">
+        <div class="card dial-card" data-od-id="dataset-rings">
+          <div class="chart" data-chart="rings3" data-values="59,58,61" data-labels="总体,油气领域,炼化领域"></div>
+        </div>
+        <div class="r r-e" id="kpiDataset" data-od-id="dataset-kpis"></div>
+      </div>
+
+      <div class="r r-1100">
+        <div class="card" data-od-id="dataset-progress-14">
+          <div class="mhead"><h3>14 个数据集建设进度</h3><span class="note">降序 · 虚线 100% · 点击行查看详情</span></div>
+          <div class="chart" data-chart="hbars" data-key="datasets14" data-max="110" data-axis="1" data-compact="1"></div>
+        </div>
+        <div class="card" data-od-id="dataset-volume">
+          <div class="mhead"><h3>数据量构成</h3><span class="note">面积按对数刻度</span></div>
+          <div class="chart" data-chart="treemap" data-key="volumes"></div>
+        </div>
+      </div>
+
+      <div class="card" data-od-id="dataset-table">
+        <div class="mhead">
+          <h3>数据集明细</h3>
+          <div class="seg" role="tablist" aria-label="领域切换">
+            <button class="seg-btn is-on" role="tab" aria-selected="true"  data-domain="oil" data-od-id="dataset-tab-oil">油气领域</button>
+            <button class="seg-btn" role="tab" aria-selected="false" data-domain="ref" data-od-id="dataset-tab-ref">炼化领域</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="ds-table">
+            <thead>
+              <tr>
+                <th class="c-idx">序号</th>
+                <th>数据集</th>
+                <th>26 年目标</th>
+                <th>已完成</th>
+                <th class="c-prog">进度</th>
+                <th class="c-status">状态</th>
+              </tr>
+            </thead>
+            <tbody id="dsBody"></tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <span id="pgInfo">—</span>
+          <span class="tbd">目标量级取需求方示例数据，其余字段待补数</span>
+          <div class="pager-btns">
+            <button class="pg-btn" data-pg="prev" aria-label="上一页">‹ 上一页</button>
+            <span id="pgNums" style="display:flex;gap:6px"></span>
+            <button class="pg-btn" data-pg="next" aria-label="下一页">下一页 ›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ P3 模型与算法 ═════════════════════════════════════════════════ -->
+  <section class="page" id="page-model" role="tabpanel" aria-labelledby="tab-model" data-od-id="page-model">
+    <div class="rows rows-3">
+      <div class="r r-b">
+        <div class="card dial-card" data-od-id="model-ring">
+          <div class="chart" data-chart="ring" data-value="55" data-size="100"></div>
+          <div class="dial-meta">
+            <h3>方向总体进度</h3>
+            <p class="dial-note">模型与算法</p>
+          </div>
+        </div>
+        <div class="r r-e" id="kpiModel" data-od-id="model-kpis"></div>
+      </div>
+
+      <div class="r r-half">
+        <div class="card" data-od-id="model-ssbr-radar">
+          <div class="mhead"><h3>SSBR 8 项力学性能预测准确率</h3><span class="note">虚线为 80% 基准圈</span></div>
+          <div class="chart" data-chart="radar" data-key="ssbr" data-max="100" data-ref="80" data-shape="8"></div>
+        </div>
+        <div class="card" data-od-id="model-accuracy">
+          <div class="mhead"><h3>模型预测准确率</h3><span class="note">虚线为 80% 基准</span></div>
+          <div class="chart" data-chart="grouped" data-key="accuracy" data-max="100" data-ref="80"></div>
+        </div>
+      </div>
+
+      <div class="r r-2-1">
+        <div class="card" data-od-id="model-progress">
+          <div class="mhead"><h3>模型开发进度</h3><span class="note">点击查看 26 年目标与当前进展</span></div>
+          <div class="mlist" id="modelPick" data-od-id="model-progress-list"></div>
+        </div>
+        <div class="card" data-od-id="model-composition">
+          <div class="mhead"><h3>模型构成</h3><span class="note">共 9 个</span></div>
+          <div class="chart" data-chart="sunburst" data-keys="3,6"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ P4 实验表征及自动化 ═══════════════════════════════════════════ -->
+  <section class="page" id="page-auto" role="tabpanel" aria-labelledby="tab-auto" data-od-id="page-auto">
+    <div class="rows rows-3">
+      <div class="r r-b">
+        <div class="card dial-card" data-od-id="auto-gauge">
+          <div class="chart" data-chart="halfgauge" data-value="82"></div>
+          <div class="dial-meta">
+            <h3>方向总体进度</h3>
+            <p class="dial-note">实验表征及自动化 · ≥80% 达标</p>
+          </div>
+        </div>
+        <div class="r r-f" id="kpiAuto" data-od-id="auto-kpis"></div>
+      </div>
+
+      <div class="r r-half">
+        <div class="card" data-od-id="auto-enzyme">
+          <div class="mhead"><h3>酶活力改造成效</h3><span class="note">野生型 vs 改造后</span></div>
+          <div class="chart" data-chart="waterfall" data-key="enzyme"></div>
+        </div>
+        <div class="card" data-od-id="auto-milestone">
+          <div class="mhead"><h3>平台建设里程碑</h3><span class="note">实心绿 = 已完成 · 空心 = 未完成</span></div>
+          <div class="tl" id="milestone"></div>
+        </div>
+      </div>
+
+      <div class="card" data-od-id="auto-site">
+        <div class="mhead"><h3>实验现场</h3><span class="note">占位示意 · 实拍图待补</span></div>
+        <div class="r r-5" id="shots" style="flex:1;min-height:0"></div>
+        <div class="dots" id="shotDots" role="tablist" aria-label="实验现场轮播"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ P5 示范应用 ═══════════════════════════════════════════════════ -->
+  <section class="page" id="page-app" role="tabpanel" aria-labelledby="tab-app" data-od-id="page-app">
+    <div class="rows rows-3">
+      <div class="r r-d">
+        <div class="card dial-card" data-od-id="app-ring">
+          <div class="chart" data-chart="ring" data-value="58" data-size="100"></div>
+          <div class="dial-meta">
+            <h3>方向总体进度</h3>
+            <p class="dial-note">示范应用</p>
+          </div>
+        </div>
+        <div class="r r-e" id="sceneRow" data-od-id="app-scenes"></div>
+      </div>
+
+      <div class="r r-2-3">
+        <div class="card" data-od-id="app-coalbed-radar">
+          <div class="mhead"><h3>煤岩气识别效果</h3><span class="note">5 项符合率</span></div>
+          <div class="chart" data-chart="radar" data-key="coalbed" data-max="100" data-ref="80"></div>
+        </div>
+        <div class="card" data-od-id="app-efficiency">
+          <div class="mhead"><h3>应用效率提升</h3><span class="note">倍数与百分比分列 · 组内归一</span></div>
+          <div class="chart" data-chart="grouped" data-key="efficiency" data-max="0" data-norm="group"></div>
+        </div>
+      </div>
+
+      <div class="r r-half">
+        <div class="card" data-od-id="app-compress">
+          <div class="mhead"><h3>作业时间压缩</h3><span class="note">改前 vs 改后 · 组内归一</span></div>
+          <div class="compress" id="compress"></div>
+        </div>
+        <div class="card" data-od-id="app-results">
+          <div class="mhead"><h3>典型成效</h3><span class="note">需求方示例结论</span></div>
+          <div class="r r-half" id="resultCards" style="flex:1;min-height:0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="watermark" aria-hidden="true">示例数据</div>
+
+  <!-- ══ 右侧抽屉 ══════════════════════════════════════════════════════ -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true" data-od-id="detail-drawer">
+    <div class="drawer-head">
+      <div class="dh-txt">
+        <span class="tag" id="drawerTag">—</span>
+        <h2 id="drawerTitle">—</h2>
+      </div>
+      <button class="drawer-close" id="drawerClose" aria-label="关闭详情抽屉">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+    <div class="chart" data-chart="drawerRing" id="drawerRing" style="flex:0 0 auto;height:96px"></div>
+    <div class="drawer-grid" id="drawerGrid"></div>
+    <div id="drawerExtra"></div>
+    <p class="drawer-foot">本抽屉为下钻示意：标「待补数」的字段需求方尚未提供，未做推算填充。</p>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══ 示例数据（全部取自需求方指标分析结论，不做任何推算填充） ═══ */
+  var DIRS = [
+    { id: 'cloud', n: 'AI科研实验云', v: 52 },
+    { id: 'dataset', n: '专业数据集', v: 59 },
+    { id: 'model', n: '模型与算法', v: 55 },
+    { id: 'auto', n: '实验表征及自动化', v: 82 },
+    { id: 'app', n: '示范应用', v: 58 }
+  ];
+  var OVERALL = 58;
+
+  var D = {
+    dirs: DIRS,
+    dirsDesc: DIRS.slice().sort(function (a, b) { return b.v - a.v; }),
+    balance: {
+      axes: DIRS.map(function (d) { return d.n; }),
+      values: DIRS.map(function (d) { return d.v; })
+    },
+    kpiOverview: [
+      { label: '数据量', num: '643', unit: 'TB', sub: '累计', c: 'var(--c1)' },
+      { label: '专业数据集', num: '14', unit: '个', sub: '油气 8 · 炼化 6', c: 'var(--c2)' },
+      { label: '模型与算法', num: '9', unit: '个', sub: '油气 3 · 炼化 6', c: 'var(--c3)' },
+      { label: '高通量平台', num: '1', unit: '个', sub: '一期已投运', c: 'var(--c4)' },
+      { label: '示范场景', num: '4', unit: '大', sub: '示范中 2 · 验证中 2', c: 'var(--c5)' },
+      { label: '效率提升目标', num: '100', unit: '倍', sub: '2026 年目标', c: 'var(--c1)' }
+    ],
+    news: [
+      { label: '地震处理大模型开发进度', v: '77%', c: 'var(--c1)' },
+      { label: '钻完井工程数据集进度', v: '92%', c: 'var(--c4)' },
+      { label: '溢流预警准确率', v: '95%', c: 'var(--c4)' },
+      { label: '最高酶活力较野生型提升', v: '+103%', c: 'var(--c2)' },
+      { label: '3DFWI 计算效率提升', v: '10 倍', c: 'var(--c3)' }
+    ],
+    kpiCloud: [
+      { label: '科研管理智能体', num: '3', unit: '个', sub: '已上线', c: 'var(--c1)' },
+      { label: '联动设备企业', num: '5', unit: '家', sub: '已完成对接', c: 'var(--c2)' },
+      { label: '效率提升目标', num: '100', unit: '倍', sub: '2026 年目标', c: 'var(--c5)' },
+      { label: '目标版本', num: 'V1.0', unit: '', sub: '2026 年发布', c: 'var(--c3)' }
+    ],
+    caps: [
+      { id: 'knowledge', n: '知识引擎', v: 60, hint: '油气与炼化知识体系构建' },
+      { id: 'compute',   n: '科学智算', v: 45, hint: '科学计算算力与调度能力' },
+      { id: 'lab',       n: '云上实验', v: 50, hint: '实验数据采集与云端实验' },
+      { id: 'manage',    n: 'AI 科研管理', v: 65, hint: '科研管理智能体与流程' },
+      { id: 'security',  n: 'AI 科研安全', v: 40, hint: '数据分级与安全管控' }
+    ],
+    roadmap: [
+      { yr: '2026 年目标', txt: '构建多学科融合 AI 科研助理，效率提升 100 倍', state: 'now' },
+      { yr: '2027 年目标', txt: '', state: 'wait' },
+      { yr: '2028 年目标', txt: '', state: 'wait' }
+    ],
+    cloudPick: [
+      { n: '知识体系构建', v: 60, p: '梳理油气与炼化领域知识体系，形成可检索的知识资产。' },
+      { n: '数据标准',     v: 50, p: '统一科研数据接入与治理规范，支撑跨专业复用。' },
+      { n: '模型研发',     v: 55, p: '面向科研场景孵化多学科融合的科研助理能力。' },
+      { n: '实验数据采集', v: 45, p: '打通实验现场采集链路，实现数据自动回传。' }
+    ],
+    datasets14: [
+      { n: '茂金属催化剂', v: 100, d: 'ref' }, { n: '生物元件', v: 100, d: 'ref' },
+      { n: '多孔材料', v: 93.3, d: 'ref' },     { n: '钻完井工程', v: 92, d: 'oil' },
+      { n: '油气勘探大模型', v: 80, d: 'oil' }, { n: '地球化学实验', v: 60, d: 'oil' },
+      { n: '溶聚丁苯橡胶', v: 59.4, d: 'ref' }, { n: '提高采收率', v: 50, d: 'oil' },
+      { n: '分层注水', v: 50, d: 'oil' },       { n: '采油采气', v: 50, d: 'oil' },
+      { n: '油层物理', v: 44, d: 'oil' },       { n: '润滑材料', v: 37, d: 'ref' },
+      { n: '酶反应', v: 17.3, d: 'ref' },       { n: '物探科研成果', v: 12, d: 'oil' }
+    ],
+    volumes: [
+      { title: '大容量数据（TB / GB）', unitHint: '按 GB 折算取对数', tiles: [
+        { n: '地震处理', v: '425 TB', w: 425000, c: 'var(--c1)' },
+        { n: '地震解释', v: '216 TB', w: 216000, c: 'var(--c2)' },
+        { n: '钻完井',   v: '300 GB', w: 300,    c: 'var(--c3)' }
+      ] },
+      { title: '样本条数（条）', unitHint: '按条数取对数', tiles: [
+        { n: '酶反应',   v: '8671 条', w: 8671, c: 'var(--c4)' },
+        { n: '合成橡胶', v: '1781 条', w: 1781, c: 'var(--c5)' },
+        { n: '生物元件', v: '1000 条', w: 1000, c: 'var(--c1)' },
+        { n: '茂金属',   v: '600 条',  w: 600,  c: 'var(--c2)' },
+        { n: '多孔材料', v: '280 条',  w: 280,  c: 'var(--c3)' }
+      ] }
+    ],
+    ssbr: {
+      axes: ['拉伸强度', '断裂伸长率', '撕裂强度', '硬度', '回弹性', '耐磨性', '压缩永久变形', '动态力学性能'],
+      values: [88, 84, 82, 86, 81, 90, 83, 85]
+    },
+    accuracy: [
+      { g: '油气', items: [
+        { n: '溢流预警', v: 95, c: 'var(--c1)' },
+        { n: '井漏预警', v: 85.6, c: 'var(--c1)' },
+        { n: '阻卡预警', v: 83, c: 'var(--c1)' },
+        { n: '压裂压力符合率', v: 85, c: 'var(--c1)' }
+      ] },
+      { g: '炼化', items: [
+        { n: '玻璃化转变温度', v: 85, c: 'var(--c2)' },
+        { n: '聚合活性', v: 99, c: 'var(--c2)' },
+        { n: '聚合物分子量', v: 99.9, c: 'var(--c2)' },
+        { n: '共聚单体插入率', v: 91.3, c: 'var(--c2)' }
+      ] }
+    ],
+    kpiModel: [
+      { label: '模型与算法', num: '9', unit: '个', sub: '合计', c: 'var(--c1)' },
+      { label: '油气领域', num: '3', unit: '个', sub: '占 1/3', c: 'var(--c2)' },
+      { label: '炼化领域', num: '6', unit: '个', sub: '占 2/3', c: 'var(--c3)' },
+      { label: '智能体', num: '3', unit: '个', sub: '科研管理方向', c: 'var(--c4)' }
+    ],
+    models: [
+      { id: 'seismic', n: '地震处理大模型', v: 77, p: '面向地震资料处理的大模型开发，当前进度 77%。' },
+      { id: 'frac',    n: '压裂施工压力预测', v: 80, p: '压裂施工压力预测模型，当前进度 80%。' },
+      { id: 'drill',   n: '钻井工程模型', v: 87, p: '钻井工程模型开发，当前进度 87%。' }
+    ],
+    kpiDataset: [
+      { label: '数据集', num: '14', unit: '个', sub: '已建与在建', c: 'var(--c1)' },
+      { label: '累计数据量', num: '643', unit: 'TB', sub: '全口径', c: 'var(--c2)' },
+      { label: '油气领域', num: '8', unit: '个', sub: '占比 57%', c: 'var(--c3)' },
+      { label: '炼化领域', num: '6', unit: '个', sub: '占比 43%', c: 'var(--c4)' }
+    ],
+    kpiAuto: [
+      { label: '高通量实验平台', num: '1', unit: '个', sub: '酶定向进化方向', c: 'var(--c4)' },
+      { label: '平台一期', num: '已投运', unit: '', sub: '全流程自动化打通', c: 'var(--c1)' },
+      { label: '平台二期', num: '可研阶段', unit: '', sub: '可研复审进行中', c: 'var(--c5)' }
+    ],
+    enzyme: { before: 302, after: 613.79, lift: '+103%' },
+    milestone: [
+      { yr: '一期建设完成', txt: '高通量实验平台一期建成并投入运行。', state: 'done' },
+      { yr: '全流程自动化打通', txt: '酶活检测与酶蛋白改造流程实现自动化贯通。', state: 'done' },
+      { yr: '二期可研复审', txt: '', state: 'wait' }
+    ],
+    shots: [
+      { t: '酶活检测流程' }, { t: '酶蛋白改造流程' }, { t: '突变体菌落' }, { t: '平台投入运行' }
+    ],
+    scenes: [
+      { id: 'reservoir', n: '智能储层预测', p: '面向储层参数预测的智能方法示范', s: '示范中', cls: 'run' },
+      { id: 'coalbed',   n: '煤岩气勘探大模型', p: '煤岩气识别与储层划分应用', s: '示范中', cls: 'run' },
+      { id: 'material',  n: '新材料研发', p: 'SSBR 力学性能预测与分子模拟', s: '验证中', cls: 'late' },
+      { id: 'bio',       n: '合成生物学', p: '酶定向进化与生物元件构建', s: '验证中', cls: 'late' }
+    ],
+    coalbed: {
+      axes: ['油气识别准确率', '储层划分', '孔隙度符合率', '饱和度符合率', '渗透率符合率'],
+      values: [87.62, 91.79, 84.13, 86.46, 94.42]
+    },
+    efficiency: [
+      { g: '倍数提升', items: [
+        { n: '3DFWI 计算效率提升', v: 10, txt: '10 倍', c: 'var(--c1)' },
+        { n: '噪声压制效率提升', v: 5, txt: '5 倍', c: 'var(--c1)' }
+      ] },
+      { g: '百分比提升', items: [
+        { n: '单井报告生成效率提升', v: 96, txt: '96%', c: 'var(--c2)' },
+        { n: '构造断裂识别效率提升', v: 80, txt: '80%', c: 'var(--c2)' },
+        { n: '初始速度模型依赖度降低', v: 40, txt: '40%', c: 'var(--c3)' }
+      ] }
+    ],
+    compress: [
+      { n: '单井报告', before: 360, after: 12, txt: '4–6 小时 → 8–12 分钟' },
+      { n: '区块提速模板', before: 3, after: 0.5, txt: '3 天 → 0.5 天' },
+      { n: '钻井工程设计', before: 3, after: 0.5, txt: '2–3 人天 → 0.5 人天' }
+    ],
+    results: [
+      { n: '煤层厚度井点符合率', a: '88.7%', b: '97.9%', p: '由 88.7% 提升至 97.9%' },
+      { n: 'SSBR 分子模拟', a: '百余组', b: '已得样品', p: '完成百余组分子模拟并得到聚合物样品' }
+    ],
+    table: {
+      oil: ['油气勘探大模型', '钻完井工程', '提高采收率', '分层注水', '采油采气', '油层物理', '地球化学实验', '物探科研成果'],
+      ref: ['茂金属催化剂', '生物元件', '多孔材料', '溶聚丁苯橡胶', '润滑材料', '酶反应'],
+      target: { '油气勘探大模型': '842 TB', '钻完井工程': '300 GB' }
+    }
+  };
+
+  /* ═══ 小工具 ═══ */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var sem = function (v) { return v >= 80 ? 'var(--ok)' : (v >= 50 ? 'var(--mid)' : 'var(--low)'); };
+  var byId = function (k) { return D[k]; };
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function svgNS(tag, attrs) {
+    var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  function statusOf(v, given) {
+    if (given) return given;
+    if (v >= 100) return { s: '已完成', c: 'done' };
+    if (v >= 50) return { s: '推进中', c: 'run' };
+    return { s: '滞后', c: 'late' };
+  }
+
+  /* ═══ 动画注册：每屏进入时播放，离开时复位 ═══ */
+  var ANIM = [];
+  function reg(el, play, reset) { ANIM.push({ el: el, play: play, reset: reset }); }
+  function playIn(root) {
+    ANIM.forEach(function (a) { if (root.contains(a.el)) a.play(); });
+    $$('.countup', root).forEach(countUp);
+  }
+  function resetIn(root) {
+    ANIM.forEach(function (a) { if (root.contains(a.el)) a.reset(); });
+    $$('.countup', root).forEach(function (c) {
+      if (c.dataset.to == null) return;
+      c.textContent = (c.dataset.pre || '') + (0).toFixed(decimals(c.dataset.to)) + (c.dataset.suf || '');
+    });
+  }
+  function decimals(s) { return (String(s).split('.')[1] || '').length; }
+  function countUp(node) {
+    var to = parseFloat(node.dataset.to); if (isNaN(to)) return;
+    var d = decimals(node.dataset.to), pre = node.dataset.pre || '', suf = node.dataset.suf || '';
+    var t0 = performance.now(), dur = 800;
+    function frame(t) {
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      node.textContent = pre + (to * e).toFixed(d) + suf;
+      if (k < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  function numCell(v) { return '' + v; }
+
+  /* ═══ 环形 / 仪表盘 ═══ */
+  function ringSVG(value, size, sw, label) {
+    var r = (size - sw) / 2 - 4, c = 2 * Math.PI * r, cx = size / 2;
+    var svg = svgNS('svg', { viewBox: '0 0 ' + size + ' ' + size, width: size, height: size });
+    var tick = svgNS('circle', { cx: cx, cy: cx, r: r + sw / 2 + 4, fill: 'none' });
+    tick.style.stroke = 'var(--grid)'; tick.style.strokeWidth = '2';
+    tick.style.strokeDasharray = '2 7';
+    var track = svgNS('circle', { cx: cx, cy: cx, r: r, fill: 'none' });
+    track.style.stroke = 'var(--track)'; track.style.strokeWidth = sw;
+    var arc = svgNS('circle', { cx: cx, cy: cx, r: r, fill: 'none', transform: 'rotate(-90 ' + cx + ' ' + cx + ')' });
+    arc.style.stroke = sem(value); arc.style.strokeWidth = sw; arc.style.strokeLinecap = 'round';
+    arc.style.strokeDasharray = c; arc.style.strokeDashoffset = c;
+    arc.style.filter = 'var(--arc-glow)';
+    arc.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.22,0.8,0.3,1)';
+    var t1 = svgNS('text', { x: cx, y: cx + 2, 'text-anchor': 'middle' });
+    t1.setAttribute('class', 'countup');
+    t1.dataset.to = String(value); t1.dataset.suf = '%';
+    t1.style.fontFamily = 'var(--font-num)';
+    t1.style.fontSize = Math.round(size * (size > 150 ? 0.3 : 0.36)) + 'px';
+    t1.style.fontWeight = '700'; t1.style.fill = 'var(--fg)';
+    t1.style.dominantBaseline = 'middle';
+    var t2 = svgNS('text', { x: cx, y: cx + size * 0.26, 'text-anchor': 'middle' });
+    t2.textContent = label || '';
+    t2.style.fontSize = '10px'; t2.style.fill = 'var(--faint)';
+    svg.appendChild(tick); svg.appendChild(track); svg.appendChild(arc);
+    svg.appendChild(t1); if (label) svg.appendChild(t2);
+    reg(svg, function () {
+      arc.style.strokeDashoffset = c * (1 - value / 100);
+      countUp(t1);
+    }, function () {
+      arc.style.strokeDashoffset = c;
+      t1.textContent = '0%';
+    });
+    return svg;
+  }
+
+  function chartRing(host) {
+    var v = parseFloat(host.dataset.value), size = parseInt(host.dataset.size || '100', 10);
+    host.innerHTML = '';
+    host.appendChild(ringSVG(v, size, size > 140 ? 14 : 8, ''));
+  }
+
+  function chartRings3(host) {
+    var vals = host.dataset.values.split(',').map(Number);
+    var labels = host.dataset.labels.split(',');
+    var cols = ['var(--c1)', 'var(--c2)', 'var(--c3)'];
+    var size = 100, cx = size / 2, sw = 7;
+    var svg = svgNS('svg', { viewBox: '0 0 ' + size + ' ' + size, width: size, height: size });
+    var arcs = [];
+    vals.forEach(function (v, i) {
+      var r = 44 - i * 12, c = 2 * Math.PI * r;
+      var tr = svgNS('circle', { cx: cx, cy: cx, r: r, fill: 'none' });
+      tr.style.stroke = 'var(--track)'; tr.style.strokeWidth = sw;
+      var a = svgNS('circle', { cx: cx, cy: cx, r: r, fill: 'none', transform: 'rotate(-90 ' + cx + ' ' + cx + ')' });
+      a.style.stroke = cols[i]; a.style.strokeWidth = sw; a.style.strokeLinecap = 'round';
+      a.style.strokeDasharray = c; a.style.strokeDashoffset = c;
+      a.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.22,0.8,0.3,1)';
+      svg.appendChild(tr); svg.appendChild(a);
+      arcs.push({ a: a, c: c, v: v });
+    });
+    var t = svgNS('text', { x: cx, y: cx + 1, 'text-anchor': 'middle' });
+    t.setAttribute('class', 'countup'); t.dataset.to = String(vals[0]); t.dataset.suf = '%';
+    t.style.fontFamily = 'var(--font-num)'; t.style.fontSize = '17px'; t.style.fontWeight = '700';
+    t.style.fill = 'var(--fg)'; t.style.dominantBaseline = 'middle';
+    svg.appendChild(t);
+    reg(svg, function () {
+      arcs.forEach(function (o) { o.a.style.strokeDashoffset = o.c * (1 - o.v / 100); });
+      countUp(t);
+    }, function () {
+      arcs.forEach(function (o) { o.a.style.strokeDashoffset = o.c; });
+      t.textContent = '0%';
+    });
+    host.innerHTML = '';
+    host.appendChild(svg);
+    var meta = el('div', 'dial-meta');
+    meta.appendChild(el('h3', null, '方向总体进度'));
+    meta.appendChild(el('p', 'dial-note', '三环自外向内：总体 / 油气 / 炼化'));
+    var lg = el('div', 'dial-legend');
+    vals.forEach(function (v, i) {
+      lg.appendChild(el('div', 'dl',
+        '<i style="background:' + cols[i] + '"></i><span>' + esc(labels[i]) + '</span>' +
+        '<b class="countup" data-to="' + v + '" data-suf="%"></b>'));
+    });
+    meta.appendChild(lg);
+    host.appendChild(meta);
+    host.classList.add('dial-card');
+    host.style.flexDirection = 'row'; host.style.alignItems = 'center'; host.style.gap = '18px';
+  }
+
+  function chartGauge(host) {
+    var v = parseFloat(host.dataset.value), size = 202, sw = 13;
+    host.innerHTML = '';
+    host.appendChild(ringSVG(v, size, sw, ''));
+    host.style.justifyContent = 'center';
+  }
+
+  function chartHalfGauge(host) {
+    var v = parseFloat(host.dataset.value), w = 168, h = 92, cx = w / 2, cy = 82, r = 62, sw = 11;
+    var svg = svgNS('svg', { viewBox: '0 0 ' + w + ' ' + h, width: w, height: h });
+    function arcPath(rr, a0, a1) {
+      var x0 = cx + rr * Math.cos(a0), y0 = cy + rr * Math.sin(a0);
+      var x1 = cx + rr * Math.cos(a1), y1 = cy + rr * Math.sin(a1);
+      var large = (a1 - a0) > Math.PI ? 1 : 0;
+      return 'M' + x0 + ' ' + y0 + 'A' + rr + ' ' + rr + ' 0 ' + large + ' 1 ' + x1 + ' ' + y1;
+    }
+    var A0 = Math.PI, A1 = 2 * Math.PI;
+    var tick = svgNS('path', { d: arcPath(r + sw / 2 + 5, A0, A1), fill: 'none' });
+    tick.style.stroke = 'var(--grid)'; tick.style.strokeWidth = '2'; tick.style.strokeDasharray = '2 7';
+    var track = svgNS('path', { d: arcPath(r, A0, A1), fill: 'none' });
+    track.style.stroke = 'var(--track)'; track.style.strokeWidth = sw; track.style.strokeLinecap = 'round';
+    var span = Math.PI * r, c = span;
+    var arc = svgNS('path', { d: arcPath(r, A0, A1), fill: 'none' });
+    arc.style.stroke = sem(v); arc.style.strokeWidth = sw; arc.style.strokeLinecap = 'round';
+    arc.style.strokeDasharray = c; arc.style.strokeDashoffset = c;
+    arc.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.22,0.8,0.3,1)';
+    var t = svgNS('text', { x: cx, y: cy - 6, 'text-anchor': 'middle' });
+    t.setAttribute('class', 'countup'); t.dataset.to = String(v); t.dataset.suf = '%';
+    t.style.fontFamily = 'var(--font-num)'; t.style.fontSize = '30px'; t.style.fontWeight = '700';
+    t.style.fill = 'var(--fg)';
+    svg.appendChild(tick); svg.appendChild(track); svg.appendChild(arc); svg.appendChild(t);
+    reg(svg, function () { arc.style.strokeDashoffset = c * (1 - v / 100); countUp(t); },
+      function () { arc.style.strokeDashoffset = c; t.textContent = '0%'; });
+    host.innerHTML = '';
+    host.appendChild(svg);
+  }
+
+  /* ═══ 横向条形图（可带 100% 目标虚线 + 刻度轴） ═══ */
+  function hbarsInto(host, items, opt) {
+    var max = opt.max || 110, compact = opt.compact;
+    var wrap = el('div', 'bars' + (compact ? ' compact' : ''));
+    wrap.style.setProperty('--bl', compact ? '188px' : '150px');
+    items.forEach(function (it) {
+      var val = typeof it === 'object' ? it.v : it;
+      var name = typeof it === 'object' ? it.n : it;
+      var row = el('div', 'bar-row' + (opt.inline ? ' inline' : ''));
+      var pctTxt = Number(val.toFixed(1));
+      row.innerHTML =
+        (opt.inline
+          ? '<span class="bar-top"><span class="n">' + esc(name) + '</span></span>'
+          : '<span class="bar-top"><span class="n">' + esc(name) + '</span>' +
+            '<span class="v countup" data-to="' + pctTxt + '" data-suf="%"></span></span>') +
+        '<span class="bar-track">' +
+          '<i class="bar-fill" style="--bc:' + sem(val) + '"></i>' +
+          '<i class="bar-ref" style="left:' + (100 / max * 100) + '%"></i>' +
+        '</span>' +
+        (opt.inline ? '<span class="bar-val countup" data-to="' + pctTxt + '" data-suf="%"></span>' : '');
+      wrap.appendChild(row);
+      var f = $('.bar-fill', row);
+      var w = Math.min(100, val / max * 100);
+      reg(f, function () { f.style.width = w + '%'; }, function () { f.style.width = '0%'; });
+    });
+    if (opt.axis) {
+      var axisRow = el('div', 'bar-row' + (opt.inline ? ' inline' : ''));
+      axisRow.style.marginTop = '2px';
+      axisRow.innerHTML = (opt.inline ? '<span></span>' : '') +
+        '<span class="axis">' + [0, 25, 50, 75, 100].map(function (t) {
+          return '<span style="left:' + (t / max * 100) + '%">' + t + '</span>';
+        }).join('') + '</span>' + (opt.inline ? '<span></span>' : '');
+      wrap.appendChild(axisRow);
+    }
+    host.innerHTML = '';
+    host.appendChild(wrap);
+  }
+  function chartBars(host) {
+    var items = byId(host.dataset.key);
+    hbarsInto(host, items, {
+      max: parseFloat(host.dataset.max || '110'),
+      axis: host.dataset.axis === '1',
+      inline: !!host.dataset.compact,
+      compact: !!host.dataset.compact
+    });
+  }
+
+  /* ═══ 雷达图 ═══ */
+  function chartRadar(host) {
+    var d = byId(host.dataset.key), max = parseFloat(host.dataset.max || '100');
+    var ref = parseFloat(host.dataset.ref || '0');
+    var n = d.axes.length, W = 520, H = 300, cx = W / 2, cy = H / 2 + 6, R = 108;
+    var svg = svgNS('svg', { viewBox: '0 0 ' + W + ' ' + H });
+    var a0 = -Math.PI / 2;
+    function pt(i, k) { var a = a0 + i * 2 * Math.PI / n; return [cx + R * k * Math.cos(a), cy + R * k * Math.sin(a)]; }
+    [0.25, 0.5, 0.75, 1].forEach(function (k) {
+      var pts = []; for (var i = 0; i < n; i++) pts.push(pt(i, k).join(','));
+      var g = svgNS('polygon', { points: pts.join(' ') });
+      g.style.fill = 'none'; g.style.stroke = 'var(--grid)'; g.style.strokeWidth = '1';
+      svg.appendChild(g);
+    });
+    for (var i = 0; i < n; i++) {
+      var p = pt(i, 1), l = svgNS('line', { x1: cx, y1: cy, x2: p[0], y2: p[1] });
+      l.style.stroke = 'var(--grid)'; l.style.strokeWidth = '1';
+      svg.appendChild(l);
+    }
+    if (ref > 0) {
+      var rp = []; for (var j = 0; j < n; j++) rp.push(pt(j, ref / max).join(','));
+      var rl = svgNS('polygon', { points: rp.join(' ') });
+      rl.style.fill = 'none'; rl.style.stroke = 'var(--ref)'; rl.style.strokeWidth = '1.2';
+      rl.style.strokeDasharray = '5 5';
+      svg.appendChild(rl);
+    }
+    var pts2 = []; for (var k2 = 0; k2 < n; k2++) pts2.push(pt(k2, d.values[k2] / max).join(','));
+    var poly = svgNS('polygon', { points: pts2.join(' ') });
+    poly.style.fill = 'var(--c1)'; poly.style.fillOpacity = '0.26';
+    poly.style.stroke = 'var(--c1)'; poly.style.strokeWidth = '2';
+    poly.style.transformOrigin = cx + 'px ' + cy + 'px';
+    poly.style.transition = 'transform 0.8s cubic-bezier(0.22,0.8,0.3,1)';
+    svg.appendChild(poly);
+    for (var k3 = 0; k3 < n; k3++) {
+      var pp = pt(k3, d.values[k3] / max);
+      var c = svgNS('circle', { cx: pp[0], cy: pp[1], r: 3.2 });
+      c.style.fill = sem(d.values[k3]);
+      svg.appendChild(c);
+    }
+    d.axes.forEach(function (ax, idx) {
+      var a = a0 + idx * 2 * Math.PI / n;
+      var lx = cx + (R + 24) * Math.cos(a), ly = cy + (R + 18) * Math.sin(a);
+      var t = svgNS('text', { x: lx, y: ly + 4, 'text-anchor': Math.abs(Math.cos(a)) < 0.2 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end') });
+      t.textContent = ax;
+      t.style.fontSize = '11px'; t.style.fill = 'var(--muted)';
+      svg.appendChild(t);
+      var tv = svgNS('text', { x: lx, y: ly + 18, 'text-anchor': Math.abs(Math.cos(a)) < 0.2 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end') });
+      tv.textContent = d.values[idx] + '%';
+      tv.style.fontSize = '11px'; tv.style.fontFamily = 'var(--font-num)';
+      tv.style.fill = sem(d.values[idx]);
+      svg.appendChild(tv);
+    });
+    reg(svg, function () { poly.style.transform = 'scale(1)'; }, function () { poly.style.transform = 'scale(0.18)'; });
+    poly.style.transform = 'scale(0.18)';
+    host.innerHTML = '';
+    host.appendChild(svg);
+  }
+
+  /* ═══ 分组条形图（按组归一或按统一量程） ═══ */
+  function chartGrouped(host) {
+    var groups = byId(host.dataset.key), max = parseFloat(host.dataset.max || '0');
+    var ref = parseFloat(host.dataset.ref || '0');
+    var norm = host.dataset.norm === 'group';
+    var wrap = el('div', 'bars');
+    groups.forEach(function (g, gi) {
+      if (gi > 0) {
+        var div = el('div', 'rule');
+        div.style.margin = '7px 0 5px';
+        div.style.borderTop = '1px solid var(--hair)';
+        wrap.appendChild(div);
+      }
+      wrap.appendChild(el('div', null,
+        '<span style="font-size:11px;color:var(--faint);letter-spacing:.08em">' + esc(g.g) + '</span>'));
+      var gMax = norm ? Math.max.apply(null, g.items.map(function (x) { return x.v; })) : 0;
+      g.items.forEach(function (it) {
+        var denom = norm ? gMax : max;
+        var row = el('div', 'bar-row inline');
+        row.style.setProperty('--bl', '170px');
+        row.innerHTML =
+          '<span class="bar-top"><span class="n">' + esc(it.n) + '</span></span>' +
+          '<span class="bar-track"><i class="bar-fill" style="--bc:' + (it.c || sem(it.v)) + '"></i>' +
+          (ref > 0 ? '<i class="bar-ref" style="left:' + (ref / max * 100) + '%"></i>' : '') + '</span>' +
+          '<span class="bar-val">' + esc(it.txt || (it.v + (it.suffix || '%'))) + '</span>';
+        wrap.appendChild(row);
+        var f = $('.bar-fill', row);
+        var w = Math.min(100, it.v / denom * 100);
+        if (w < 4) w = 4;
+        reg(f, function () { f.style.width = w + '%'; }, function () { f.style.width = '0%'; });
+      });
+    });
+    host.innerHTML = '';
+    host.appendChild(wrap);
+  }
+
+  /* ═══ 子弹图 ═══ */
+  function chartBullet(host) {
+    var items = byId(host.dataset.key), max = parseFloat(host.dataset.max || '110');
+    var wrap = el('div', 'bars');
+    items.forEach(function (it) {
+      var row = el('div', 'bar-row inline');
+      row.style.setProperty('--bl', '176px');
+      row.innerHTML =
+        '<span class="bar-top"><span class="n">' + esc(it.n) + '</span></span>' +
+        '<span class="bar-track" style="height:12px">' +
+          '<i class="bar-fill" style="--bc:' + sem(it.v) + '"></i>' +
+          '<i class="bar-ref" style="left:' + (100 / max * 100) + '%;border-left-style:solid;border-left-width:2px"></i>' +
+        '</span>' +
+        '<span class="bar-val countup" data-to="' + it.v + '" data-suf="%"></span>';
+      wrap.appendChild(row);
+      var f = $('.bar-fill', row), w = Math.min(100, it.v / max * 100);
+      reg(f, function () { f.style.width = w + '%'; }, function () { f.style.width = '0%'; });
+    });
+    host.innerHTML = '';
+    host.appendChild(wrap);
+  }
+
+  /* ═══ 矩形树图（面积按对数刻度，同面内归一） ═══ */
+  function squarify(items, x, y, w, h, out) {
+    if (items.length === 1) { out.push({ it: items[0], x: x, y: y, w: w, h: h }); return; }
+    var total = items.reduce(function (s, d) { return s + d.w; }, 0);
+    var acc = 0, split = 1;
+    for (var i = 0; i < items.length - 1; i++) {
+      acc += items[i].w;
+      if (acc >= total / 2) { split = i + 1; break; }
+    }
+    var A = items.slice(0, split), B = items.slice(split);
+    var aw = A.reduce(function (s, d) { return s + d.w; }, 0) / total;
+    if (w >= h) {
+      squarify(A, x, y, w * aw, h, out);
+      squarify(B, x + w * aw, y, w * (1 - aw), h, out);
+    } else {
+      squarify(A, x, y, w, h * aw, out);
+      squarify(B, x, y + h * aw, w, h * (1 - aw), out);
+    }
+  }
+  function chartTreemap(host) {
+    var facets = byId(host.dataset.key);
+    var box = el('div', null);
+    box.style.cssText = 'display:flex;flex-direction:column;gap:14px;flex:1;min-height:0;width:100%';
+    facets.forEach(function (f) {
+      var fw = el('div', null);
+      fw.style.cssText = 'display:flex;flex-direction:column;gap:8px;flex:1;min-height:0';
+      fw.appendChild(el('div', null,
+        '<span style="font-size:11px;color:var(--muted);letter-spacing:.06em">' + esc(f.title) + '</span>' +
+        '<span style="font-size:10px;color:var(--faint);margin-left:8px">' + esc(f.unitHint) + '</span>'));
+      var W = 660, H = 108, out = [];
+      var tiles = f.tiles.slice().sort(function (a, b) { return b.w - a.w; });
+      var logged = tiles.map(function (t) { return { it: t, w: Math.max(0.42, Math.log10(t.w)) }; });
+      squarify(logged, 0, 0, W, H, out);
+      var plate = el('div', null);
+      plate.style.cssText = 'position:relative;flex:1;min-height:108px';
+      out.forEach(function (o) {
+        var d = el('div', null,
+          '<b style="font-size:11px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(o.it.it.n) + '</b>' +
+          '<span class="num" style="font-size:' + (o.w > 150 ? 17 : 13) + 'px;color:var(--fg)">' + esc(o.it.it.v) + '</span>');
+        d.style.cssText =
+          'position:absolute;overflow:hidden;border-radius:8px;padding:8px 10px;' +
+          'left:' + (o.x / W * 100) + '%;top:' + (o.y / H * 100) + '%;' +
+          'width:' + (o.w / W * 100) + '%;height:' + (o.h / H * 100) + '%;' +
+          'background:linear-gradient(150deg,' + o.it.it.c + ' 0%,color-mix(in oklch,' + o.it.it.c + ' 38%,var(--bg-edge)) 100%);' +
+          'border:1px solid color-mix(in oklch,' + o.it.it.c + ' 55%,transparent);' +
+          'display:flex;flex-direction:column;justify-content:flex-end;gap:1px;min-width:0';
+        d.style.transform = 'scale(0.86)'; d.style.opacity = '0';
+        d.style.transition = 'transform .8s cubic-bezier(.22,.8,.3,1), opacity .8s ease';
+        plate.appendChild(d);
+        reg(d, function () { d.style.transform = 'scale(1)'; d.style.opacity = '1'; },
+          function () { d.style.transform = 'scale(0.86)'; d.style.opacity = '0'; });
+      });
+      fw.appendChild(plate);
+      box.appendChild(fw);
+    });
+    host.innerHTML = '';
+    host.appendChild(box);
+  }
+
+  /* ═══ 旭日图（内环 2 大领域 / 外环 9 模型） ═══ */
+  function chartSunburst(host) {
+    var counts = host.dataset.keys.split(',').map(Number);
+    var total = counts.reduce(function (a, b) { return a + b; }, 0);
+    var W = 260, H = 260, cx = W / 2, cy = H / 2;
+    var svg = svgNS('svg', { viewBox: '0 0 ' + W + ' ' + H });
+    function arc(r0, r1, a0, a1) {
+      var x0 = cx + r1 * Math.cos(a0), y0 = cy + r1 * Math.sin(a0);
+      var x1 = cx + r1 * Math.cos(a1), y1 = cy + r1 * Math.sin(a1);
+      var x2 = cx + r0 * Math.cos(a1), y2 = cy + r0 * Math.sin(a1);
+      var x3 = cx + r0 * Math.cos(a0), y3 = cy + r0 * Math.sin(a0);
+      var lg = (a1 - a0) > Math.PI ? 1 : 0;
+      return 'M' + x0 + ' ' + y0 + 'A' + r1 + ' ' + r1 + ' 0 ' + lg + ' 1 ' + x1 + ' ' + y1 +
+             'L' + x2 + ' ' + y2 + 'A' + r0 + ' ' + r0 + ' 0 ' + lg + ' 0 ' + x3 + ' ' + y3 + 'Z';
+    }
+    var inner = ['var(--c1)', 'var(--c2)'];
+    var outer = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)'];
+    var pieces = [];
+    var a = -Math.PI / 2;
+    counts.forEach(function (cn, gi) {
+      var span = cn / total * Math.PI * 2;
+      var p = svgNS('path', { d: arc(52, 92, a, a + span) });
+      p.style.fill = inner[gi]; p.style.fillOpacity = '0.55';
+      p.style.stroke = 'var(--bg-edge)'; p.style.strokeWidth = '1.5';
+      svg.appendChild(p); pieces.push(p);
+      var step = span / cn;
+      for (var i = 0; i < cn; i++) {
+        var q = svgNS('path', { d: arc(96, 124, a + i * step + 0.02, a + (i + 1) * step - 0.02) });
+        q.style.fill = outer[(gi * 3 + i) % outer.length];
+        q.style.stroke = 'var(--bg-edge)'; q.style.strokeWidth = '1.5';
+        svg.appendChild(q); pieces.push(q);
+      }
+      a += span;
+    });
+    var t1 = svgNS('text', { x: cx, y: cy + 2, 'text-anchor': 'middle' });
+    t1.setAttribute('class', 'countup'); t1.dataset.to = String(total);
+    t1.style.fontFamily = 'var(--font-num)'; t1.style.fontSize = '28px'; t1.style.fontWeight = '700';
+    t1.style.fill = 'var(--fg)'; t1.style.dominantBaseline = 'middle';
+    var t2 = svgNS('text', { x: cx, y: cy + 22, 'text-anchor': 'middle' });
+    t2.textContent = '个模型与算法';
+    t2.style.fontSize = '10px'; t2.style.fill = 'var(--faint)';
+    svg.appendChild(t1); svg.appendChild(t2);
+    reg(svg, function () { pieces.forEach(function (p) { p.style.opacity = '1'; }); countUp(t1); },
+      function () { pieces.forEach(function (p) { p.style.opacity = '0'; }); t1.textContent = '0'; });
+    pieces.forEach(function (p) { p.style.transition = 'opacity .8s ease'; p.style.opacity = '0'; });
+    host.innerHTML = '';
+    var wrap = el('div', null);
+    wrap.style.cssText = 'display:flex;align-items:center;gap:14px;flex:1;min-height:0';
+    wrap.appendChild(svg);
+    svg.style.flex = '0 0 auto'; svg.style.width = '230px'; svg.style.height = '230px';
+    var lg = el('div', 'dial-legend');
+    lg.style.marginTop = '0';
+    lg.appendChild(el('div', 'dl', '<i style="background:var(--c1)"></i><span>油气领域</span><b class="num">3 个</b>'));
+    lg.appendChild(el('div', 'dl', '<i style="background:var(--c2)"></i><span>炼化领域</span><b class="num">6 个</b>'));
+    lg.appendChild(el('div', 'dl', '<i style="background:var(--c4)"></i><span>合计</span><b class="num">9 个</b>'));
+    wrap.appendChild(lg);
+    host.appendChild(wrap);
+  }
+
+  /* ═══ 瀑布 / 前后对比柱 ═══ */
+  function chartWaterfall(host) {
+    var d = byId(host.dataset.key), mx = Math.max(d.before, d.after);
+    var wrap = el('div', null);
+    wrap.style.cssText = 'display:flex;flex-direction:column;flex:1;min-height:0';
+    var cols = el('div', 'cols');
+    var c1 = el('div', 'col'), c2 = el('div', 'col');
+    c1.innerHTML = '<span class="col-val countup" data-to="' + d.before + '"></span>' +
+      '<div class="col-bar" style="--cc:var(--c1)"></div>';
+    c2.innerHTML = '<span class="col-val countup" data-to="' + d.after + '"></span>' +
+      '<div class="col-bar" style="--cc:var(--c4)"></div>';
+    var br = el('div', 'bridge');
+    br.innerHTML = '<span>提升 ' + esc(d.lift) + '</span>';
+    c2.appendChild(br);
+    cols.appendChild(c1); cols.appendChild(c2);
+    var axis = el('div', 'col-axis');
+    axis.innerHTML = '<div>野生型</div><div>改造后</div>';
+    wrap.appendChild(cols); wrap.appendChild(axis);
+    var bars = [c1.querySelector('.col-bar'), c2.querySelector('.col-bar')];
+    var hs = [d.before / mx * 82, d.after / mx * 82];
+    reg(wrap, function () {
+      bars[0].style.height = hs[0] + '%';
+      bars[1].style.height = hs[1] + '%';
+      br.style.bottom = hs[0] + '%';
+      br.style.opacity = '1';
+    }, function () {
+      bars[0].style.height = '0%'; bars[1].style.height = '0%'; br.style.opacity = '0';
+    });
+    host.innerHTML = '';
+    host.appendChild(wrap);
+  }
+
+  /* ═══ 顶部 Tab 切换 ═══ */
+  var PAGES = ['overview', 'cloud', 'dataset', 'model', 'auto', 'app'];
+  var current = 0;
+  function show(idx) {
+    idx = Math.max(0, Math.min(PAGES.length - 1, idx));
+    var prevPage = $('#page-' + PAGES[current]);
+    current = idx;
+    var page = $('#page-' + PAGES[idx]);
+    PAGES.forEach(function (p, i) {
+      var node = $('#page-' + p);
+      node.classList.toggle('is-active', i === idx);
+      node.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+    });
+    $$('.tab').forEach(function (t, i) { t.setAttribute('aria-selected', i === idx ? 'true' : 'false'); });
+    if (prevPage && prevPage !== page) resetIn(prevPage);
+    playIn(page);
+    try { localStorage.setItem('od-cockpit-tab', String(idx)); } catch (e) {}
+  }
+  $$('.tab').forEach(function (t) {
+    t.addEventListener('click', function () { show(PAGES.indexOf(t.dataset.target)); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' && !$('#drawer').classList.contains('open')) show(current + 1);
+    if (e.key === 'ArrowLeft' && !$('#drawer').classList.contains('open')) show(current - 1);
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  /* ═══ 抽屉 ═══ */
+  var drawer = $('#drawer'), scrim = $('#scrim'), lastFocus = null;
+  function openDrawer(o) {
+    lastFocus = document.activeElement;
+    $('#drawerTag').textContent = o.tag;
+    $('#drawerTag').className = 'tag';
+    if (o.tagTone) $('#drawerTag').style.color = o.tagTone;
+    $('#drawerTitle').textContent = o.title;
+    $('#drawerGrid').innerHTML = o.boxes.map(function (b) {
+      return '<div class="dbox"><h4>' + esc(b.k) + '</h4>' +
+        (b.tbd ? '<span class="tbd">待补数</span>' : '<p>' + esc(b.v) + '</p>') + '</div>';
+    }).join('');
+    $('#drawerExtra').innerHTML = o.extra || '';
+    var host = $('#drawerRing');
+    host.innerHTML = '';
+    if (o.value != null) {
+      host.style.display = 'flex';
+      host.appendChild(ringSVG(o.value, 84, 8, ''));
+    } else {
+      host.style.display = 'none';
+    }
+    drawer.classList.add('open'); scrim.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    $('#drawerClose').focus();
+    if (o.value != null) playIn(host);
+  }
+  function closeDrawer() {
+    if (!drawer.classList.contains('open')) return;
+    drawer.classList.remove('open'); scrim.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  $('#drawerClose').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+
+  /* ═══ 轻提示 ═══ */
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('#toast');
+    t.textContent = msg; t.classList.add('open');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('open'); }, 2600);
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-toast]') : null;
+    if (b) toast(b.dataset.toast);
+  });
+
+  /* ═══ 渲染：总览 ═══ */
+  function renderOverview() {
+    var dc = $('#dirCards');
+    D.dirs.forEach(function (d) {
+      var c = el('div', 'dir');
+      c.setAttribute('data-od-id', 'direction-card-' + d.id);
+      c.innerHTML = '<span class="d-top">' + esc(d.n) + '</span>' +
+        '<span class="d-num" style="color:' + sem(d.v) + '"><span class="countup" data-to="' + d.v + '"></span><small>%</small></span>' +
+        '<span class="prog"><i style="--pc:' + sem(d.v) + '"></i></span>';
+      dc.appendChild(c);
+      var f = $('.prog > i', c), w = d.v;
+      reg(f, function () { f.style.width = w + '%'; }, function () { f.style.width = '0%'; });
+      c.addEventListener('click', function () { show(PAGES.indexOf(d.id)); });
+    });
+
+    var ko = $('#kpiOverview');
+    D.kpiOverview.forEach(function (k, i) {
+      var c = el('div', 'kpi');
+      c.setAttribute('data-od-id', 'kpi-' + i);
+      c.style.setProperty('--kc', k.c);
+      c.innerHTML = '<span class="k-label">' + esc(k.label) + '</span>' +
+        '<span class="k-line"><span class="k-num countup" data-to="' + k.num + '" data-pre="' + (k.pre || '') + '"></span>' +
+        (k.unit ? '<span class="k-unit">' + esc(k.unit) + '</span>' : '') + '</span>' +
+        '<span class="k-sub">' + esc(k.sub) + '</span>';
+      ko.appendChild(c);
+    });
+
+    var nt = $('#newsTrack');
+    var list = D.news.concat(D.news);
+    list.forEach(function (n) {
+      var it = el('div', 'news-item');
+      it.style.setProperty('--pc', n.c);
+      it.innerHTML = '<i class="dot"></i><span class="t">' + esc(n.label) + '</span>' +
+        '<span class="v">' + esc(n.v) + '</span>';
+      nt.appendChild(it);
+    });
+  }
+
+  /* ═══ 渲染：AI 科研实验云 ═══ */
+  function renderCloud() {
+    fillKpis('#kpiCloud', D.kpiCloud, 'cloud');
+    var grid = $('#capGrid');
+    D.caps.forEach(function (c) {
+      var b = el('button', 'cap');
+      b.setAttribute('data-od-id', 'capability-' + c.id);
+      b.innerHTML = '<span class="cap-top"><b>' + esc(c.n) + '</b>' +
+        '<span class="countup" data-to="' + c.v + '" data-suf="%"></span></span>' +
+        '<span class="prog"><i style="--pc:' + sem(c.v) + '"></i></span>' +
+        '<span class="cap-hint">' + esc(c.hint) + '</span>';
+      grid.appendChild(b);
+      var f = $('.prog > i', b);
+      reg(f, function () { f.style.width = c.v + '%'; }, function () { f.style.width = '0%'; });
+      b.addEventListener('click', function () {
+        openDrawer({
+          tag: '能力模块', tagTone: 'var(--c1)', title: c.n, value: c.v,
+          boxes: [
+            { k: '模块说明', v: c.hint + '。' },
+            { k: '当前进展', v: '成熟度 ' + c.v + '%，其余细化指标待补数。', tbd: false },
+            { k: '数据来源', v: '需求方指标分析结论（2026-09）。' }
+          ],
+          extra: '<div class="tbd-block">模块级明细指标 待补数</div>'
+        });
+      });
+    });
+    var empty = el('div', 'cap-empty');
+    empty.innerHTML = '<b style="color:var(--muted);font-weight:500">第 6 格留空</b>' +
+      '<span>五大能力模块为 5 项，此处保留栅格位以维持 2×3 矩阵。</span>';
+    grid.appendChild(empty);
+
+    var tl = $('#roadmap');
+    D.roadmap.forEach(function (r) {
+      var n = el('div', 'tl-node ' + r.state);
+      n.innerHTML = '<div class="tl-track"><span class="tl-dot"></span></div>' +
+        '<div class="tl-body"><span class="yr">' + esc(r.yr) + '</span>' +
+        (r.txt ? '<p>' + esc(r.txt) + '</p>' : '<span class="tbd" style="align-self:flex-start">待补数</span>') +
+        '</div>';
+      tl.appendChild(n);
+    });
+
+    var pk = $('#cloudPick');
+    D.cloudPick.forEach(function (p, i) {
+      var c = el('button', 'pick-card');
+      c.setAttribute('data-od-id', 'cloud-progress-' + i);
+      c.style.setProperty('--pc', sem(p.v));
+      c.innerHTML = '<h4><i></i>' + esc(p.n) + '</h4>' +
+        '<span class="pick-big" style="color:' + sem(p.v) + '">' +
+          '<span class="countup" data-to="' + p.v + '"></span><small>%</small></span>' +
+        '<span class="prog lg"><i style="--pc:' + sem(p.v) + '"></i></span>' +
+        '<p>' + esc(p.p) + '</p>';
+      pk.appendChild(c);
+      var f = $('.prog > i', c);
+      reg(f, function () { f.style.width = p.v + '%'; }, function () { f.style.width = '0%'; });
+      c.addEventListener('click', function () {
+        openDrawer({
+          tag: '当前进展', tagTone: 'var(--c1)', title: p.n, value: p.v,
+          boxes: [
+            { k: '当前进展', v: p.p },
+            { k: '26 年目标', tbd: true },
+            { k: '里程碑', tbd: true }
+          ],
+          extra: '<div class="tbd-block">节点级数据 待补数</div>'
+        });
+      });
+    });
+  }
+
+  function fillKpis(sel, arr, prefix) {
+    var host = $(sel);
+    arr.forEach(function (k, i) {
+      var c = el('div', 'kpi');
+      c.setAttribute('data-od-id', 'kpi-' + prefix + '-' + i);
+      c.style.setProperty('--kc', k.c);
+      var big = /^[0-9.]+$/.test(k.num);
+      c.innerHTML = '<span class="k-label">' + esc(k.label) + '</span>' +
+        '<span class="k-line"><span class="k-num' + (big ? ' countup' : '') + '" style="font-size:' +
+        (big ? 40 : 26) + 'px" ' + (big ? 'data-to="' + k.num + '"' : '') + '>' + (big ? '' : esc(k.num)) + '</span>' +
+        (k.unit ? '<span class="k-unit">' + esc(k.unit) + '</span>' : '') + '</span>' +
+        '<span class="k-sub">' + esc(k.sub) + '</span>';
+      host.appendChild(c);
+    });
+  }
+
+  /* ═══ 渲染：专业数据集（KPI + 表格 + 分页） ═══ */
+  var tState = { domain: 'oil', page: 0, per: 5 };
+  function renderDataset() {
+    fillKpis('#kpiDataset', D.kpiDataset, 'dataset');
+  }
+  function renderTable() {
+    var names = D.table[tState.domain];
+    var maxPage = Math.max(0, Math.ceil(names.length / tState.per) - 1);
+    tState.page = Math.min(tState.page, maxPage);
+    var rows = names.slice(tState.page * tState.per, tState.page * tState.per + tState.per);
+    var body = $('#dsBody');
+    body.innerHTML = '';
+    rows.forEach(function (n, i) {
+      var rec = D.datasets14.filter(function (x) { return x.n === n; })[0] || { v: 0 };
+      var idx = tState.page * tState.per + i + 1;
+      var tg = D.table.target[n];
+      var st = statusOf(rec.v);
+      var tr = el('tr');
+      tr.setAttribute('data-od-id', 'dataset-row-' + idx);
+      tr.innerHTML =
+        '<td class="c-idx">' + String(idx).padStart(2, '0') + '</td>' +
+        '<td class="c-name">' + esc(n) + '</td>' +
+        '<td class="c-mag">' + (tg ? esc(tg) : '<span class="tbd">待补数</span>') + '</td>' +
+        '<td class="c-mag"><span class="tbd">待补数</span></td>' +
+        '<td class="c-prog"><div class="prog-row"><span class="prog"><i style="--pc:' + sem(rec.v) + ';width:' + rec.v + '%"></i></span>' +
+          '<span class="pct" style="color:' + sem(rec.v) + '">' + rec.v + '%</span></div></td>' +
+        '<td class="c-status"><span class="status ' + st.c + '"><i></i>' + st.s + '</span></td>';
+      body.appendChild(tr);
+      tr.addEventListener('click', function () {
+        openDrawer({
+          tag: (tState.domain === 'oil' ? '油气领域' : '炼化领域'), tagTone: 'var(--c2)', title: n, value: rec.v,
+          boxes: [
+            { k: '26 年目标', v: tg ? tg + '（需求方示例数据）' : null, tbd: !tg },
+            { k: '已完成', tbd: true },
+            { k: '当前进度', v: rec.v + '%' },
+            { k: '状态', v: st.s }
+          ],
+          extra: '<div class="tbd-block">数据集明细字段 待补数</div>'
+        });
+      });
+    });
+    $('#pgInfo').textContent = '共 ' + names.length + ' 个数据集 · 第 ' + (tState.page + 1) + ' / ' + (maxPage + 1) + ' 页 · 每页 ' + tState.per + ' 行';
+    var nums = $('#pgNums'); nums.innerHTML = '';
+    for (var p = 0; p <= maxPage; p++) {
+      (function (p) {
+        var b = el('button', 'pg-btn' + (p === tState.page ? ' is-on' : ''), String(p + 1));
+        b.addEventListener('click', function () { tState.page = p; renderTable(); });
+        nums.appendChild(b);
+      })(p);
+    }
+    $('[data-pg="prev"]').disabled = tState.page === 0;
+    $('[data-pg="next"]').disabled = tState.page === maxPage;
+  }
+  $$('.seg-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.seg-btn').forEach(function (x) {
+        x.classList.toggle('is-on', x === b);
+        x.setAttribute('aria-selected', x === b ? 'true' : 'false');
+      });
+      tState.domain = b.dataset.domain; tState.page = 0; renderTable();
+    });
+  });
+  $('[data-pg="prev"]').addEventListener('click', function () { tState.page--; renderTable(); });
+  $('[data-pg="next"]').addEventListener('click', function () { tState.page++; renderTable(); });
+
+  /* ═══ 渲染：模型与算法 ═══ */
+  function renderModel() {
+    fillKpis('#kpiModel', D.kpiModel, 'model');
+    var pk = $('#modelPick');
+    D.models.forEach(function (m, i) {
+      var c = el('button', 'mrow');
+      c.setAttribute('data-od-id', 'model-progress-' + m.id);
+      c.innerHTML =
+        '<span class="m-name">' + esc(m.n) + '</span>' +
+        '<span class="m-num" style="color:' + sem(m.v) + '">' +
+          '<span class="countup" data-to="' + m.v + '"></span>%</span>' +
+        '<span class="prog"><i style="--pc:' + sem(m.v) + '"></i></span>' +
+        '<span class="m-cta">26 年目标 / 当前进展 ›</span>' +
+        '<span class="m-desc">' + esc(m.p) + '（点击查看详情）</span>';
+      pk.appendChild(c);
+      var f = $('.prog > i', c);
+      reg(f, function () { f.style.width = m.v + '%'; }, function () { f.style.width = '0%'; });
+      c.addEventListener('click', function () {
+        openDrawer({
+          tag: '模型开发', tagTone: 'var(--c1)', title: m.n, value: m.v,
+          boxes: [
+            { k: '26 年目标', tbd: true },
+            { k: '当前进展', v: m.p }
+          ],
+          extra: '<div class="tbd-block">26 年目标文本 待补数</div>'
+        });
+      });
+    });
+  }
+
+  /* ═══ 渲染：实验表征及自动化 ═══ */
+  function renderAuto() {
+    fillKpis('#kpiAuto', D.kpiAuto, 'auto');
+    var tl = $('#milestone');
+    D.milestone.forEach(function (m) {
+      var n = el('div', 'tl-node ' + m.state);
+      n.innerHTML = '<div class="tl-track"><span class="tl-dot"></span></div>' +
+        '<div class="tl-body"><span class="yr">' + esc(m.yr) + '</span>' +
+        (m.txt ? '<p>' + esc(m.txt) + '</p>' : '<span class="tbd" style="align-self:flex-start">待补数</span>') +
+        '</div>';
+      tl.appendChild(n);
+    });
+    var row = $('#shots'), dots = $('#shotDots');
+    var GEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' +
+      '<circle cx="12" cy="12" r="7"/><path d="M12 5v14M5 12h14"/></svg>';
+    D.shots.forEach(function (s, i) {
+      var t = el('div', 'shot');
+      t.setAttribute('data-od-id', 'site-shot-' + i);
+      t.innerHTML = '<span class="geo">' + GEO + '</span><span class="cap">' + esc(s.t) + '</span>';
+      row.appendChild(t);
+      var d = el('button', '', '');
+      d.setAttribute('aria-label', '切换到：' + s.t);
+      d.addEventListener('click', function () { setShot(i, true); });
+      dots.appendChild(d);
+    });
+    var tbd = el('div', 'shot is-tbd');
+    tbd.innerHTML = '<span class="geo">' + GEO + '</span><span class="cap" style="color:var(--faint)">待补数 · 实拍图</span>';
+    row.appendChild(tbd);
+    setShot(0, true);
+  }
+  var shotIdx = 0, shotTimer = null;
+  function setShot(i, manual) {
+    shotIdx = i % D.shots.length;
+    $$('#shots .shot').forEach(function (s, k) { s.classList.toggle('is-on', k === shotIdx); });
+    $$('#shotDots button').forEach(function (d, k) { d.classList.toggle('is-on', k === shotIdx); });
+    if (manual) { clearInterval(shotTimer); shotTimer = setInterval(function () { setShot(shotIdx + 1); }, 3000); }
+  }
+
+  /* ═══ 渲染：示范应用 ═══ */
+  function renderApp() {
+    var row = $('#sceneRow');
+    D.scenes.forEach(function (s) {
+      var b = el('button', 'scene');
+      b.setAttribute('data-od-id', 'app-scene-' + s.id);
+      b.innerHTML = '<h4>' + esc(s.n) + '</h4><p>' + esc(s.p) + '</p>' +
+        '<span class="status ' + s.cls + '"><i></i>' + esc(s.s) + '</span>';
+      row.appendChild(b);
+      b.addEventListener('click', function () {
+        openDrawer({
+          tag: s.s, tagTone: s.cls === 'run' ? 'var(--c1)' : 'var(--c5)', title: s.n, value: null,
+          boxes: [
+            { k: '场景说明', v: s.p + '。' },
+            { k: '场景状态', v: s.s },
+            { k: '量化成效', tbd: true }
+          ],
+          extra: '<div class="tbd-block">场景级量化指标 待补数</div>'
+        });
+      });
+    });
+    var cz = $('#compress');
+    D.compress.forEach(function (c) {
+      var w1 = 100, w2 = Math.max(4, c.after / c.before * 100);
+      var parts = c.txt.split('→');
+      var r = el('div', 'cz-row');
+      r.innerHTML = '<span class="cz-name">' + esc(c.n) + '</span>' +
+        '<span class="cz-bars">' +
+          '<span class="cz-line"><span class="cz-bar">' +
+            '<i style="background:linear-gradient(90deg,color-mix(in oklch,var(--c1) 40%,transparent),var(--c1))"></i>' +
+          '</span><span class="cz-txt">改前 · ' + esc(parts[0].trim()) + '</span></span>' +
+          '<span class="cz-line after"><span class="cz-bar">' +
+            '<i style="background:linear-gradient(90deg,color-mix(in oklch,var(--c4) 40%,transparent),var(--c4))"></i>' +
+          '</span><span class="cz-txt">改后 · ' + esc(parts[1].trim()) + '</span></span>' +
+        '</span>';
+      cz.appendChild(r);
+      var f1 = r.querySelectorAll('.cz-bar > i')[0], f2 = r.querySelectorAll('.cz-bar > i')[1];
+      reg(f1, function () { f1.style.width = w1 + '%'; }, function () { f1.style.width = '0%'; });
+      reg(f2, function () { f2.style.width = w2 + '%'; }, function () { f2.style.width = '0%'; });
+    });
+    var rc = $('#resultCards');
+    D.results.forEach(function (r, i) {
+      var c = el('div', 'card res-card');
+      c.setAttribute('data-od-id', 'app-result-' + i);
+      c.innerHTML = '<span class="k-label">' + esc(r.n) + '</span>' +
+        '<span class="k-line"><span class="num" style="font-size:32px;font-weight:700;color:var(--c2)">' +
+        esc(r.a) + '</span><span class="k-unit">→</span><span class="num" style="font-size:32px;font-weight:700;color:var(--c4)">' +
+        esc(r.b) + '</span></span>' +
+        '<p style="font-size:var(--fs-body);color:var(--muted);line-height:1.7">' + esc(r.p) + '</p>' +
+        '<span class="pick-foot" style="border-top:1px solid var(--hair);padding-top:10px">需求方示例结论 · 2026-09</span>';
+      rc.appendChild(c);
+    });
+  }
+
+  /* ═══ 渲染所有图表 ═══ */
+  function renderCharts(root) {
+    $$('[data-chart]', root || document).forEach(function (h) {
+      var t = h.dataset.chart;
+      if (h.dataset.done === '1') return;
+      try {
+        if (t === 'ring') chartRing(h);
+        else if (t === 'rings3') chartRings3(h);
+        else if (t === 'gauge') chartGauge(h);
+        else if (t === 'halfgauge') chartHalfGauge(h);
+        else if (t === 'hbars') chartBars(h);
+        else if (t === 'radar') chartRadar(h);
+        else if (t === 'grouped') chartGrouped(h);
+        else if (t === 'bullet') chartBullet(h);
+        else if (t === 'treemap') chartTreemap(h);
+        else if (t === 'sunburst') chartSunburst(h);
+        else if (t === 'waterfall') chartWaterfall(h);
+        h.dataset.done = '1';
+      } catch (e) {
+        h.innerHTML = '<div class="tbd-block">图表渲染异常</div>';
+      }
+    });
+  }
+
+  /* ═══ 缩放适配：1920×1080 等比铺满视口，杜绝页面级滚动条 ═══ */
+  function fit() { }
+  window.addEventListener('resize', fit);
+
+  /* ═══ 时钟 + 年度筛选 ═══ */
+  function tick() {
+    var d = new Date();
+    $('#clock').textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  $('#yearSel').addEventListener('change', function () {
+    this.value = '2026';
+    toast('本原型仅呈现 2026 年度示例数据');
+  });
+
+  /* ═══ 播报轮播 ═══ */
+  var newsIdx = 0;
+  function startNews() {
+    var track = $('#newsTrack');
+    setInterval(function () {
+      newsIdx++;
+      track.style.transition = 'transform .6s cubic-bezier(.22,.8,.3,1)';
+      track.style.transform = 'translateY(' + (-newsIdx * 61) + 'px)';
+      if (newsIdx >= D.news.length) {
+        setTimeout(function () {
+          track.style.transition = 'none';
+          track.style.transform = 'translateY(0)';
+          newsIdx = 0;
+          void track.offsetHeight;
+        }, 620);
+      }
+    }, 3000);
+  }
+
+  /* ═══ 启动 ═══ */
+  fit();
+  renderOverview(); renderCloud(); renderDataset(); renderTable();
+  renderModel(); renderAuto(); renderApp();
+  renderCharts();
+  tick(); setInterval(tick, 30000);
+  startNews();
+
+  var saved = 0;
+  try { saved = parseInt(localStorage.getItem('od-cockpit-tab') || '0', 10) || 0; } catch (e) {}
+  PAGES.forEach(function (p) { resetIn($('#page-' + p)); });
+  show(saved);
+
+  window.addEventListener('beforeunload', function () {
+    try { localStorage.setItem('od-cockpit-tab', String(current)); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

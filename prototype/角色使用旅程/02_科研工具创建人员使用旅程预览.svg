@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="2730" viewBox="0 0 1520 2730">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#526782"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<rect x="35" y="180" width="1450" height="340" fill="#F1F6FF" stroke="#DAE4EE"/>
+<text x="65" y="208.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">需求侧  /  用途与验收</tspan></text>
+<rect x="35" y="545" width="1450" height="1275" fill="#EEF7F4" stroke="#DAE4EE"/>
+<text x="65" y="573.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI 中台  /  工具建设与发布</tspan></text>
+<rect x="35" y="1845" width="1450" height="640" fill="#F1F6FF" stroke="#DAE4EE"/>
+<text x="65" y="1873.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI4S  /  登记、发现与调用</tspan></text>
+<polyline points="710.0,339 710.0,380" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="570,450.0 415,450 415,585 415.0,620" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,450.0 1075,450 1075,585 1075.0,620" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="415.0,724 415,765 710,765 710.0,805" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="1075.0,724 1075,765 710,765 710.0,805" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,909 710.0,970" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1074 710.0,1135" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1239 710.0,1295" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,1365.0 975.0,1365.0 975.0,1367.0 1100,1367.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1257.5,1310 1257.5,1022 890,1022.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,1435 710.0,1495" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1599 710.0,1670" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1774 710.0,1915" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,2019 710.0,2080" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,2184 710.0,2245" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="890,2297.0 995.0,2297.0 995.0,2299.0 1100,2299.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,2349 710.0,2380" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="1415,2299.0 1465,2299 1465,857 890,857.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<rect x="530" y="235" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="261.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">01  明确工具用途与交付标准</tspan><tspan x="710.0" dy="25.840000000000003">接收科研任务需求或使用反馈</tspan><tspan x="710.0" dy="25.840000000000003">[科研人员交接 / 能力需求]</tspan></text>
+<polygon points="710.0,380 850,450.0 710.0,520 570,450.0" fill="#FFF8E8" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="437.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">已有能力</tspan><tspan x="710.0" dy="25.840000000000003">是否可以复用或扩展？</tspan></text>
+<rect x="220" y="620" width="390" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="415.0" y="646.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="415.0" dy="0">02A  复用或扩展已有能力</tspan><tspan x="415.0" dy="25.840000000000003">核对模型、程序、接口及许可</tspan><tspan x="415.0" dy="25.840000000000003">[AI 中台 · 业务级步骤]</tspan></text>
+<rect x="880" y="620" width="390" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1075.0" y="646.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1075.0" dy="0">02B  创建新的工具能力</tspan><tspan x="1075.0" dy="25.840000000000003">明确开发方式和执行依赖</tspan><tspan x="1075.0" dy="25.840000000000003">[AI 中台 · 业务级步骤]</tspan></text>
+<rect x="530" y="805" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="831.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">03  定义工具与调用契约</tspan><tspan x="710.0" dy="25.840000000000003">输入输出、参数、依赖与边界</tspan><tspan x="710.0" dy="25.840000000000003">[AI 中台 · 工具配置]</tspan></text>
+<rect x="530" y="970" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="996.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">04  开发与调试工具</tspan><tspan x="710.0" dy="25.840000000000003">接入所需程序、模型或服务</tspan><tspan x="710.0" dy="25.840000000000003">[AI 中台 · 开发调试]</tspan></text>
+<rect x="530" y="1135" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1161.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">05  执行功能与科研适用性验证</tspan><tspan x="710.0" dy="25.840000000000003">检查正常、异常、越界输入</tspan><tspan x="710.0" dy="25.840000000000003">[AI 中台 · 测试验证]</tspan></text>
+<polygon points="710.0,1295 850,1365.0 710.0,1435 570,1365.0" fill="#FFF8E8" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1352.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">约定测试与</tspan><tspan x="710.0" dy="25.840000000000003">交付条件是否满足？</tspan></text>
+<rect x="1100" y="1310" width="315" height="114" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="1341.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">定位失败原因</tspan><tspan x="1257.5" dy="25.840000000000003">修订实现、配置或适用边界</tspan><tspan x="1257.5" dy="25.840000000000003">[AI 中台 · 修改后重测]</tspan></text>
+<rect x="530" y="1495" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1521.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">06  发布可调用的能力版本</tspan><tspan x="710.0" dy="25.840000000000003">交付调用标识、依赖与使用说明</tspan><tspan x="710.0" dy="25.840000000000003">[AI 中台 · 能力发布]</tspan></text>
+<rect x="530" y="1670" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1696.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">07  准备能力交接资料</tspan><tspan x="710.0" dy="25.840000000000003">版本、输入输出、测试依据与授权</tspan><tspan x="710.0" dy="25.840000000000003">[AI 中台 → AI4S]</tspan></text>
+<rect x="530" y="1915" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1941.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">08  在 AI4S 登记或关联资源</tspan><tspan x="710.0" dy="25.840000000000003">引用中台能力，补充科研分类与说明</tspan><tspan x="710.0" dy="25.840000000000003">[科研资源 / 空间资产]</tspan></text>
+<rect x="530" y="2080" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="2106.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">09  核对版本、授权与可用范围</tspan><tspan x="710.0" dy="25.840000000000003">按需发布资源并进入发现目录</tspan><tspan x="710.0" dy="25.840000000000003">[AI4S · 科研资源]</tspan></text>
+<rect x="530" y="2245" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="2271.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">10  交给科研超级中枢使用</tspan><tspan x="710.0" dy="25.840000000000003">科研人员在研究任务中调用与复核</tspan><tspan x="710.0" dy="25.840000000000003">[科研超级中枢 · 任务会话]</tspan></text>
+<rect x="1100" y="2240" width="315" height="118" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="2273.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">接收失败样例与适用性反馈</tspan><tspan x="1257.5" dy="25.840000000000003">回 AI 中台修订并再次验证</tspan><tspan x="1257.5" dy="25.840000000000003">[使用反馈 → AI 中台]</tspan></text>
+<rect x="530" y="2380" width="360" height="78" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="2406.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">交付可复用能力</tspan><tspan x="710.0" dy="25.840000000000003">进入持续维护阶段</tspan></text>
+<rect x="432.0" y="410" width="46" height="30" fill="white" rx="3"/>
+<text x="455.0" y="425.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="455.0" dy="0">是</tspan></text>
+<rect x="972.0" y="410" width="46" height="30" fill="white" rx="3"/>
+<text x="995.0" y="425.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="995.0" dy="0">否</tspan></text>
+<rect x="952.0" y="1330" width="46" height="30" fill="white" rx="3"/>
+<text x="975.0" y="1345.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="975.0" dy="0">否</tspan></text>
+<rect x="728.0" y="1455" width="46" height="30" fill="white" rx="3"/>
+<text x="751.0" y="1470.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="751.0" dy="0">是</tspan></text>
+<rect x="760.0" y="1835" width="100" height="30" fill="white" rx="3"/>
+<text x="810.0" y="1850.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="810.0" dy="0">跨系统交接</tspan></text>
+<rect x="927.0" y="2250" width="132" height="30" fill="white" rx="3"/>
+<text x="993.0" y="2265.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="993.0" dy="0">问题 / 需求</tspan></text>
+<text x="40" y="51.5" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="30" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">ScienceLab AI4S  /  科研工具创建人员使用旅程</tspan></text>
+<text x="40" y="117.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#526782"><tspan x="40" dy="0">建设主场：AI 中台｜接收需求 → 复用或新建 → 开发调试与验证 → 发布能力 → AI4S 登记与科研调用</tspan></text>
+<text x="80" y="1098.54" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="18" font-weight="650" fill="#0B2146"><tspan x="80" dy="0">具体工具创建在 AI 中台完成。</tspan><tspan x="80" dy="24.48">AI4S 中的资产登记表单</tspan><tspan x="80" dy="24.48">不替代开发、调试和运行验证。</tspan><tspan x="80" dy="24.48">此图不假定某一种模型、SDK</tspan><tspan x="80" dy="24.48">或特定 AI 中台菜单。</tspan></text>
+<text x="1100" y="1655.32" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="1100" dy="0">能力发布 ≠ 资源上架。</tspan><tspan x="1100" dy="23.12">发布说明哪个版本可以被调用；</tspan><tspan x="1100" dy="23.12">上架说明哪些用户可以发现它。</tspan><tspan x="1100" dy="23.12">实际调用仍需满足权限与依赖条件。</tspan></text>
+<text x="90" y="1972.82" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="90" dy="0">登记、关联或同步的具体方式</tspan><tspan x="90" dy="23.12">需与实际 AI 中台方案对齐。</tspan><tspan x="90" dy="23.12">本图不假定已经自动打通</tspan><tspan x="90" dy="23.12">API、单点登录或目录同步。</tspan></text>
+<text x="40" y="2545.94" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">图例：实框＝现有或已确认的角色动作；虚框＝业务级环节，具体页面或联动尚待核实。</tspan><tspan x="40" dy="23.12">实箭头＝正常推进；虚箭头＝修改重试、跨系统交接或使用反馈。</tspan></text>
+<text x="40" y="2645.94" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="40" dy="0">交付：可识别的能力版本、调用与复用说明、测试依据、适用边界和维护责任。</tspan><tspan x="40" dy="23.12">用户已明确“工具在 AI 中台创建”；当前工作区未提供 AI 中台页面，因此不将图中中台步骤视作已验证功能。</tspan></text>
+<text x="40" y="2711.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" font-weight="400" fill="#526782"><tspan x="40" dy="0">角色与系统分工依据用户确认；对应原型模块参考本工作区。更新：2026-10-10</tspan></text>
+</svg>

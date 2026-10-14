@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="2770" viewBox="0 0 1560 2770">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#526782"/></marker></defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<rect x="40" y="195" width="480" height="2340" fill="#F1F6FF" stroke="#D8E7FA"/>
+<text x="280" y="237.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="25" font-weight="650" fill="#0B2146"><tspan x="280" dy="0">科研人员</tspan></text>
+<rect x="540" y="195" width="480" height="2340" fill="#F3F8F6" stroke="#DAEBE4"/>
+<text x="780" y="237.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="25" font-weight="650" fill="#0B2146"><tspan x="780" dy="0">科研工具创建人员</tspan></text>
+<rect x="1040" y="195" width="480" height="2340" fill="#F8F6F1" stroke="#EAE3D5"/>
+<text x="1280" y="237.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="25" font-weight="650" fill="#0B2146"><tspan x="1280" dy="0">科研项目管理人员</tspan></text>
+<polyline points="1130,360 430,360" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="280,410 280,470" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="280,570 280,630" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="280,730 280,800" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="410,875 630,875" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="150,875 110,875 110,1510 130,1510" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="780,925 780,985" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="780,1095 780,1145" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="780,1245 780,1290" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="780,1420 780,1460" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="910,1355 975,1355 975,1040 930,1040" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="630,1510 430,1510" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="280,1560 280,1620" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="280,1720 280,1790" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="430,1670 580,1670 580,1845 630,1845" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="930,1845 995,1845 995,990 930,990" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="150,1865 85,1865 85,520 130,520" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="280,1940 280,2000" fill="none" stroke="#526782" stroke-width="2" marker-end="url(#arrow)"/>
+<polyline points="430,2050 1130,2050" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1280,410 1280,630" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1280,730 1280,1620" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1280,1720 1280,2000" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1280,2100 1280,2160" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1150,2235 430,2235" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="130,2235 55,2235 55,680 130,680" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1280,2310 1280,2400" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1130,2452 430,2452" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<rect x="130" y="310" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="334.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">01  进入已有课题</tspan><tspan x="280.0" dy="25.840000000000003">核对目标与研究上下文</tspan><tspan x="280.0" dy="25.840000000000003">[科研工作台 → 课题空间]</tspan></text>
+<rect x="130" y="470" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="494.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">02  明确科学问题与假设</tspan><tspan x="280.0" dy="25.840000000000003">约定验证标准和适用边界</tspan><tspan x="280.0" dy="25.840000000000003">[科学问题]</tspan></text>
+<rect x="130" y="630" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="654.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">03  组织科研任务与材料</tspan><tspan x="280.0" dy="25.840000000000003">确定数据版本和所需能力</tspan><tspan x="280.0" dy="25.840000000000003">[科研任务 · 任务上下文]</tspan></text>
+<polygon points="280.0,800 410,875.0 280.0,950 150,875.0" fill="#FFF9EA" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="862.08" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">现有能力</tspan><tspan x="280.0" dy="25.840000000000003">是否满足需求？</tspan></text>
+<rect x="130" y="1460" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="1484.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">04  确认计划并开展研究</tspan><tspan x="280.0" dy="25.840000000000003">会话 / 计算 / 实验（演示）</tspan><tspan x="280.0" dy="25.840000000000003">[科研任务 · 科研活动]</tspan></text>
+<rect x="130" y="1620" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="1644.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">05  检查产物与证据</tspan><tspan x="280.0" dy="25.840000000000003">核对来源、条件与局限</tspan><tspan x="280.0" dy="25.840000000000003">[产出视图 · 证据研判]</tspan></text>
+<polygon points="280.0,1790 410,1865.0 280.0,1940 150,1865.0" fill="#FFF9EA" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="1852.08" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">本轮判断依据</tspan><tspan x="280.0" dy="25.840000000000003">是否充分？</tspan></text>
+<rect x="130" y="2000" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="2024.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">06  形成限定范围的判断</tspan><tspan x="280.0" dy="25.840000000000003">提交阶段材料与验证计划</tspan><tspan x="280.0" dy="25.840000000000003">[科学问题 · 科研任务]</tspan></text>
+<rect x="130" y="2185" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="2209.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">07  落实评审意见</tspan><tspan x="280.0" dy="25.840000000000003">补充材料 / 调整验证任务</tspan><tspan x="280.0" dy="25.840000000000003">[科研任务 · 科学问题]</tspan></text>
+<rect x="130" y="2400" width="300" height="105" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="280.0" y="2426.66" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="280.0" dy="0">08  整理可复用科研资产</tspan><tspan x="280.0" dy="25.840000000000003">可选：保留来源与使用边界</tspan><tspan x="280.0" dy="25.840000000000003">[空间资产]</tspan></text>
+<rect x="630" y="825" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="780.0" y="849.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="780.0" dy="0">承接科研能力需求</tspan><tspan x="780.0" dy="25.840000000000003">检查复用 / 扩展 / 新建方案</tspan><tspan x="780.0" dy="25.840000000000003">[空间资产 · 科研资产]</tspan></text>
+<rect x="630" y="985" width="300" height="110" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="780.0" y="1014.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="780.0" dy="0">创建工具建设配置</tspan><tspan x="780.0" dy="25.840000000000003">输入输出、依赖与测试要求</tspan><tspan x="780.0" dy="25.840000000000003">[新建科研资产 → 科研工具]</tspan></text>
+<rect x="630" y="1145" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="780.0" y="1169.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="780.0" dy="0">保存草稿并建立验证计划</tspan><tspan x="780.0" dy="25.840000000000003">核对配置、日志与预期输出</tspan><tspan x="780.0" dy="25.840000000000003">[测试 / 验证 → 科研活动]</tspan></text>
+<polygon points="780.0,1290 910,1355.0 780.0,1420 650,1355.0" fill="#FFF9EA" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="780.0" y="1342.08" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="780.0" dy="0">测试与交付条件</tspan><tspan x="780.0" dy="25.840000000000003">是否满足？</tspan></text>
+<rect x="630" y="1460" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="780.0" y="1484.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="780.0" dy="0">发布可识别的工具版本</tspan><tspan x="780.0" dy="25.840000000000003">交付复用说明；上架按需</tspan><tspan x="780.0" dy="25.840000000000003">[空间资产 · 科研资产]</tspan></text>
+<rect x="630" y="1795" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="780.0" y="1819.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="780.0" dy="0">接收异常与使用反馈</tspan><tspan x="780.0" dy="25.840000000000003">修订配置 / 优化能力</tspan><tspan x="780.0" dy="25.840000000000003">[资产编辑；版本迭代待完善]</tspan></text>
+<rect x="1130" y="310" width="300" height="100" rx="8" fill="white" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1280.0" y="334.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1280.0" dy="0">明确项目目标与阶段要求</tspan><tspan x="1280.0" dy="25.840000000000003">约定节点、职责及验收依据</tspan><tspan x="1280.0" dy="25.840000000000003">[科研管理 · 立项管理]</tspan></text>
+<rect x="1130" y="630" width="300" height="100" rx="8" fill="white" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1280.0" y="654.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1280.0" dy="0">跟踪里程碑、风险与变更</tspan><tspan x="1280.0" dy="25.840000000000003">定位需要复核的课题事项</tspan><tspan x="1280.0" dy="25.840000000000003">[科研管理 · 过程管理]</tspan></text>
+<rect x="1130" y="1620" width="300" height="100" rx="8" fill="white" stroke="#085FD7" stroke-width="2"/>
+<text x="1280.0" y="1644.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1280.0" dy="0">进入课题核查阶段依据</tspan><tspan x="1280.0" dy="25.840000000000003">查看报告、证据与验证安排</tspan><tspan x="1280.0" dy="25.840000000000003">[空间概览 · 科学问题 · 任务]</tspan></text>
+<rect x="1130" y="2000" width="300" height="100" rx="8" fill="white" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1280.0" y="2024.16" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1280.0" dy="0">组织阶段评审</tspan><tspan x="1280.0" dy="25.840000000000003">专家评证据；管理者评交付</tspan><tspan x="1280.0" dy="25.840000000000003">[科研管理 / 任务评审]</tspan></text>
+<polygon points="1280.0,2160 1410,2235.0 1280.0,2310 1150,2235.0" fill="#FFF9EA" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1280.0" y="2222.08" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1280.0" dy="0">满足阶段</tspan><tspan x="1280.0" dy="25.840000000000003">交付要求？</tspan></text>
+<rect x="1130" y="2400" width="300" height="105" rx="8" fill="white" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1280.0" y="2426.66" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1280.0" dy="0">确认阶段交付并归档</tspan><tspan x="1280.0" dy="25.840000000000003">明确下一节点与遗留事项</tspan><tspan x="1280.0" dy="25.840000000000003">[科研管理 · 成果管理]</tspan></text>
+<rect x="684.0" y="321" width="192" height="30" rx="3" fill="white"/>
+<text x="780" y="337.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="780" dy="0">目标、节点与验收要求</tspan></text>
+<rect x="441.0" y="838" width="158" height="30" rx="3" fill="white"/>
+<text x="520" y="854.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="520" dy="0">否 · 能力需求</tspan></text>
+<rect x="80.0" y="901" width="70" height="30" rx="3" fill="white"/>
+<text x="115" y="917.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="115" dy="0">是</tspan></text>
+<rect x="776.0" y="1427" width="70" height="30" rx="3" fill="white"/>
+<text x="811" y="1443.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="811" dy="0">是</tspan></text>
+<rect x="982.5" y="1164" width="175" height="30" rx="3" fill="white"/>
+<text x="1070" y="1180.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1070" dy="0">否 · 修改后重测</tspan></text>
+<rect x="459.5" y="1471" width="141" height="30" rx="3" fill="white"/>
+<text x="530" y="1487.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="530" dy="0">版本与使用说明</tspan></text>
+<rect x="688.0" y="1674" width="192" height="30" rx="3" fill="white"/>
+<text x="784" y="1690.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="784" dy="0">异常 / 适用性反馈</tspan></text>
+<rect x="1025.0" y="1754" width="90" height="30" rx="3" fill="white"/>
+<text x="1070" y="1770.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1070" dy="0">迭代完善</tspan></text>
+<rect x="82.0" y="1814" width="70" height="30" rx="3" fill="white"/>
+<text x="117" y="1830.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="117" dy="0">否</tspan></text>
+<rect x="280.0" y="1957" width="70" height="30" rx="3" fill="white"/>
+<text x="315" y="1973.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="315" dy="0">是</tspan></text>
+<rect x="624.5" y="2010" width="311" height="30" rx="3" fill="white"/>
+<text x="780" y="2026.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="780" dy="0">阶段报告 / 证据包 / 验证计划</tspan></text>
+<rect x="1178.5" y="1114" width="243" height="30" rx="3" fill="white"/>
+<text x="1300" y="1130.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1300" dy="0">发现需关注事项，按授权查看</tspan></text>
+<rect x="1207.5" y="1874" width="175" height="30" rx="3" fill="white"/>
+<text x="1295" y="1890.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1295" dy="0">核查依据后组织评审</tspan></text>
+<rect x="641.5" y="2194" width="277" height="30" rx="3" fill="white"/>
+<text x="780" y="2210.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="780" dy="0">否 · 补充验证 / 调整计划</tspan></text>
+<rect x="1277.0" y="2339" width="70" height="30" rx="3" fill="white"/>
+<text x="1312" y="2355.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1312" dy="0">是</tspan></text>
+<rect x="658.5" y="2412" width="243" height="30" rx="3" fill="white"/>
+<text x="780" y="2428.0" text-anchor="middle" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="780" dy="0">有复用价值且满足共享条件时</tspan></text>
+<text x="40" y="50.0" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="32" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">ScienceLab AI4S 三角色业务流程图</tspan></text>
+<text x="40" y="107.0" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="19" font-weight="400" fill="#526782"><tspan x="40" dy="0">以正式课题为主线：开展科研 → 按需建设能力 → 复核证据 → 组织评审 → 继续验证或归档</tspan></text>
+<text x="40" y="152.0" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="40" dy="0">阅读方式：泳道内由上向下；跨泳道箭头表示交接。科研工具创建是按需分支，已有能力可直接复用。</tspan></text>
+<text x="150" y="1138.52" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="18" font-weight="400" fill="#526782"><tspan x="150" dy="0">已有能力满足需求时</tspan><tspan x="150" dy="24.48">沿左侧路径进入研究执行</tspan><tspan x="150" dy="24.48">无需经过工具新建与发布</tspan></text>
+<text x="150" y="1307.88" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="150" dy="0">判断依据不足时</tspan><tspan x="150" dy="23.12">沿回路补充证据或修订假设</tspan><tspan x="150" dy="23.12">返回第02步，组织下一轮验证</tspan></text>
+<text x="630" y="450.52" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="18" font-weight="400" fill="#526782"><tspan x="630" dy="0">科研工具创建人员按需参与</tspan><tspan x="630" dy="24.48">接收：需求、样例输入与验收条件</tspan><tspan x="630" dy="24.48">交付：版本、测试依据与使用边界</tspan></text>
+<text x="610" y="1949.12" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="610" dy="0">依据充分可形成有边界的结论；</tspan><tspan x="610" dy="21.76">发现分歧也可形成阶段判断。</tspan></text>
+<text x="630" y="2306.62" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="630" dy="0">管理反馈返回科研任务；</tspan><tspan x="630" dy="21.76">涉及能力问题时再走工具建设分支。</tspan></text>
+<text x="40" y="2580.0" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="17" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">图例：矩形＝业务动作　菱形＝判断　实线＝原型可查看或本地演示　虚线＝手动交接、流程要求或待接入</tspan></text>
+<text x="40" y="2633.44" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="40" dy="0">原型边界：管理域入口多为提示；测试、发布和上架不代表真实服务已运行或审核通过。</tspan><tspan x="40" dy="23.12">三角色为职责视角；自动权限切换、跨模块同步、测试通过门禁和正式项目审批尚未完整接入。</tspan></text>
+<text x="40" y="2717.5" text-anchor="start" dominant-baseline="middle" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="40" dy="0">科研执行完成 ≠ 科学结论成立 ≠ 资产发布 ≠ 阶段验收通过　｜　依据：工作区原型与三角色演示说明 · 2026-10-10</tspan></text>
+</svg>

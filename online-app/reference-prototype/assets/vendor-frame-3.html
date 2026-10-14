@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>科研智能体 · AI4S</title>
+  <style>
+:root {
+  --blue: #1765e3;
+  --blue-hover: #0f58cf;
+  --blue-soft: #ebf3ff;
+  --blue-line: #8fb5ec;
+  --ink: #15233b;
+  --ink-2: #33415a;
+  --muted: #6b7a90;
+  --muted-2: #8e9bb0;
+  --line: #e2e9f3;
+  --line-2: #d5dfeb;
+  --bg: #f4f7fc;
+  --sider: 236px;
+  --rail: 68px;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+input, textarea { border: 0; background: none; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+svg { display: block; flex: none; }
+[hidden] { display: none !important; }
+
+/* ---------- 外壳 ---------- */
+.app { display: grid; grid-template-columns: var(--sider) 1fr; min-height: 100vh; }
+.app.is-rail { grid-template-columns: var(--rail) 1fr; }
+.sider { background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; z-index: 25; }
+.sider-logo { height: 56px; display: flex; align-items: center; padding: 0 30px; border-bottom: 1px solid var(--line); }
+.logo { display: flex; gap: 4px; align-items: center; color: var(--ink); text-decoration: none; }
+.logo strong { display: block; font-size: 19px; line-height: 1; font-weight: 800; letter-spacing: .2px; color: #0e1c35; font-family: "Helvetica Neue", Arial, sans-serif; }
+.logo em { display: block; font-style: normal; color: #2b5fb8; font-size: 10.5px; line-height: 1.1; margin-top: 2px; font-family: "Helvetica Neue", Arial, sans-serif; }
+.sider-nav { padding: 12px 12px; display: flex; flex-direction: column; overflow: auto; flex: 1; }
+.nav-sep { height: 1px; background: var(--line); margin: 8px 0; }
+.nav-label { color: #7c8aa0; font-size: 12px; padding: 8px 12px 4px; }
+.nav-item { display: flex; align-items: center; gap: 12px; height: 42px; padding: 0 12px; border-radius: 6px; color: var(--ink-2); text-decoration: none; position: relative; font-size: 14px; }
+.nav-item svg { color: #3b475b; }
+.nav-item .arrow { margin-left: auto; color: #6e7b90; }
+.nav-item:hover { background: #f5f8fd; }
+.nav-item.active { background: #eaf2fd; color: #1452b8; font-weight: 600; }
+.nav-item.active svg { color: #1452b8; }
+.nav-item.active::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; border-radius: 2px 0 0 2px; background: var(--blue); }
+.is-rail .sider-logo { padding: 0; justify-content: center; }
+.is-rail .logo span, .is-rail .nav-item > span, .is-rail .nav-item .arrow, .is-rail .nav-label, .is-rail .sider-foot span:last-child { display: none; }
+.is-rail .nav-item { justify-content: center; padding: 0; }
+.sider-foot { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #8b98ab; font-size: 12px; border-top: 1px solid var(--line); }
+.mark-n { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; padding: 0 20px 0 24px; position: sticky; top: 0; z-index: 20; }
+.crumb { color: var(--muted); white-space: nowrap; font-size: 13px; margin-left: 4px; }
+.crumb b { color: var(--ink); font-weight: 600; margin-left: 6px; }
+.top-search { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #f6f8fb; border: 1px solid #e3e9f1; height: 34px; border-radius: 6px; padding: 0 12px; width: 300px; color: #7d8aa0; }
+.top-search input { width: 100%; outline: none; font-size: 13px; }
+.top-search input::placeholder { color: #98a4b6; }
+.top-actions { display: flex; align-items: center; gap: 12px; position: relative; }
+.scope-btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; border-radius: 6px; padding: 0 12px; background: #f6f8fb; border: 1px solid #e3e9f1; font-size: 13px; }
+.scope-btn span { color: var(--muted); }
+.scope-btn b { font-weight: 600; font-size: 12.5px; }
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; display: inline-grid; place-items: center; color: #3a475c; position: relative; }
+.icon-btn:hover, .scope-btn:hover, .user-btn:hover { background: #f1f5fb; }
+.has-dot::after { content: ""; position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #e5484d; }
+.user-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 6px; border-radius: 8px; font-size: 14px; }
+.user-btn i { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(145deg, #6ea6f4, #3b7be0); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 13px; }
+.menu { position: absolute; top: 44px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 32px rgba(24, 60, 120, .12); min-width: 170px; padding: 6px; z-index: 30; }
+.menu button { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+.menu button:hover { background: #f3f7fd; }
+.menu button.on { color: var(--blue); background: var(--blue-soft); }
+.menu-h { font-weight: 600; padding: 6px 10px 4px; font-size: 13px; }
+.menu-p { color: var(--muted); padding: 0 10px 8px; font-size: 12px; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #16263f; color: #fff; padding: 10px 18px; border-radius: 999px; z-index: 90; box-shadow: 0 10px 30px rgba(0,0,0,.18); font-size: 13px; }
+
+/* ---------- 科研智能体页面（沿用科学工具箱样式） ---------- */
+.stage { position: relative; background:
+  radial-gradient(900px 260px at 62% 60px, rgba(214, 229, 250, .75), rgba(244, 247, 252, 0) 70%),
+  linear-gradient(180deg, #f2f6fc 0, #f5f8fc 420px, #f5f8fc 100%); flex: 1; }
+.page { max-width: 1520px; margin: 0 auto; padding: 38px 60px 60px 100px; }
+.tb-head { display: flex; align-items: flex-start; gap: 24px; min-height: 118px; position: relative; }
+.tb-title h1 { font-size: 32px; line-height: 1.25; font-weight: 700; color: #0f1f3d; letter-spacing: .5px; }
+.tb-title .kicker { font-size: 15.5px; font-weight: 700; color: #1b2c4b; margin-top: 4px; }
+.tb-title .sub { font-size: 14.5px; color: #56657c; margin-top: 10px; }
+.tb-art { position: absolute; left: 50%; top: -12px; width: 300px; height: 118px; transform: translateX(-4%); pointer-events: none; }
+.tb-art .glow { position: absolute; inset: -30px -60px; background: radial-gradient(closest-side, rgba(196, 218, 250, .75), rgba(196, 218, 250, 0)); }
+.tb-art svg.orbit { position: absolute; left: 0; top: 0; }
+.tile { position: absolute; display: grid; place-items: center; color: #fff; border-radius: 8px; }
+.tile-ai { left: 116px; top: 3px; width: 64px; height: 64px; border-radius: 10px; font-size: 25px; font-weight: 500; font-family: "Helvetica Neue", Arial, sans-serif; background: linear-gradient(160deg, #7cb2f7 0%, #3f82ea 100%); box-shadow: 0 10px 22px rgba(61, 125, 232, .32), inset 0 1px 0 rgba(255,255,255,.35); }
+.tile-l { left: 0; top: 55px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tile-r { left: 265px; top: 64px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tb-actions { margin-left: auto; display: flex; gap: 14px; margin-top: 22px; position: relative; z-index: 1; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 6px; height: 34px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+.btn:hover { background: var(--blue-hover); }
+.btn.lg { height: 42px; padding: 0 22px; font-size: 14.5px; box-shadow: 0 6px 14px rgba(23, 101, 227, .22); }
+.btn.ghost { background: #fff; color: #1d2a40; border: 1px solid var(--line-2); box-shadow: none; }
+.btn.ghost:hover { border-color: #b9cbe3; background: #fbfcff; }
+.btn:disabled { background: #a8c6f4; cursor: not-allowed; }
+.btn.sm { height: 28px; padding: 0 12px; font-size: 13px; border-radius: 5px; }
+.btn.sm.ghost { color: #25324a; }
+
+.tb-search { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 18px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.tb-search form { display: flex; align-items: stretch; height: 46px; }
+.tb-search label { flex: 1; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-2); border-right: 0; border-radius: 6px 0 0 6px; padding: 0 16px; color: #5d6b80; }
+.tb-search input { flex: 1; outline: none; font-size: 14px; height: 100%; }
+.tb-search input::placeholder { color: #9aa6b8; }
+.tb-search .btn { height: auto; border-radius: 0 6px 6px 0; width: 88px; font-size: 14.5px; }
+
+.filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.filters[data-group="field"] { margin-top: 18px; }
+.filters .lbl { width: 76px; flex: none; font-weight: 600; color: #1d2a40; font-size: 13px; margin-right: -8px; }
+.filter-box { margin-top: 18px; }
+.filter-box .filters { margin-top: 8px; }
+.filter-box .filters[data-group="field"] { margin-top: 0; }
+.filters[hidden] { display: none; }
+.filters.sub .chip { height: 24px; font-size: 12px; background: #fafbfd; }
+.fmore, .fclear { height: 26px; padding: 0 6px; font-size: 12.5px; color: var(--blue); display: inline-flex; align-items: center; gap: 2px; background: none; }
+.fclear { color: var(--muted); margin-left: 6px; }
+.fclear:hover { color: var(--blue); }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: #34425a; }
+.field .checks input { padding: 0; width: auto; }
+.field small.opt { font-size: 12px; color: var(--muted); margin-left: 6px; }
+.field .inline { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-top: 4px; }
+.kv-note { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.chip { height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: #fff; color: #34425a; font-size: 12.5px; }
+.chip:hover { border-color: #aac3e6; color: var(--blue); }
+.chip.on { background: #eaf2fe; border-color: var(--blue-line); color: #1356c2; }
+
+.tb-bar { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 18px; border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 0; }
+.tabs button { height: 48px; padding: 0 12px; margin-right: 18px; font-size: 14px; color: #3a475d; position: relative; }
+.tabs button:hover { color: var(--blue); }
+.tabs button.on { color: #1356c2; }
+.tabs button.on::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: -1px; height: 3px; border-radius: 2px; background: var(--blue); }
+.bar-tools { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; color: #56657c; font-size: 12.5px; }
+.bar-tools .count { margin-right: 4px; }
+.select { position: relative; }
+.select select { appearance: none; -webkit-appearance: none; height: 34px; width: 122px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; padding: 0 30px 0 14px; font-size: 13.5px; color: #25324a; outline: none; }
+.select svg { position: absolute; right: 9px; top: 10px; color: #5d6b80; pointer-events: none; }
+.view-btn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; color: #6b7a90; font-size: 13.5px; }
+.view-btn.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.hot { margin-top: 26px; border-radius: 12px; padding: 14px 14px 16px; background: linear-gradient(100deg, #ecf3fd 0%, #eaf2fd 60%, #e7f0fc 100%); border: 1px solid #e4edf9; }
+.hot > header { display: flex; align-items: baseline; gap: 8px; padding: 0 2px 12px; }
+.hot > header svg { color: #e2a12b; align-self: center; }
+.hot > header b { font-size: 16px; font-weight: 500; color: #1c2a42; }
+.hot > header span { font-size: 12px; color: #6b7a90; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.hot .grid { gap: 16px; }
+
+.card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 12px; padding: 14px 16px; min-width: 0; }
+.card.feature { padding: 14px 16px; border-color: #e3ebf6; }
+.tools-grid { margin-top: 14px; }
+.tools-grid .card { grid-template-rows: 1fr auto; padding: 14px 16px 12px; transition: box-shadow .15s, border-color .15s; }
+.tools-grid .card:hover { border-color: #c8d9f1; box-shadow: 0 8px 22px rgba(30, 80, 150, .07); }
+.ic { width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center; color: #fff; }
+.ic-blue   { background: linear-gradient(160deg, #5aa1fb 0%, #2f78ea 100%); box-shadow: 0 6px 14px rgba(47, 120, 234, .28); }
+.ic-purple { background: linear-gradient(160deg, #b36bf8 0%, #8a3fe8 100%); box-shadow: 0 6px 14px rgba(138, 63, 232, .26); }
+.ic-green  { background: linear-gradient(160deg, #4fd083 0%, #1fa75c 100%); box-shadow: 0 6px 14px rgba(31, 167, 92, .26); }
+.ic-orange { background: linear-gradient(160deg, #ff9a52 0%, #f46a26 100%); box-shadow: 0 6px 14px rgba(244, 106, 38, .26); }
+.ic-pink   { background: linear-gradient(160deg, #f76aa3 0%, #e63d7f 100%); box-shadow: 0 6px 14px rgba(230, 61, 127, .26); }
+.ic-teal   { background: linear-gradient(160deg, #3ed1d6 0%, #13a8b4 100%); box-shadow: 0 6px 14px rgba(19, 168, 180, .26); }
+.body { min-width: 0; display: flex; flex-direction: column; }
+.body b.name { font-size: 15px; font-weight: 500; color: #15233b; line-height: 1.4; padding-right: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+.tags em { font-style: normal; font-size: 12px; line-height: 20px; height: 20px; padding: 0 6px; border-radius: 3px; color: #637188; background: #f1f4f8; white-space: nowrap; }
+.tags em.ok { color: #1f9a57; background: #e8f7ee; }
+.tags em.official { color: #2167d4; background: #e7f0fd; }
+.tags em.kind { font-weight: 600; }
+.tags em.k-mcp { color: #2167d4; background: #eaf2fe; }
+.tags em.k-fn { color: #4a5a73; background: #eef1f5; }
+.tags em.k-comp { color: #0f8a7e; background: #e5f6f4; }
+.pbox ol.steps { margin: 6px 0 0; padding-left: 20px; }
+.pbox ol.steps li { margin: 3px 0; }
+.desc { font-size: 13px; color: #4c5a70; margin-top: 6px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.card footer { grid-column: 2; align-self: end; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.meta { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; color: #7a879b; font-size: 12px; white-space: nowrap; overflow: hidden; }
+.meta span { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.meta span.owner { flex: 0 1 auto; min-width: 0; }
+.meta span.owner i { font-style: normal; overflow: hidden; text-overflow: ellipsis; }
+.meta svg { color: #7a879b; }
+.ops { display: flex; gap: 8px; flex: none; }
+.more { position: absolute; right: 12px; top: 8px; width: 26px; height: 24px; border-radius: 5px; display: grid; place-items: center; color: #5b687d; }
+.more:hover { background: #f1f5fb; }
+.more-menu { right: 8px; top: 34px; min-width: 132px; }
+
+.list { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.list-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 280px auto; gap: 16px; align-items: center; padding: 14px 20px; border-top: 1px solid #eef2f8; }
+.list-row:first-child { border-top: 0; }
+.list-row .ic { width: 40px; height: 40px; margin: 0; }
+.empty { margin-top: 16px; background: #fff; border: 1px dashed var(--line-2); border-radius: 8px; padding: 36px; text-align: center; color: var(--muted); }
+
+.mask { position: fixed; inset: 0; background: rgba(15, 28, 50, .3); z-index: 60; display: flex; }
+.mask.drawer-mask { justify-content: flex-end; }
+.drawer { width: min(440px, 100%); height: 100%; background: #fff; padding: 18px 22px; box-shadow: -12px 0 40px rgba(0,0,0,.08); overflow: auto; }
+.drawer.wide { width: min(640px, 100%); }
+.btn.auto { cursor: default; background: #effaf3; color: #1f7a45; box-shadow: inset 0 0 0 1px #bfe5cd; }
+.btn.auto:hover { background: #effaf3; }
+.kbind { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.kbind > span { font-size: 12px; color: #8390a4; }
+.bchip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 5px; font-size: 12px; color: #25324a; background: #f4f8fe; border: 1px solid #d6e4f8; cursor: default; }
+a.bchip { cursor: pointer; }
+a.bchip:hover { border-color: var(--blue-line); color: var(--blue); }
+.bchip.tool { background: #f6f4fd; border-color: #e0daf6; }
+.bchip em { font-style: normal; font-size: 11px; color: #1356c2; }
+.bchip.tool em { color: #6547c9; }
+.bchip small { font-size: 11.5px; color: var(--muted); }
+.bchip small::before { content: "· "; }
+.bchip i { font-style: normal; font-size: 11px; color: #1f7a45; }
+.bmore { font-size: 12px; color: var(--muted); }
+.bind-field > span small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.brow { display: grid; grid-template-columns: minmax(0, 1.4fr) 92px minmax(0, 1fr) 28px; gap: 8px; align-items: center; margin-bottom: 8px; }
+.brow select, .brow input { min-width: 0; border: 1px solid var(--line-2); border-radius: 6px; padding: 6px 8px; background: #fff; font-size: 12.5px; }
+.brow select:disabled { background: #f6f8fb; color: #56657c; }
+.bquick { display: flex; flex-wrap: wrap; gap: 6px; }
+.bempty { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; }
+.lchip.grp { cursor: pointer; padding-right: 8px; color: #43516a; background: #f6f8fb; border-style: dashed; }
+.lchip.grp .ic { background: #eef2f8; color: #56657c; }
+.lchip.grp svg:last-child { transition: transform .15s; }
+.lchip.grp.on svg:last-child { transform: rotate(180deg); }
+.lp-chips.sub { margin-top: 8px; padding: 8px; border-radius: 6px; background: #f6f8fb; }
+.lchip.comp { padding-right: 8px; }
+.lchip .src.ok { color: #1f7a45; background: #effaf3; }
+.lp-note { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.lp-note a { color: var(--blue); cursor: pointer; }
+.dtabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line-2); margin: 16px 0 14px; }
+.dtabs button { height: 36px; padding: 0 14px; font-size: 13.5px; color: #43516a; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.dtabs button.on { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+.pbox { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; font-size: 13px; color: #43516a; line-height: 1.65; }
+.pbox h4 { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: #1d2b44; margin-bottom: 6px; }
+.pbox h4 i { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.pbox ul { padding-left: 16px; margin: 0; }
+.pbox code, .etable code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.etable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+.etable th, .etable td { text-align: left; padding: 6px 8px; border-top: 1px solid #eef2f8; vertical-align: top; }
+.etable th { color: var(--muted); font-weight: 500; }
+.code-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 6px; font-size: 13px; color: #1d2b44; font-weight: 600; }
+pre.code { background: #0f1c32; color: #d6e2f5; border-radius: 8px; padding: 12px 14px; font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace; overflow: auto; max-height: 360px; margin: 0 0 14px; white-space: pre; }
+.cform .prow { display: grid; grid-template-columns: 130px 1fr; gap: 4px 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eef2f8; font-size: 13px; }
+.cform .prow > span { color: #1d2b44; }
+.cform .prow small { grid-column: 2; color: var(--muted); font-size: 12px; }
+.cform input[type=text], .cform input[type=number], .cform select { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input:focus, .cform select:focus { border-color: var(--blue-line); }
+.cform .note { font-size: 12.5px; color: var(--muted); margin: 0 0 6px; }
+.cform .dirty { color: #b26a00; }
+.btn.auto.plan { background: #f3f5f8; color: #6b7a90; box-shadow: inset 0 0 0 1px #dfe4ec; }
+.pbox.plan { background: #fafbfd; border-style: dashed; }
+.pbox .alink, .alink { color: var(--blue); cursor: pointer; margin-left: 6px; }
+.pgroup { margin-top: 14px; }
+.pgroup h5 { font-size: 13.5px; color: #1d2b44; padding: 6px 0; border-bottom: 1px solid var(--line-2); display: flex; align-items: baseline; gap: 10px; }
+.pgroup h5 span { font-weight: 400; font-size: 12px; color: var(--muted); }
+.cform .num { display: inline-flex; align-items: center; gap: 6px; }
+.cform .num input { width: 140px; }
+.cform .num em { font-style: normal; color: var(--muted); font-size: 12.5px; }
+.cform .chg { font-style: normal; color: #b26a00; font-size: 9px; margin-left: 4px; vertical-align: middle; }
+.cform-foot { position: sticky; bottom: -18px; background: #fff; padding: 12px 0; margin-top: 8px; border-top: 1px solid #eef2f8; }
+.kit-line { display: flex; align-items: center; gap: 6px; margin: 6px 0 0; font-size: 12.5px; color: #43516a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kit-line b { font-weight: 500; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; flex: none; }
+.kit-line svg { flex: none; color: #1356c2; }
+.lchip .kn { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 999px; padding: 0 6px; line-height: 17px; }
+.rftabs { margin: 8px 0 4px; }
+.rftabs button { position: relative; font-size: 13px; padding: 0 12px; }
+.rdot { position: absolute; top: 8px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #e0503f; }
+.rlist { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
+.rcard { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #43516a; }
+.rcard p { margin: 5px 0 0; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.rcard code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.rcard small, .rc-sub { color: var(--muted); font-size: 12px; }
+.rc-top { display: flex; align-items: center; gap: 8px; }
+.rc-top b { color: #1d2b44; font-size: 14px; }
+.rs { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.rs.def { color: #0b7a55; background: #e3f6ee; }
+.rs.gray { color: #6b7a90; background: #f1f3f7; }
+.rst { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.rst i { width: 7px; height: 7px; border-radius: 50%; background: #c3cad6; }
+.rst.ok { color: #0b7a55; } .rst.ok i { background: #19a974; }
+.rst.fail { color: #c0392b; } .rst.fail i { background: #e0503f; }
+.rst.testing i { background: #f0a020; animation: rblink 0.8s infinite alternate; }
+@keyframes rblink { to { opacity: 0.3; } }
+.rc-act { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.btn.danger { color: #c0392b !important; }
+.cform .req { font-style: normal; color: #e0503f; margin-left: 2px; }
+.cform input[type=password], .cform input[type=file] { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input[type=file] { padding: 4px 8px; }
+.cform small.warn { color: #b26a00; }
+.cform .sw { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.rtable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+.rtable th, .rtable td { text-align: left; padding: 5px 8px; border-top: 1px solid #eef2f8; }
+.rtable th { color: var(--muted); font-weight: 500; }
+.kit-note { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+.ktools { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.ktools li { border: 1px solid #e3e9f3; border-radius: 8px; padding: 10px 12px; }
+.ktools li.off { background: #fafbfd; opacity: .65; }
+.ktools label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.ktools input { margin-top: 3px; }
+.ktools .kt-top { display: flex; align-items: center; gap: 8px; }
+.ktools .kt-top b { font-size: 13.5px; color: #1d2b44; }
+.ktools code, .kv code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; color: #43516a; background: #f3f6fb; border-radius: 3px; padding: 0 5px; }
+.ktools p { margin: 3px 0 0; font-size: 12.5px; color: #43516a; }
+.ktools small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.drawer > header, .modal > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.drawer h3, .modal h3 { font-size: 16px; }
+.drawer .card { border: 0; padding: 0; }
+.kv { margin: 16px 0; display: grid; gap: 10px; }
+.kv li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #eef2f8; padding-bottom: 8px; font-size: 13px; }
+.kv span { color: var(--muted); }
+.row-actions { display: flex; gap: 10px; }
+.row-actions.right { justify-content: flex-end; }
+.modal { width: min(480px, calc(100% - 32px)); margin: auto; background: #fff; border-radius: 12px; padding: 18px 22px 20px; }
+.field { display: grid; gap: 6px; margin-bottom: 12px; color: #43516a; font-size: 13px; }
+.field input, .field textarea, .field select { border: 1px solid var(--line-2); border-radius: 6px; padding: 8px 10px; background: #fff; outline: none; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--blue-line); }
+
+/* 课题空间已加载工具 */
+.loaded { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px 16px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.lp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lp-head > svg { color: var(--blue); }
+.lp-head b { font-size: 15px; font-weight: 600; color: #15233b; }
+.lp-space { font-size: 12.5px; color: #1356c2; background: #eaf2fe; border: 1px solid var(--blue-line); border-radius: 999px; padding: 0 10px; line-height: 22px; }
+.lp-count { font-size: 12.5px; color: var(--muted); }
+.lp-actions { margin-left: auto; display: flex; gap: 8px; }
+.lp-desc { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; font-size: 13px; color: #56657c; line-height: 1.6; }
+.lp-desc span { flex: none; color: #8390a4; }
+.lp-desc p { min-width: 0; }
+.lp-desc .from { flex: none; margin-left: auto; font-size: 12px; color: #9aa6b8; white-space: nowrap; }
+.lp-hint { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 8px 12px; border: 1px dashed var(--blue-line); border-radius: 6px; background: #f4f8fe; color: #1356c2; font-size: 13px; }
+.lp-hint svg { flex: none; }
+.lp-hint .grow { flex: 1; }
+.lp-hint .x { color: #7a879b; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lchip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 4px 0 4px; border: 1px solid var(--line-2); border-radius: 6px; background: #fbfcfe; font-size: 13px; color: #25324a; }
+.lchip:hover { border-color: #b9cbe3; }
+.lchip .ic { width: 24px; height: 24px; border-radius: 6px; box-shadow: none; }
+.lchip b { font-weight: 500; max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.lchip .x { width: 20px; height: 20px; border-radius: 4px; display: grid; place-items: center; color: #8a96a8; }
+.lchip .x:hover { background: #eef2f8; color: #c0392b; }
+.src { font-style: normal; font-size: 11px; line-height: 18px; padding: 0 5px; border-radius: 3px; white-space: nowrap; }
+.src.warn { color: #b8620f; background: #fdf2e4; }
+.lp-more { height: 32px; padding: 0 12px; border-radius: 6px; color: var(--blue); font-size: 13px; }
+.lp-more:hover { background: #f1f5fb; }
+.lp-empty { margin-top: 12px; padding: 14px; border: 1px dashed var(--line-2); border-radius: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.btn.load.on { background: #eaf2fe; box-shadow: inset 0 0 0 1px var(--blue-line); color: #1356c2; }
+.btn.load.on:hover { background: #dde9fc; }
+.ops .btn.sm { padding: 0 10px; }
+.tools-grid .card.is-loaded { border-color: #c9dbf6; }
+.tabs button .n { font-style: normal; font-size: 12px; margin-left: 4px; color: var(--muted); }
+.tabs button.on .n { color: #1356c2; }
+
+/* 宽弹窗（新建） */
+.modal.wide { width: min(720px, calc(100% - 32px)); max-height: calc(100vh - 64px); display: flex; flex-direction: column; }
+.modal.wide .scroll { overflow: auto; margin: 0 -22px; padding: 0 22px; }
+
+@media (max-width: 1600px) { .tools-grid .card footer { grid-column: 1 / -1; } }
+@media (max-width: 1440px) { .page { padding-left: 40px; padding-right: 32px; } }
+@media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb-art { display: none; } }
+@media (max-width: 900px) {
+  .app { grid-template-columns: var(--rail) 1fr; }
+  .logo span, .nav-item > span, .nav-item .arrow, .nav-label, .sider-foot span:last-child { display: none; }
+  .nav-item { justify-content: center; padding: 0; }
+  .sider-logo { padding: 0; justify-content: center; }
+  .grid { grid-template-columns: 1fr; }
+  .top-search { display: none; }
+  .page { padding: 24px 18px 40px; }
+  .tb-bar { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- 科研技能 / 科研模型 / 科研智能体 补充 ---------- */
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.mbox { border: 1px solid #dfe8f5; background: #f7faff; border-radius: 8px; padding: 10px 12px; }
+.mbox b { display: block; font-size: 18px; color: #1452b8; font-weight: 700; }
+.mbox span { font-size: 12px; color: var(--muted); }
+.lineage { display: flex; align-items: stretch; flex-wrap: wrap; gap: 6px; padding: 16px; border: 1px dashed #cfdcf0; border-radius: 10px; background: #fbfdff; margin-bottom: 12px; }
+.lnode { flex: 1 1 120px; min-width: 110px; border: 1px solid #d6e4f8; background: #fff; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 3px; }
+.lnode b { font-size: 13px; color: #1b2c4b; word-break: break-all; }
+.lnode small { font-size: 11.5px; color: var(--muted); }
+.lnode.gray { background: #f7f8fa; border-color: #e3e7ee; }
+.lnode.link { border-color: #b9d2f5; }
+.lnode.on { background: #eaf2fd; border-color: #8fb5ee; }
+.lnode.on b { color: #1452b8; }
+.larrow { display: grid; place-items: center; color: #8fa3c2; }
+.tags em.k-skill { color: #8a4bd0; background: #f3ecfc; }
+.tags em.k-agent { color: #c2560c; background: #fdf0e6; }
+.skill-md { white-space: pre-wrap; }
+  </style>
+<style>.sider{display:none !important;}.topbar{display:none !important;}.app{grid-template-columns:1fr !important;}.main{width:100% !important;min-width:0;}</style><style>.tb-actions{display:none !important;}[data-act^="newver"]{display:none !important;}</style></head>
+<body>
+<!--
+  合并约定
+  1. 每人一个 HTML，文件名与侧栏一致：科研工作台.html、科研超级中枢.html、科研知识中心.html、科研技能.html、科研模型.html、科学工具箱.html、云上实验室.html、科研资产.html、历史任务.html。
+  2. 侧栏和顶栏是公共外壳，合并时保持不动。
+  3. 本页只改「科研智能体页面」标记之间的内容，以及底部 PAGE 配置（数据与详情页签）；公共逻辑在「通用列表引擎」段，与其他使用同一引擎的页面保持一致。
+  4. 本页视觉沿用科学工具箱页面风格；科研智能体的目标、工作流程与执行边界延续原工具箱中的智能体条目。
+-->
+<div class="app" id="app">
+  <aside class="sider">
+    <div class="sider-logo">
+      <a class="logo" href="科研工作台.html" aria-label="AI4S 首页">
+        <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fa0ff"/><stop offset="1" stop-color="#1459d9"/></linearGradient>
+            <linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b6ef0"/><stop offset="1" stop-color="#5bb4ff"/></linearGradient>
+          </defs>
+          <path d="M13.2 2.2c1-1.9 3.7-1.9 4.7 0L32.6 27a1.8 1.8 0 0 1-1.6 2.7h-4.7a2 2 0 0 1-1.8-1.1L15.6 11 11 19.4 6.8 22.6Z" fill="url(#lg1)"/>
+          <path d="M1.3 26.8 6.8 17c1.3 2.8 4 4.6 7.2 4.6 1.6 0 3-.4 4.3-1.2l-2.6 4.6c-1.6 2.9-4.9 4.6-8.3 4.6H2.8a1.8 1.8 0 0 1-1.5-2.8Z" fill="url(#lg2)"/>
+        </svg>
+        <span><strong>AI4S</strong><em>AI for Science</em></span>
+      </a>
+    </div>
+    <nav class="sider-nav">
+      <a class="nav-item" href="科研工作台.html"><span data-icon="home"></span><span>科研工作台</span></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研超级中枢.html"><span data-icon="hub"></span><span>科研超级中枢</span></a>
+      <div class="nav-sep"></div>
+      <div class="nav-label">科研广场</div>
+      <a class="nav-item" href="科研应用.html"><span data-icon="grid"></span><span>科研应用</span></a>
+      <a class="nav-item" href="科研知识中心.html"><span data-icon="book"></span><span>科研知识中心</span></a>
+      <a class="nav-item" href="科研技能.html"><span data-icon="layers"></span><span>科研技能</span></a>
+      <a class="nav-item active" href="科研智能体.html" aria-current="page"><span data-icon="network"></span><span>科研智能体</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <a class="nav-item" href="科研模型.html"><span data-icon="box"></span><span>科研模型</span></a>
+      <a class="nav-item" href="科学工具箱.html"><span data-icon="wrench"></span><span>科学工具箱</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="云上实验室.html"><span data-icon="flask"></span><span>云上实验室</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研资产.html"><span data-icon="folder"></span><span>科研资产</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="历史任务.html"><span data-icon="history"></span><span>历史任务</span></a>
+    </nav>
+    <div class="sider-foot"><span class="mark-n">N</span><span>AI4S 科研平台 · 原型</span></div>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <button class="icon-btn" type="button" id="rail-btn" aria-label="收起导航"><span data-icon="panel"></span></button>
+      <div class="crumb">当前页面：<b>科研智能体</b></div>
+      <form class="top-search" id="top-search">
+        <span data-icon="search" data-size="16"></span>
+        <input id="top-q" placeholder="搜索文献、数据、工具或提问…" />
+      </form>
+      <div class="top-actions">
+        <button class="scope-btn" type="button" id="scope-btn"><span>课题空间：</span><b id="scope-label">配方优化课题</b><span data-icon="down" data-size="15"></span></button>
+        <div class="menu" id="scope-menu" style="left:0" hidden></div>
+        <button class="icon-btn has-dot" type="button" id="bell-btn" aria-label="通知"><span data-icon="bell"></span></button>
+        <div class="menu" id="bell-menu" style="right:120px;width:280px" hidden>
+          <div class="menu-h">科研活动 · 2 条未读</div>
+          <button type="button"><b>计算任务开始运行</b><div class="menu-p" style="padding:0">GROMACS 分子动力学模拟（任务 #1025）</div></button>
+          <button type="button"><b>实验数据已同步</b><div class="menu-p" style="padding:0">实验 GB-2026-0915 数据已同步至 ELN</div></button>
+        </div>
+        <button class="icon-btn" type="button" id="help-btn" aria-label="帮助"><span data-icon="help"></span></button>
+        <div class="menu" id="help-menu" style="right:80px;width:260px" hidden>
+          <div class="menu-h">科研智能体</div>
+          <p class="menu-p">科研智能体是面向一类科研任务的专用 Agent，有自己的目标、工作流程和执行边界。点「加载」把它放进课题空间，它绑定的工具和技能会一并加载；在科研超级中枢提出匹配的任务时，Research Agent 会把任务分派给它，也可以用 @名称 直接指定。</p>
+        </div>
+        <button class="user-btn" type="button" id="user-btn"><i>林</i> 林夏 <span data-icon="down" data-size="15"></span></button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <!-- ========== 科研智能体页面 开始 ========== -->
+      <div class="page" id="agents">
+        <header class="tb-head">
+          <div class="tb-title">
+            <h1>科研智能体</h1>
+            <p class="kicker">由 Research Agent 分派、多步执行的专用 Agent</p>
+            <p class="sub">每个科研智能体绑定一组工具和技能，按工作流程在执行边界内完成一类科研任务</p>
+          </div>
+          <div class="tb-art" aria-hidden="true">
+            <div class="glow"></div>
+            <svg class="orbit" width="310" height="118" viewBox="0 0 310 118"><ellipse cx="155" cy="62" rx="118" ry="29" transform="rotate(-6 155 62)" fill="none" stroke="#a9c3ea" stroke-width="1.2"/></svg>
+            <span class="tile tile-l" data-icon="wrench" data-size="20"></span>
+            <span class="tile tile-ai">AI</span>
+            <span class="tile tile-r" data-icon="network" data-size="20"></span>
+          </div>
+          <div class="tb-actions">
+            <label class="btn ghost lg"><span data-icon="upload" data-size="17"></span> 导入智能体<input id="import-file" type="file" hidden /></label>
+            <button class="btn lg" type="button" id="open-create"><span data-icon="plus" data-size="17"></span> 新建智能体</button>
+          </div>
+        </header>
+
+        <div class="tb-search">
+          <form id="item-search">
+            <label><span data-icon="search" data-size="19"></span><input id="item-q" placeholder="搜索智能体名称、任务或应用场景（如：DFT 计算、地震资料处理、蛋白设计...）" /></label>
+            <button class="btn" type="submit">搜索</button>
+          </form>
+        </div>
+
+        <section class="loaded" id="loaded-panel" aria-label="课题空间已加载智能体"></section>
+
+        <div class="filter-box"></div>
+
+        <div class="tb-bar">
+          <div class="tabs" id="item-tabs"></div>
+          <div class="bar-tools">
+            <span class="count" id="item-count"></span>
+            <div class="select">
+              <select id="item-sort" aria-label="排序">
+                <option>综合排序</option>
+                <option>最近更新</option>
+                <option>最多使用</option>
+                <option>名称</option>
+              </select>
+              <span data-icon="down" data-size="14"></span>
+            </div>
+            <button class="view-btn on" type="button" data-view="card"><span data-icon="grid" data-size="16"></span>卡片</button>
+            <button class="view-btn" type="button" data-view="list"><span data-icon="list" data-size="16"></span>列表</button>
+          </div>
+        </div>
+
+        <div id="item-results"></div>
+      </div>
+      <!-- ========== 科研智能体页面 结束 ========== -->
+    </div>
+  </section>
+</div>
+
+<div class="mask drawer-mask" id="drawer" hidden></div>
+<div class="mask" id="modal" hidden></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+// ========== 科研智能体 · 页面配置（数据 + 详情页签） ==========
+/* ========== 科研智能体 ==========
+   科研智能体 = 面向一类科研任务的专用 Agent：有自己的目标、工作流程、执行边界，
+   绑定一组科学工具箱里的 MCP 工具和科研技能，在独立上下文里多步执行。
+   Research Agent（主智能体）在会话中识别到匹配的任务时，把任务分派给已加载的科研智能体，完成后汇总结果。
+   加载科研智能体时，它绑定的工具和技能一并加载到课题空间。 */
+const FIELDS = ["全部", "通用", "地球科学", "合成生物学", "材料科学"]
+const DIRS = {
+  "材料科学": ["合成橡胶", "聚合物复合材料", "配方设计", "多相催化", "均相催化", "反应机理", "电池材料", "光电材料", "多孔材料", "功能分子设计"],
+  "地球科学": ["地震勘探", "储层表征", "油气藏开发", "地质建模", "盆地模拟", "天然地震"],
+  "合成生物学": ["蛋白质设计", "酶工程", "基因线路设计", "代谢工程", "组学分析"]
+}
+// 通用领域不再细分研究方向
+const SCENES = ["文献调研", "数据分析", "实验设计", "科学计算", "科研绘图", "论文写作", "专利与标准", "编程与自动化"]
+const SOURCES = ["平台官方", "团队共享", "个人创建"]
+const BASE_MODELS = ["平台默认大模型", "推理增强模型", "长上下文模型"]
+// 可绑定的工具（来自科学工具箱）与技能（来自科研技能）
+const KIT_TOOLS = ["内部文献库连接", "Zotero 文献管理", "专利库", "标准条款解析", "科研数据清洗工具", "科研数据格式转换", "Plotly.js", "Apache ECharts", "Matplotlib", "Pandoc 文档转换", "LaTeX 排版（TeX Live）", "GROMACS", "LAMMPS", "Packmol", "RDKit", "3Dmol.js", "VASP", "Quantum ESPRESSO", "CP2K", "pymatgen", "ASE", "ORCA", "segyio", "Madagascar / Seismic Unix", "Devito", "lasio / welly", "OPM Flow", "PyVista", "ObsPy", "AlphaFold2 / ColabFold", "RFdiffusion", "ProteinMPNN", "Mol*", "Biopython", "BLAST+", "Primer3", "DNA Chisel", "COBRApy", "DESeq2", "Nextflow / nf-core", "远程计算"]
+const KIT_SKILLS = ["文献自动综述", "文献证据抽取", "研究空白识别", "论文图表提取", "科研数据清洗", "数据趋势分析", "实验方案设计", "科研报告生成", "论文写作辅助", "技术交底书撰写", "专利技术路线分析", "标准条款对标", "代码生成与调试", "计算作业编排", "分子动力学模拟编排", "配方相容性评估", "催化实验条件抽取", "DFT 计算编排", "地震数据质控", "测井曲线解释", "油藏数值模拟编排", "震相拾取与定位", "蛋白质结构解析", "序列特征提取", "引物与基因片段设计", "代谢通量分析"]
+
+const A = (id, name, field, dirs, scenes, src, desc, o) => Object.assign({ id, name, field, dirs, scenes, src, desc, owner: src === "平台官方" ? "AI4S 平台" : src === "团队共享" ? "科研计算中心" : "林夏", ver: "V1.0", updated: "2026-09-24", runs: "620", okRate: 94, favs: 20, rating: 4.6, hot: false, recent: false, tools: [], skills: [], model: "平台默认大模型", maxSteps: 30, timeout: "2 小时", confirm: [], icon: "network", color: "blue" }, o, { calls: (o && o.runs) || "620" })
+const PAGE_ITEMS = [
+  A("a1", "文献调研智能体", "通用", [], ["文献调研"], "平台官方", "围绕一个研究问题多轮检索、筛选和精读文献，输出带引用的调研报告与证据表。", {
+    hot: true, recent: true, runs: "9.8K", okRate: 97, favs: 412, rating: 4.9, ver: "V2.1", updated: "2026-09-26", icon: "book", model: "长上下文模型", maxSteps: 40, timeout: "1 小时",
+    tools: ["内部文献库连接", "Zotero 文献管理"], skills: ["文献自动综述", "文献证据抽取", "研究空白识别"],
+    goal: "把一个开放的研究问题变成有证据支撑的调研结论，并指出研究空白。",
+    steps: ["把研究问题拆成子问题和检索式", "多轮检索：根据首轮结果补充同义词和引文追溯", "筛选并精读核心文献，抽取证据表", "归纳共识、分歧与研究空白", "生成调研报告并同步到 Zotero 分组"],
+    guard: ["只引用实际检索到的文献，不编造 DOI", "单次任务精读不超过 60 篇", "付费全文无权限时仅用摘要并标注"] }),
+  A("a2", "专利与标准分析智能体", "通用", [], ["专利与标准"], "平台官方", "检索相关专利与标准，梳理技术路线和权利要求，对标标准条款并起草技术交底书。", {
+    runs: "2.2K", okRate: 93, favs: 138, rating: 4.7, ver: "V1.3", icon: "shield", color: "purple",
+    tools: ["专利库", "标准条款解析", "Pandoc 文档转换"], skills: ["专利技术路线分析", "标准条款对标", "技术交底书撰写"],
+    goal: "判断技术方案的新颖性风险和标准符合性，产出可提交的交底书初稿。",
+    steps: ["根据技术方案生成专利检索式", "检索并聚类相关专利，梳理技术路线", "比对核心权利要求，标出可能冲突的点", "解析相关标准条款并逐条对标", "起草技术交底书并导出 Word"],
+    guard: ["结论只作为参考，不代替专利代理人意见", "技术方案内容不出空间"], confirm: ["导出交底书前"] }),
+  A("a3", "数据分析智能体", "通用", [], ["数据分析", "科研绘图"], "平台官方", "读取实验或仿真数据，清洗、统计建模、出图并解读趋势，全过程代码可复现。", {
+    hot: true, runs: "7.4K", okRate: 96, favs: 356, rating: 4.8, ver: "V2.0", updated: "2026-09-25", icon: "chart", color: "green", recent: true, model: "推理增强模型",
+    tools: ["科研数据清洗工具", "科研数据格式转换", "Plotly.js", "Matplotlib"], skills: ["科研数据清洗", "数据趋势分析", "代码生成与调试"],
+    goal: "从一批原始数据中得到可信的统计结论和论文可用的图。",
+    steps: ["识别数据结构、字段类型和单位", "清洗数据，异常值标记后请用户确认", "选择统计方法并在沙箱中编写、运行代码", "生成交互图和论文图", "输出分析结论、代码和图表"],
+    guard: ["原始数据只读，结果另存为新版本", "代码在空间沙箱中运行，不访问外网"] }),
+  A("a4", "论文写作智能体", "通用", [], ["论文写作"], "平台官方", "按目标期刊结构组织材料，逐节起草、润色并排版，引用与图表编号自动对齐。", {
+    runs: "4.1K", okRate: 92, favs: 267, rating: 4.7, ver: "V1.6", icon: "pen", color: "orange", model: "长上下文模型", maxSteps: 50, timeout: "3 小时",
+    tools: ["Zotero 文献管理", "LaTeX 排版（TeX Live）", "Pandoc 文档转换"], skills: ["论文写作辅助", "科研报告生成", "论文图表提取"],
+    goal: "把课题结果整理成结构完整、引用规范的论文初稿。",
+    steps: ["确认目标期刊、文章类型和核心结论", "生成大纲并请用户确认", "逐节起草，每节完成后请用户修改", "统一引用格式与图表编号", "用 LaTeX 或 Word 模板排版导出"],
+    guard: ["不虚构实验数据和结果", "每节改动都保留修订记录"], confirm: ["大纲", "每节初稿", "最终导出"] }),
+  A("a5", "计算作业调度智能体", "通用", [], ["科学计算", "编程与自动化"], "平台官方", "把计算任务拆成作业，通过远程计算提交到空间配置的集群，监控状态、失败重提并回收结果。", {
+    hot: true, runs: "5.6K", okRate: 95, favs: 288, rating: 4.8, ver: "V1.8", icon: "cpu", color: "teal", maxSteps: 80, timeout: "24 小时",
+    tools: ["远程计算"], skills: ["计算作业编排", "代码生成与调试"],
+    goal: "让其他科研智能体的计算作业可靠地跑完，并把结果放回空间。",
+    steps: ["估算作业规模与核时", "生成作业脚本与依赖文件", "经用户确认后提交作业", "轮询作业状态，失败时分析日志并重提", "回传结果文件并汇总资源消耗"],
+    guard: ["核时预估经用户确认后才提交", "只用空间已配置的远程资源", "凭据由密钥库注入，不经过大模型"], confirm: ["提交作业前", "单次重提超过 3 次时"] }),
+  A("a6", "DFT 计算智能体", "材料科学", ["多相催化", "电池材料", "光电材料"], ["科学计算"], "平台官方", "从结构出发完成收敛测试、弛豫与自洽、能带与态密度计算，自动监控作业并汇总结果。", {
+    hot: true, recent: true, runs: "3.2K", okRate: 91, favs: 246, rating: 4.8, ver: "V2.0", updated: "2026-09-26", icon: "atom", color: "purple", model: "推理增强模型", maxSteps: 60, timeout: "48 小时",
+    tools: ["VASP", "Quantum ESPRESSO", "pymatgen", "ASE", "远程计算"], skills: ["DFT 计算编排", "计算作业编排"],
+    goal: "得到收敛可靠的结构、能量与电子结构结果。",
+    steps: ["读取结构，识别对称性并生成 k 点", "做截断能与 k 点收敛测试", "弛豫与自洽计算", "能带与 DOS 计算", "监控作业，失败自动诊断并重提", "汇总能量、能带图和 DOS 图"],
+    guard: ["核时预估经用户确认后才提交", "单次最多提交 20 个作业", "只用空间已配置的远程资源"], confirm: ["收敛测试结果", "提交正式计算前"] }),
+  A("a7", "分子动力学智能体", "材料科学", ["聚合物复合材料", "合成橡胶"], ["科学计算"], "平台官方", "搭建多组分体系、选择力场、跑平衡与生产模拟，分析密度、Tg 与相容性。", {
+    hot: true, runs: "2.8K", okRate: 92, favs: 214, rating: 4.7, ver: "V1.5", icon: "atom", color: "blue", maxSteps: 60, timeout: "24 小时",
+    tools: ["Packmol", "GROMACS", "LAMMPS", "RDKit", "3Dmol.js", "远程计算"], skills: ["分子动力学模拟编排", "配方相容性评估"],
+    goal: "用模拟结果回答配方体系的结构与性能问题。",
+    steps: ["根据配方生成分子与组分比例", "用 Packmol 搭建初始构型", "选择力场并生成拓扑", "能量最小化、NVT/NPT 平衡", "生产模拟并分析密度、RDF、Tg", "用 3D 组件展示构型，输出分析报告"],
+    guard: ["体系超过 50 万原子时先请用户确认", "平衡判据不满足时不进入生产模拟"], confirm: ["力场选择", "提交生产模拟前"] }),
+  A("a8", "催化机理研究智能体", "材料科学", ["反应机理", "多相催化", "均相催化"], ["文献调研", "科学计算"], "平台官方", "结合文献中的反应条件和量化计算，提出反应路径假设并计算关键中间体与过渡态。", {
+    runs: "860", okRate: 88, favs: 97, rating: 4.6, ver: "V1.2", icon: "flask", color: "orange", model: "推理增强模型", maxSteps: 50, timeout: "48 小时",
+    tools: ["内部文献库连接", "ORCA", "CP2K", "ASE", "远程计算"], skills: ["催化实验条件抽取", "文献证据抽取", "DFT 计算编排"],
+    goal: "给出有文献和计算双重支撑的反应机理假设。",
+    steps: ["抽取文献中的催化剂、条件与产物", "提出 2～3 条候选反应路径", "请用户选择要计算的路径", "计算中间体与过渡态能量", "绘制能量剖面并比较路径"],
+    guard: ["每条路径假设都要附文献依据", "过渡态搜索前确认计算方法与基组"], confirm: ["候选路径", "计算方法", "提交作业前"] }),
+  A("a9", "配方筛选智能体", "材料科学", ["配方设计", "合成橡胶", "功能分子设计"], ["实验设计", "数据分析"], "团队共享", "根据目标性能和历史实验数据生成候选配方，打分排序并给出下一轮实验方案。", {
+    runs: "1.1K", okRate: 90, favs: 126, rating: 4.6, ver: "V1.3", icon: "sliders", color: "green",
+    tools: ["RDKit", "科研数据清洗工具", "Plotly.js"], skills: ["配方相容性评估", "实验方案设计", "数据趋势分析"],
+    goal: "用更少的实验轮次找到满足目标性能的配方。",
+    steps: ["整理历史实验数据与目标性能", "计算组分描述符并训练代理模型", "生成候选配方并按预测性能排序", "做相容性初筛", "输出下一轮实验方案（正交或贝叶斯优化）"],
+    guard: ["候选配方只在用户给定的组分范围内生成", "预测值同时给出不确定度"], confirm: ["实验方案下发前"] }),
+  A("a10", "地震资料处理智能体", "地球科学", ["地震勘探"], ["数据分析", "科学计算"], "平台官方", "读取 SEG-Y 道头做质控，格式转换后小数据试算处理流程，确认后全量处理并输出叠加剖面。", {
+    hot: true, recent: true, runs: "1.9K", okRate: 93, favs: 187, rating: 4.8, ver: "V1.7", updated: "2026-09-25", icon: "wave", color: "blue", maxSteps: 60, timeout: "24 小时",
+    tools: ["segyio", "Madagascar / Seismic Unix", "Matplotlib", "远程计算"], skills: ["地震数据质控", "计算作业编排"],
+    goal: "得到质量可控、流程可追溯的叠加剖面。",
+    steps: ["读取道头并质控（坐标、采样率、缺道）", "格式转换与观测系统检查", "取小数据试算处理流程", "用户确认参数后全量处理", "输出叠加剖面与处理报告"],
+    guard: ["全量处理前必须经用户确认", "不覆盖原始数据，结果另存"], confirm: ["试算结果", "全量处理前"] }),
+  A("a11", "地震正演反演智能体", "地球科学", ["地震勘探", "地质建模"], ["科学计算"], "团队共享", "根据地质模型做波动方程正演，与实测资料对比后做全波形反演，迭代更新速度模型。", {
+    runs: "420", okRate: 86, favs: 64, rating: 4.5, ver: "V1.1", icon: "wave", color: "purple", model: "推理增强模型", maxSteps: 80, timeout: "72 小时",
+    tools: ["Devito", "segyio", "PyVista", "远程计算"], skills: ["计算作业编排", "代码生成与调试"],
+    goal: "得到与实测资料匹配的速度模型。",
+    steps: ["读取初始速度模型与观测系统", "生成正演代码并做小模型测试", "请用户确认反演参数（频带、迭代次数）", "分频段迭代反演", "对比正演与实测记录，输出速度模型剖面"],
+    guard: ["每个频段结束都汇报目标函数下降情况", "GPU 作业提交前确认"], confirm: ["正演测试结果", "反演参数", "每个频段结束"] }),
+  A("a12", "测井解释智能体", "地球科学", ["储层表征"], ["数据分析"], "平台官方", "读取 LAS 测井曲线，做环境校正、岩性识别与孔渗饱计算，输出解释成果表。", {
+    runs: "1.3K", okRate: 94, favs: 142, rating: 4.7, ver: "V1.4", icon: "chart", color: "teal",
+    tools: ["lasio / welly", "科研数据清洗工具", "Plotly.js"], skills: ["测井曲线解释", "科研数据清洗"],
+    goal: "快速得到单井或多井的储层参数解释结果。",
+    steps: ["读取 LAS 并统一曲线命名与单位", "深度对齐与环境校正", "岩性识别与分层", "计算孔隙度、渗透率、含水饱和度", "输出解释成果表与测井综合图"],
+    guard: ["解释参数（如阿尔奇参数）使用用户提供或默认值时明确标注"] }),
+  A("a13", "油藏数值模拟智能体", "地球科学", ["油气藏开发"], ["科学计算"], "平台官方", "准备油藏模拟输入、跑历史拟合与开发方案对比，输出产量曲线和压力场。", {
+    runs: "780", okRate: 89, favs: 103, rating: 4.6, ver: "V1.3", icon: "globe", color: "orange", maxSteps: 60, timeout: "48 小时",
+    tools: ["OPM Flow", "PyVista", "Plotly.js", "远程计算"], skills: ["油藏数值模拟编排", "计算作业编排"],
+    goal: "对比多个开发方案并给出推荐。",
+    steps: ["检查模型网格、属性与井数据", "生成模拟输入文件", "历史拟合，调整关键参数", "按方案批量提交预测模拟", "对比产量、含水与压力场并给出推荐"],
+    guard: ["批量方案数不超过 10 个", "历史拟合参数调整范围由用户给定"], confirm: ["历史拟合结果", "批量提交前"] }),
+  A("a14", "天然地震监测智能体", "地球科学", ["天然地震"], ["数据分析"], "团队共享", "下载连续波形，自动拾取震相、关联定位并估算震级，输出事件目录。", {
+    runs: "560", okRate: 92, favs: 71, rating: 4.6, ver: "V1.2", icon: "wave", color: "green",
+    tools: ["ObsPy", "Matplotlib"], skills: ["震相拾取与定位"],
+    goal: "从连续波形中得到完整的地震事件目录。",
+    steps: ["获取台站与连续波形", "滤波与去仪器响应", "自动拾取 P/S 震相", "事件关联与定位", "估算震级，输出事件目录与分布图"],
+    guard: ["低信噪比拾取标记为待复核"] }),
+  A("a15", "蛋白设计智能体", "合成生物学", ["蛋白质设计"], ["科学计算", "实验设计"], "平台官方", "确认靶点后用 RFdiffusion 生成骨架、ProteinMPNN 设计序列、AlphaFold 回验，按 pLDDT/iPAE 筛选候选。", {
+    hot: true, recent: true, runs: "1.6K", okRate: 90, favs: 231, rating: 4.8, ver: "V1.6", updated: "2026-09-26", icon: "dna", color: "purple", model: "推理增强模型", maxSteps: 60, timeout: "24 小时",
+    tools: ["RFdiffusion", "ProteinMPNN", "AlphaFold2 / ColabFold", "Mol*", "远程计算"], skills: ["蛋白质结构解析", "计算作业编排"],
+    goal: "得到结构可信、可进入湿实验验证的候选蛋白序列。",
+    steps: ["确认靶点结构与结合位点", "RFdiffusion 生成骨架", "ProteinMPNN 设计序列", "AlphaFold 回验结构", "按 pLDDT / iPAE 筛选并排序候选", "用 Mol* 展示候选结构"],
+    guard: ["候选数量上限 200 个", "GPU 作业提交前确认"], confirm: ["靶点与结合位点", "提交 GPU 作业前"] }),
+  A("a16", "基因线路设计智能体", "合成生物学", ["基因线路设计"], ["实验设计"], "团队共享", "根据目标逻辑功能选择元件、设计线路与引物，并做序列合成性检查。", {
+    runs: "640", okRate: 88, favs: 82, rating: 4.5, ver: "V1.2", icon: "dna", color: "green",
+    tools: ["Biopython", "Primer3", "DNA Chisel", "BLAST+"], skills: ["引物与基因片段设计", "序列特征提取"],
+    goal: "得到可直接下单合成、可克隆构建的基因线路方案。",
+    steps: ["确认目标逻辑功能与宿主", "从元件库选择启动子、RBS、编码区与终止子", "组装线路并检查序列冲突", "设计克隆片段与引物", "做合成性检查（GC、重复序列、酶切位点）"],
+    guard: ["不设计涉及病原体毒力基因的序列", "每个元件选择都请用户确认"], confirm: ["元件选择", "线路方案", "导出下单序列前"] }),
+  A("a17", "代谢工程智能体", "合成生物学", ["代谢工程"], ["科学计算", "实验设计"], "平台官方", "基于基因组尺度代谢模型做通量分析，找出提高目标产物的敲除与过表达靶点。", {
+    runs: "520", okRate: 90, favs: 76, rating: 4.6, ver: "V1.2", icon: "network", color: "teal",
+    tools: ["COBRApy", "Plotly.js"], skills: ["代谢通量分析", "实验方案设计"],
+    goal: "给出可实验验证的代谢改造靶点清单。",
+    steps: ["加载代谢模型并设置培养条件", "FBA / FVA 计算基线通量", "扫描单、双基因敲除与过表达", "按目标产物产率与生长排序靶点", "输出靶点清单与改造实验方案"],
+    guard: ["模型预测只作为实验参考，标注模型版本与约束"], confirm: ["培养条件约束", "实验方案下发前"] }),
+  A("a18", "转录组分析智能体", "合成生物学", ["组学分析"], ["数据分析"], "团队共享", "从原始测序数据跑标准流程，完成差异表达与富集分析，输出火山图与通路图。", {
+    runs: "700", okRate: 93, favs: 88, rating: 4.6, ver: "V1.3", icon: "dna", color: "orange", maxSteps: 40, timeout: "12 小时",
+    tools: ["Nextflow / nf-core", "DESeq2", "Matplotlib", "远程计算"], skills: ["数据趋势分析", "计算作业编排"],
+    goal: "从测序数据得到差异基因和通路层面的结论。",
+    steps: ["检查样本表与测序质量", "用 nf-core 流程比对与定量", "DESeq2 差异表达分析", "GO / KEGG 富集分析", "输出火山图、热图与结果表"],
+    guard: ["样本分组由用户确认，不自动推断", "原始 FASTQ 只读"] }),
+  A("a19", "实验方案设计智能体", "通用", [], ["实验设计"], "个人创建", "根据研究假设设计对照组、变量水平与样本量，生成可执行的实验方案与记录表。", {
+    runs: "130", okRate: 91, favs: 18, rating: 4.4, ver: "V1.0", updated: "2026-09-22", icon: "flask", color: "blue", maxSteps: 20, timeout: "30 分钟",
+    tools: ["Apache ECharts"], skills: ["实验方案设计", "文献证据抽取"],
+    goal: "让一个研究假设变成可执行、可复现的实验方案。",
+    steps: ["明确假设、因变量与自变量", "参考文献确定变量水平范围", "选择设计方法并计算样本量", "生成实验方案与记录表"],
+    guard: ["涉及危险化学品时提示安全规范"], confirm: ["变量与水平", "最终方案"] })
+]
+
+const PAGE = {
+  title: "科研智能体",
+  unit: "智能体",
+  items: PAGE_ITEMS,
+  favs: ["a1", "a6"],
+  preload: ["a1", "a7", "a9"],
+  panelIcon: "network",
+  newIcon: "network",
+  hotNote: "由 Research Agent 按任务自动分派，在独立上下文中多步执行",
+  tabs: ["全部智能体", "已加载", "最近使用", "我的收藏", "我创建的"],
+  dims: [
+    ["field", "学科领域", () => FIELDS, (i) => [i.field]],
+    ["dir", "研究方向", () => ["全部", ...dirsFor(state.field)], (i) => i.dirs],
+    ["scene", "应用场景", () => ["全部", ...SCENES], (i) => i.scenes],
+    ["src", "来源", () => ["全部", ...SOURCES], (i) => [i.src]]
+  ],
+  dirsOf: (i) => i.dirs,
+  scenesOf: (i) => i.scenes,
+  searchText: (i) => `${i.name} ${i.desc} ${i.field} ${i.dirs.join(" ")} ${i.scenes.join(" ")} ${i.src} ${i.tools.join(" ")} ${i.skills.join(" ")} ${(i.steps || []).join(" ")} ${i.goal || ""}`,
+  tags: (i) => [[i.dirs[0] || i.field, "kind k-agent", i.dirs.length ? `研究方向 · ${i.field}` : "学科领域"], [i.scenes[0]]],
+  status: (i) => i.src === "个人创建" ? `<em>仅自己可见</em>` : `<em class="ok">可用</em>`,
+  cardLine: (i) => `<p class="kit-line" title="${esc([...i.tools, ...i.skills].join("、"))}">${icon("wrench", 13)}<b>能力</b>${i.tools.length} 个工具 · ${i.skills.length} 个技能<span class="kv-note" style="margin-left:6px">${esc(i.tools.slice(0, 2).join(" · "))}</span></p>`,
+  meta: (i) => `<span class="owner" title="${esc(i.owner)}">${icon("user", 13)}<i>${esc(i.owner)}</i></span>
+    <span title="评分">${icon("star", 13)}${i.rating}</span>
+    <span title="运行次数">${icon("eye", 14)}${esc(i.runs)}</span>
+    <span title="成功率">${icon("check", 13)}${i.okRate}%</span>`,
+  chipNote: (i) => `<i class="kn" title="绑定的工具 / 技能">${i.tools.length} 工具 · ${i.skills.length} 技能</i>`,
+  onLoad: (i) => {
+    const parts = []
+    if (i.tools.length) parts.push(`工具 ${i.tools.length} 个`)
+    if (i.skills.length) parts.push(`技能 ${i.skills.length} 个`)
+    return parts.length ? `，并联带加载绑定的${parts.join("、")}` : ""
+  },
+  drawerTabs: () => ["说明", "工具与技能", "运行配置", "运行记录"],
+  tabLabel: (i, t) => t === "工具与技能" ? `工具与技能（${i.tools.length + i.skills.length}）` : t,
+  drawerTab(i, tab) {
+    if (tab === "工具与技能") {
+      const on = isLoaded(i.id)
+      const row = (name, sub) => `<li><div class="kt-top"><b>${esc(name)}</b><em class="src ${on ? "ok" : ""}" style="margin-left:auto">${on ? "已加载" : "随智能体加载"}</em></div><p>${esc(sub)}</p></li>`
+      return `<p class="kit-note">科研智能体只能调用这里绑定的工具和技能。加载本智能体时它们一并加载到「${esc(state.space)}」；移除智能体不会移除它们，可能还被其他智能体使用。</p>
+        ${pbox("工具", `${i.tools.length} 个 · 来自科学工具箱`, i.tools.length ? `<ul class="ktools">${i.tools.map((u) => row(u, u === "远程计算" ? "提交计算作业到空间已配置的远程资源，凭据由密钥库注入" : `步骤 ${stepOf(i, u)} 调用`)).join("")}</ul>` : `<div class="empty" style="margin-top:0">未绑定工具</div>`, "wrench")}
+        ${pbox("技能", `${i.skills.length} 个 · 来自科研技能`, i.skills.length ? `<ul class="ktools">${i.skills.map((u) => row(u, "执行对应步骤时读取该技能的 SKILL.md")).join("")}</ul>` : `<div class="empty" style="margin-top:0">未绑定技能</div>`, "layers")}
+        <p class="lp-note">工具的参数与远程资源在<a href="科学工具箱.html">科学工具箱</a>中管理，技能内容在<a href="科研技能.html">科研技能</a>中管理。</p>`
+    }
+    if (tab === "运行配置") {
+      return `${kv([["基础模型", i.model], ["最大步数", `${i.maxSteps} 步`], ["单次超时", i.timeout], ["人工确认点", i.confirm.length ? i.confirm.join("、") : "无（结束时汇报）"], ["上下文", "独立上下文，只接收主智能体分派的任务描述与空间文件引用"], ["结果回传", "结构化摘要 + 产出文件引用，交回 Research Agent 汇总"]])}
+        ${pbox("执行边界", `${(i.guard || []).length} 条`, `<ul>${(i.guard || []).map((x) => `<li>${esc(x)}</li>`).join("")}<li>只能读写课题空间的文件，不能访问其他空间</li></ul>`, "shield")}
+        <div class="code-head"><span>agent.yaml</span><button class="btn sm ghost" type="button" data-copytext="agent-yaml">复制</button></div><pre class="code" id="agent-yaml">${esc(agentFile(i))}</pre>`
+    }
+    if (tab === "运行记录") {
+      const rs = runsOf(i)
+      return `<div class="mgrid"><div class="mbox"><b>${esc(i.runs)}</b><span>累计运行</span></div><div class="mbox"><b>${i.okRate}%</b><span>成功率</span></div><div class="mbox"><b>${Math.round(i.maxSteps * 0.45)}</b><span>平均步数</span></div><div class="mbox"><b>${i.confirm.length}</b><span>人工确认点</span></div></div>
+        <table class="etable"><thead><tr><th>时间</th><th>空间</th><th>任务</th><th>步数</th><th>状态</th></tr></thead><tbody>${rs.map((r) => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]}</td><td><em class="rs ${r[4] === "已完成" ? "def" : ""}">${esc(r[4])}</em></td></tr>`).join("")}</tbody></table>`
+    }
+    return `
+      ${pbox("目标", "", esc(i.goal || i.desc), "spark")}
+      ${pbox("工作流程", `${(i.steps || []).length} 步`, `<ol class="steps">${(i.steps || []).map((x) => `<li>${esc(x)}${i.confirm.some((c) => x.includes(c.replace(/前$/, ""))) ? ` <em class="rs">需确认</em>` : ""}</li>`).join("")}</ol>`, "list")}
+      ${i.guard ? pbox("执行边界", "", `<ul>${i.guard.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`, "shield") : ""}
+      ${pbox("如何被调用", "", `在科研超级中枢提出匹配的任务时，Research Agent 会把任务分派给本智能体；也可以在会话中输入「@${esc(i.name)}」直接指定。`, "hub")}
+      ${kv([["学科领域", i.field], ["研究方向", i.dirs.join("、")], ["应用场景", i.scenes.join("、")], ["来源", i.src], ["维护人", i.owner], ["当前版本", `${i.ver} · ${i.updated}`], ["评分 / 运行", `${i.rating} / ${i.runs} 次`]])}`
+  },
+  drawerActions: (i) => `<button class="btn ghost" type="button" data-act="try|${i.id}">${icon("hub", 15)}在会话中调用</button>`,
+  action(name, id) {
+    const i = findItem(id)
+    if (name === "try") {
+      if (!isLoaded(id)) toggleLoad(i, true)
+      i.recent = true
+      render()
+      state.keepScroll = true
+      openDrawer(i)
+      toast(`已在「${state.space}」启用「${i.name}」，前往科研超级中枢输入任务或 @${i.name} 即可调用`)
+    }
+  },
+  // 新建在独立配置页「科研智能体配置.html」完成，发布后带 #created= 回到本页
+  createPage: "科研智能体配置.html",
+  fromCreated(d) {
+    const field = FIELDS.includes(d.field) ? d.field : "通用"
+    const tools = [...(d.mcps || []), ...(d.tools || [])]
+    const skills = d.skills || []
+    return {
+      item: A("new-" + Date.now(), d.name, field, field === "通用" ? [] : (d.dirs || []), d.scenes && d.scenes.length ? d.scenes : ["编程与自动化"], d.src || "个人创建", d.desc || "用户创建的科研智能体。", {
+        goal: d.goal || d.desc || "", steps: d.steps && d.steps.length ? d.steps : ["按提示词执行"], tools, skills, guard: d.guard && d.guard.length ? d.guard : null,
+        model: d.model || "平台默认大模型", maxSteps: d.maxSteps || 30, timeout: d.timeout || "2 小时", owner: "林夏", rating: 0, runs: "0", okRate: 0, favs: 0, updated: "2026-09-30", ver: d.ver || "V1.0",
+        icon: d.icon || "network", color: d.color || "blue",
+        confirm: d.confirm || [] }),
+      msg: `「${d.name}」已发布（${tools.length} 个工具、${skills.length} 个技能）`
+    }
+  },
+  importItem: (file) => A("imp-" + Date.now(), file.name.replace(/\.[^.]+$/, ""), "通用", [], ["编程与自动化"], "个人创建", `由 ${file.name} 导入，解析 agent.yaml 后可被 Research Agent 分派。`, { rating: 0, runs: "0", okRate: 0, favs: 0, steps: ["按导入的配置执行"], confirm: ["提交计算作业前"] })
+}
+function stepOf(i, u) {
+  const low = u.split(/[ /（]/)[0].toLowerCase()
+  const hit = (i.steps || []).map((s, n) => s.toLowerCase().includes(low) ? n + 1 : 0).filter(Boolean)
+  return hit.length ? hit.join("、") : "中按需"
+}
+function runsOf(i) {
+  if (i.id.startsWith("new") || i.id.startsWith("imp")) return []
+  const spaces = ["高分子配方优化", "地震资料处理", "蛋白设计"]
+  const n = Number(i.id.slice(1)) || 1
+  return [["09-28 16:42", spaces[n % 3], i.desc.split("，")[0], Math.round(i.maxSteps * 0.4), "已完成"],
+    ["09-27 10:15", spaces[(n + 1) % 3], i.goal ? i.goal.replace(/。$/, "") : i.name, Math.round(i.maxSteps * 0.55), i.confirm.length ? "等待确认" : "已完成"],
+    ["09-25 19:03", spaces[(n + 2) % 3], i.steps[0], Math.round(i.maxSteps * 0.3), n % 4 === 0 ? "已终止" : "已完成"]]
+}
+function agentFile(i) {
+  return `name: ${i.name}
+version: ${i.ver}
+description: ${i.desc}
+model: ${i.model}
+max_steps: ${i.maxSteps}
+timeout: ${i.timeout}
+tools:
+${i.tools.map((t) => `  - ${t}`).join("\n") || "  []"}
+skills:
+${i.skills.map((t) => `  - ${t}`).join("\n") || "  []"}
+confirm_before:
+${i.confirm.map((t) => `  - ${t}`).join("\n") || "  []"}
+instructions: |
+  目标：${i.goal || i.desc}
+${(i.steps || []).map((s, n) => `  ${n + 1}. ${s}`).join("\n")}
+${i.guard ? `guardrails:\n${i.guard.map((g) => `  - ${g}`).join("\n")}` : ""}`
+}
+
+
+// ========== 通用列表引擎（科研技能 / 科研模型 / 科研智能体 共用，保持一致） ==========
+/* ========== 公共页面逻辑（与科学工具箱同构）==========
+   页面只需提供 PAGE（文案、条目、筛选维度、详情页签、新建表单），其余交给这里。 */
+const ICONS = {
+  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7"/><path d="M5.5 8.8V20.5h13V8.8"/><path d="M10 20.5v-5.5h4v5.5"/>',
+  hub: '<circle cx="12" cy="12" r="2.6"/><path d="M18.4 7.2A8 8 0 1 1 9.7 4.3"/><path d="M5.6 16.8A8 8 0 0 0 20 12"/><circle cx="17.5" cy="5.2" r="1.6"/>',
+  book: '<path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v12a2.8 2.8 0 0 0-2.8-2.8H2.5z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v12a2.8 2.8 0 0 1 2.8-2.8h6.7z"/>',
+  layers: '<path d="m12 3 9.5 4.8L12 12.6 2.5 7.8z"/><path d="m2.5 12.2 9.5 4.8 9.5-4.8"/><path d="m2.5 16.4 9.5 4.8 9.5-4.8"/>',
+  box: '<path d="M20.5 7.5 12 3 3.5 7.5v9L12 21l8.5-4.5z"/><path d="m3.5 7.5 8.5 4.6 8.5-4.6"/><path d="M12 12.1V21"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6.3L4.7 18.1A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.7-2.9L14 9.3V3"/><path d="M7.2 15h9.6"/>',
+  folder: '<path d="M4 20h16a2 2 0 0 0 2-2V8.5a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3.5H4a2 2 0 0 0-2 2V18a2 2 0 0 0 2 2Z"/><path d="M12 10.5v3.5"/><circle cx="12" cy="16.6" r="1.2"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8.2"/><path d="M3 3.5v4.7h4.7"/><path d="M12 7.5V12l3.4 2"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>',
+  doc: '<path d="M14 3H6.5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8.5z"/><path d="M14 3v5.5h5.5"/><path d="M8.5 9.5h2M8.5 13h7M8.5 16.5h7"/>',
+  network: '<rect x="9" y="3" width="6" height="5.5" rx="1"/><rect x="3" y="15.5" width="6" height="5.5" rx="1"/><rect x="15" y="15.5" width="6" height="5.5" rx="1"/><path d="M6 15.5v-2.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2.5"/><path d="M12 12V8.5"/>',
+  chart: '<path d="M7 19v-4.5M12 19v-8M17 19V7.5"/>',
+  sliders: '<path d="M4 8h9M17.5 8H20M4 16h2.5M11 16h9"/><circle cx="15.2" cy="8" r="2.2"/><circle cx="8.8" cy="16" r="2.2"/>',
+  upload: '<path d="M12 15V3.5"/><path d="m7 8 5-4.5L17 8"/><path d="M20.5 15v3.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V15"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  chev: '<path d="m9 6 6 6-6 6"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  grid: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17M12 3.5v17"/>',
+  list: '<path d="M9 6h11.5M9 12h11.5M9 18h11.5"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="2.6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>',
+  heart: '<path d="M19.2 13.8c1.5-1.5 2.8-3.2 2.8-5.4A5.3 5.3 0 0 0 16.7 3c-1.8 0-3 .5-4.7 2.1C10.3 3.5 9.1 3 7.3 3A5.3 5.3 0 0 0 2 8.4c0 2.2 1.3 3.9 2.8 5.4l7.2 7.1Z"/>',
+  dots: '<circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  crown: '<path d="M3 7.5 7.5 11 12 4.5l4.5 6.5L21 7.5 19.2 17H4.8Z"/><path d="M4.8 20h14.4"/>',
+  bell: '<path d="M6 8.5a6 6 0 0 1 12 0c0 6.5 2.8 8.5 2.8 8.5H3.2S6 15 6 8.5"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.5-2.6 2.5"/><path d="M12 16.6h.01" stroke-width="2.4"/>',
+  panel: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9 3.5v17"/><path d="m15.5 14.5-2.5-2.5 2.5-2.5"/>',
+  close: '<path d="M7 7l10 10M17 7 7 17"/>',
+  spark: '<path d="M12 3.5 13.9 9 19.5 11 13.9 13 12 18.5 10.1 13 4.5 11 10.1 9z"/><path d="M19 3.5v3M17.5 5h3M5 17.5v3M3.5 19h3"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  star: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+  code: '<path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5"/>',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx=".8"/><path d="M9.5 3v3M14.5 3v3M9.5 18v3M14.5 18v3M3 9.5h3M3 14.5h3M18 9.5h3M18 14.5h3"/>',
+  wave: '<path d="M2.5 12h3l2-6 3.5 12 3-9 2 5h5.5"/>',
+  dna: '<path d="M7 3c0 6 10 6 10 12s-10 6-10 6M17 3c0 6-10 6-10 12"/><path d="M8.5 6.5h7M8.5 17.5h7M10 12h4"/>',
+  atom: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>',
+  pen: '<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3Z"/>',
+  image: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m20.5 16-5-5-8.5 8.5"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6z"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+}
+function icon(name, size, sw) {
+  const s = size || 18
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.box}</svg>`
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]))
+}
+let toastTimer = 0
+function toast(text) {
+  const el = document.getElementById("toast")
+  el.hidden = false
+  el.textContent = text
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { el.hidden = true }, 2400)
+}
+function paintIcons(root) {
+  root.querySelectorAll("[data-icon]").forEach((el) => {
+    if (el.dataset.ready) return
+    el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 18)
+    el.dataset.ready = "1"
+  })
+}
+function numOf(calls) {
+  const s = String(calls)
+  return s.endsWith("K") ? parseFloat(s) * 1000 : parseFloat(s) || 0
+}
+function checks(name, label, list, on) {
+  return `<div class="field"><span>${esc(label)}<small class="opt">可多选</small></span><div class="checks">${list.map((x) => `<label><input type="checkbox" name="${name}" value="${esc(x)}" ${on && on.includes(x) ? "checked" : ""} /> ${esc(x)}</label>`).join("")}</div></div>`
+}
+const opts = (arr, cur) => arr.filter((x) => x !== "全部").map((x) => `<option ${x === cur ? "selected" : ""}>${esc(x)}</option>`).join("")
+function dirChecks(field) { return (DIRS[field] || []).length ? checks("dirs", "研究方向", DIRS[field]) : "" } // 通用领域不分研究方向
+
+const ITEMS = PAGE.items
+const findItem = (id) => ITEMS.find((row) => row.id === id)
+const DIMS = PAGE.dims // [key, 标签, 全部选项(), 取值(item)=>[]]
+const DIM_LIMIT = 12
+const favs = new Set(PAGE.favs || [])
+const state = { query: "", tab: PAGE.tabs[0], sort: "综合排序", view: "card", space: "配方优化课题", menu: null, lpOpen: false, fOpen: {}, dtab: "" }
+DIMS.forEach(([k]) => { state[k] = "全部" })
+const SPACES = ["全部项目", "配方优化课题", "高性能合成橡胶项目"]
+// 空间（课题）信息由课题管理平台同步，本平台只读；这里只维护每个空间已加载的条目
+const SPACE_INFO = {}
+SPACES.forEach((s) => { SPACE_INFO[s] = { loaded: {} } })
+;(PAGE.preload || []).forEach((id, i) => { SPACE_INFO["配方优化课题"].loaded[id] = { at: i + 1 } })
+const LP_FOLD = 10
+
+function anyFilter() { return DIMS.some(([k]) => state[k] !== "全部") }
+function spaceInfo(name) {
+  const key = name || state.space
+  if (!SPACE_INFO[key]) SPACE_INFO[key] = { loaded: {} }
+  return SPACE_INFO[key]
+}
+function loadedOf(name) { return spaceInfo(name).loaded }
+function isLoaded(id) { return !!loadedOf()[id] }
+function loadBtn(item, big) {
+  return `<button class="btn ${big ? "" : "sm"} load" type="button" data-name="${esc(item.name)}" onclick="event.stopPropagation();parent.joinMyAssets&&parent.joinMyAssets('智能体', this.getAttribute('data-name'))" title="加入我的科研资产">${icon("plus", big ? 15 : 14, 2)}加入我的科研资产</button>`
+}
+function toggleLoad(item, silent) {
+  const box = loadedOf()
+  if (box[item.id]) {
+    delete box[item.id]
+    if (!silent) toast(`已从「${state.space}」移除「${item.name}」`)
+  } else {
+    box[item.id] = { at: Date.now() }
+    item.recent = true
+    const also = PAGE.onLoad ? PAGE.onLoad(item) : ""
+    if (!silent) toast(`已加载「${item.name}」到「${state.space}」${also}`)
+  }
+}
+
+function chips(group, options, current) {
+  const box = document.querySelector(`[data-group="${group}"]`)
+  const label = box.querySelector(".lbl").outerHTML
+  box.hidden = !options || (group === "dir" && options.length <= 1)
+  if (!options) return
+  const open = state.fOpen[group]
+  const over = options.length - 1 > DIM_LIMIT
+  const shown = over && !open ? options.filter((op, i) => i <= DIM_LIMIT || op === current) : options
+  const last = group === DIMS[DIMS.length - 1][0] && anyFilter()
+  box.innerHTML = label + shown.map((op) => `<button type="button" class="chip ${op === current ? "on" : ""}" data-filter="${group}" data-value="${esc(op)}">${esc(op)}</button>`).join("")
+    + (over ? `<button type="button" class="fmore" data-fmore="${group}">${open ? "收起" : `更多 ${options.length - shown.length}`}${icon("down", 12, 2)}</button>` : "")
+    + (last ? `<button type="button" class="fclear" data-fclear="1">清空筛选</button>` : "")
+}
+// 筛选联动：逐级收窄，首行保留完整选项；研究方向常驻：学科领域为「全部」时列出所有方向，选定领域后只列该领域的方向；「通用」不分研究方向，选中时隐藏该行
+function dirsFor(field) { return field === "全部" ? [...new Set(FIELDS.slice(1).flatMap((f) => DIRS[f] || []))] : (DIRS[field] || []) }
+function cascadeOptions() {
+  const out = {}
+  let pool = ITEMS
+  DIMS.forEach(([key, , all, get]) => {
+    const have = new Set(pool.flatMap(get))
+    const options = key === "field" ? all() : all().filter((op) => op === "全部" || have.has(op))
+    if (!options.includes(state[key])) state[key] = "全部"
+    out[key] = options
+    if (state[key] !== "全部") pool = pool.filter((item) => get(item).includes(state[key]))
+  })
+  return out
+}
+function tabs() {
+  const n = Object.keys(loadedOf()).length
+  document.getElementById("item-tabs").innerHTML = PAGE.tabs.map((tab) => `<button type="button" class="${tab === state.tab ? "on" : ""}" data-tab="${esc(tab)}">${esc(tab)}${tab === "已加载" ? `<i class="n">${n}</i>` : ""}</button>`).join("")
+}
+function tagHtml(item, feature) {
+  const tags = PAGE.tags(item).map(([t, cls, tip]) => `<em class="${cls || ""}" ${tip ? `title="${esc(tip)}"` : ""}>${esc(t)}</em>`).join("")
+  const status = feature ? `<em class="official">平台官方</em>` : PAGE.status(item)
+  return `<div class="tags">${tags}${status}</div>`
+}
+function loadedPanel() {
+  const info = spaceInfo()
+  const ids = Object.keys(info.loaded).filter((id) => findItem(id)).sort((a, b) => info.loaded[a].at - info.loaded[b].at)
+  const shown = state.lpOpen ? ids : ids.slice(0, LP_FOLD)
+  const chip = (id) => {
+    const item = findItem(id)
+    return `<span class="lchip" title="${esc(item.desc)}">
+      <span class="ic ic-${item.color}">${icon(item.icon, 14, 1.9)}</span>
+      <b data-detail="${id}">${esc(item.name)}</b>
+      ${PAGE.chipNote ? PAGE.chipNote(item) : ""}
+      <button class="x" type="button" data-unload="${id}" aria-label="移除 ${esc(item.name)}">${icon("close", 13, 2)}</button>
+    </span>`
+  }
+  document.getElementById("loaded-panel").innerHTML = `
+    <div class="lp-head">
+      ${icon(PAGE.panelIcon || "layers", 18)}
+      <b>课题空间已加载${PAGE.unit}</b>
+      <span class="lp-space">${esc(state.space)}</span>
+      <span class="lp-count">${ids.length} 个</span>
+      <div class="lp-actions">
+        <button class="btn sm ghost" type="button" data-lp="clear" ${ids.length ? "" : "disabled"}>清空</button>
+      </div>
+    </div>
+    ${ids.length ? `<div class="lp-chips">${shown.map(chip).join("")}${ids.length > LP_FOLD ? `<button class="lp-more" type="button" data-lp="fold">${state.lpOpen ? "收起" : `+${ids.length - LP_FOLD} 展开`}</button>` : ""}</div>`
+      : `<div class="lp-empty">「${esc(state.space)}」还没有加载${PAGE.unit}。点卡片上的「加载」即可。</div>`}`
+}
+function featureCard(item) {
+  return `<article class="card feature" data-detail="${item.id}" style="cursor:pointer">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, true)}
+      <p class="desc">${esc(item.desc)}</p>
+    </div>
+  </article>`
+}
+function itemCard(item) {
+  const open = state.menu === item.id
+  return `<article class="card ${isLoaded(item.id) ? "is-loaded" : ""}">
+    <button class="more" type="button" data-more="${item.id}" aria-label="更多操作">${icon("dots", 18)}</button>
+    ${open ? `<div class="menu more-menu">
+      <button type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+      <button type="button" data-detail="${item.id}">查看详情</button>
+      <button type="button" data-copy="${item.id}">复制${PAGE.unit}名称</button>
+    </div>` : ""}
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, false)}
+      <p class="desc">${esc(item.desc)}</p>
+      ${PAGE.cardLine ? PAGE.cardLine(item) : ""}
+    </div>
+    <footer>
+      <div class="meta">${PAGE.meta(item)}</div>
+      <div class="ops">
+        <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+        ${loadBtn(item)}
+      </div>
+    </footer>
+  </article>`
+}
+function listRow(item) {
+  return `<div class="list-row">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}</div>
+    <div><p class="desc" style="margin:0">${esc(item.desc)}</p>${PAGE.cardLine ? PAGE.cardLine(item) : ""}</div>
+    <div class="ops">
+      <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+      ${loadBtn(item)}
+    </div>
+  </div>`
+}
+function visible() {
+  const q = state.query.trim().toLowerCase()
+  let list = ITEMS.filter((item) => {
+    if (q) { const hay = PAGE.searchText(item).toLowerCase(); if (!q.split(/[\s,，、]+/).filter(Boolean).every((w) => hay.includes(w))) return false }
+    if (!DIMS.every(([k, , , get]) => state[k] === "全部" || get(item).includes(state[k]))) return false
+    if (state.tab === "已加载") return isLoaded(item.id)
+    if (state.tab === "最近使用") return item.recent
+    if (state.tab === "我的收藏") return favs.has(item.id)
+    if (state.tab === "我创建的") return item.owner === "林夏"
+    return true
+  })
+  list = [...list]
+  if (state.sort === "名称") list.sort((a, b) => a.name.localeCompare(b.name, "zh"))
+  if (state.sort === "最近更新") list.sort((a, b) => String(b.updated).localeCompare(String(a.updated)))
+  if (state.sort === "最多使用") list.sort((a, b) => numOf(b.calls) - numOf(a.calls))
+  return list
+}
+function render() {
+  const o = cascadeOptions()
+  DIMS.forEach(([key]) => chips(key, o[key], state[key]))
+  loadedPanel()
+  tabs()
+  document.querySelectorAll("[data-view]").forEach((btn) => btn.classList.toggle("on", btn.dataset.view === state.view))
+  const list = visible()
+  document.getElementById("item-count").textContent = `共 ${list.length} 个${PAGE.unit}`
+  const showHot = state.tab === PAGE.tabs[0] && !state.query && !anyFilter()
+  let html = ""
+  if (showHot) {
+    html += `<section class="hot"><header>${icon("crown", 18)}<b>精选推荐</b><span>${esc(PAGE.hotNote)}</span></header>
+      <div class="grid">${ITEMS.filter((i) => i.hot).slice(0, 3).map(featureCard).join("")}</div></section>`
+  }
+  if (!list.length && state.tab === "已加载") html += `<div class="empty">「${esc(state.space)}」还没有加载${PAGE.unit}，或当前筛选条件下没有已加载的${PAGE.unit}。</div>`
+  else if (!list.length) html += `<div class="empty">没有匹配的${PAGE.unit}，试试更换筛选条件或搜索词。</div>`
+  else if (state.view === "card") html += `<div class="grid tools-grid">${list.map(itemCard).join("")}</div>`
+  else html += `<div class="list">${list.map(listRow).join("")}</div>`
+  document.getElementById("item-results").innerHTML = html
+}
+
+function openDrawer(item) {
+  state.menu = null
+  const box = document.getElementById("drawer")
+  box.hidden = false
+  const list = PAGE.drawerTabs(item)
+  const tab = list.includes(state.dtab) ? state.dtab : list[0]
+  const top = box.querySelector(".drawer") ? box.querySelector(".drawer").scrollTop : 0
+  box.innerHTML = `<aside class="drawer wide" role="dialog" aria-label="${esc(item.name)}" data-open="${item.id}">
+    <header><h3>${esc(PAGE.unit)}详情</h3><button class="icon-btn" type="button" data-close="drawer" aria-label="关闭">${icon("close")}</button></header>
+    <div class="card">
+      <span class="ic ic-${item.color}">${icon(item.icon, 24, 1.8)}</span>
+      <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}<p class="desc" style="-webkit-line-clamp:3">${esc(item.desc)}</p></div>
+    </div>
+    <div class="row-actions" style="margin-top:12px">
+      ${loadBtn(item, true)}
+      ${PAGE.drawerActions ? PAGE.drawerActions(item) : ""}
+      <button class="btn ghost" type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+    </div>
+    <nav class="dtabs">${list.map((t) => `<button type="button" class="${t === tab ? "on" : ""}" data-dtab="${esc(t)}">${esc(PAGE.tabLabel ? PAGE.tabLabel(item, t) : t)}</button>`).join("")}</nav>
+    ${PAGE.drawerTab(item, tab)}
+  </aside>`
+  if (state.keepScroll) box.querySelector(".drawer").scrollTop = top
+  state.keepScroll = false
+}
+function openId() { const d = document.querySelector("#drawer [data-open]"); return d && d.dataset.open }
+function kv(rows) {
+  return `<ul class="kv">${rows.filter((r) => r && r[1] !== undefined && r[1] !== "").map(([k, v, raw]) => `<li><span>${esc(k)}</span><b>${raw ? v : esc(v)}</b></li>`).join("")}</ul>`
+}
+function pbox(title, badge, inner, ic) {
+  return `<div class="pbox"><h4>${icon(ic || "spark", 15)}${esc(title)}${badge ? `<i>${esc(badge)}</i>` : ""}</h4>${inner}</div>`
+}
+
+function openCreate() {
+  const box = document.getElementById("modal")
+  box.hidden = false
+  box.innerHTML = `<div class="modal wide" role="dialog" aria-label="新建${PAGE.unit}">
+    <header><h3>新建${esc(PAGE.unit)}</h3><button class="icon-btn" type="button" data-close="modal" aria-label="关闭">${icon("close")}</button></header>
+    <form id="create-form" class="scroll">
+      ${PAGE.createForm()}
+      <div class="row-actions right" style="padding-bottom:4px">
+        <button class="btn ghost" type="button" data-close="modal">取消</button>
+        <button class="btn" type="submit">确定创建</button>
+      </div>
+    </form>
+  </div>`
+}
+function addItem(extra) {
+  const colors = ["blue", "purple", "green", "orange", "pink", "teal"]
+  const n = ITEMS.length % 6
+  ITEMS.unshift(Object.assign({ owner: "林夏", calls: "0", favs: 0, hot: false, recent: true, updated: "2026-09-30", icon: PAGE.newIcon || "box", color: colors[n], ver: "V1.0" }, extra))
+}
+
+function toggleMenu(id) {
+  ["scope-menu", "bell-menu", "help-menu"].forEach((m) => { if (m !== id) document.getElementById(m).hidden = true })
+  if (id) document.getElementById(id).hidden = !document.getElementById(id).hidden
+}
+
+/* ---------- 初始化与事件 ---------- */
+document.querySelector(".filter-box").innerHTML = DIMS.map(([k, label]) => `<div class="filters ${k === "dir" ? "sub" : ""}" data-group="${k}"><span class="lbl">${esc(label)}：</span></div>`).join("")
+document.getElementById("item-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  state.query = document.getElementById("item-q").value.trim()
+  render()
+})
+document.getElementById("top-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  const text = document.getElementById("top-q").value.trim()
+  document.getElementById("item-q").value = text
+  state.query = text
+  render()
+  toast(text ? `已在${PAGE.title}搜索「${text}」` : "已清除搜索")
+})
+document.getElementById("item-sort").addEventListener("change", (e) => { state.sort = e.target.value; render() })
+// PAGE.createPage：新建在独立配置页完成（如科研智能体），否则用弹窗表单
+document.getElementById("open-create").addEventListener("click", () => { if (PAGE.createPage) location.href = PAGE.createPage; else openCreate() })
+document.getElementById("rail-btn").addEventListener("click", () => document.getElementById("app").classList.toggle("is-rail"))
+document.getElementById("import-file").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0]
+  e.target.value = ""
+  if (!file) return
+  addItem(PAGE.importItem(file))
+  state.tab = PAGE.tabs[0]
+  toast(`已导入 ${file.name}`)
+  render()
+})
+document.getElementById("scope-btn").addEventListener("click", (e) => {
+  e.stopPropagation()
+  document.getElementById("scope-menu").innerHTML = SPACES.map((name) => `<button type="button" class="${name === state.space ? "on" : ""}" data-space="${esc(name)}">${esc(name)}</button>`).join("")
+  toggleMenu("scope-menu")
+})
+document.getElementById("bell-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("bell-menu") })
+document.getElementById("help-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("help-menu") })
+document.getElementById("user-btn").addEventListener("click", () => toast("这是原型，账号保持登录"))
+
+document.body.addEventListener("click", (e) => {
+  const t = e.target
+  const inMenu = t.closest(".menu")
+  const act = t.closest("[data-act]")
+  if (act) { const [name, arg, arg2] = act.dataset.act.split("|"); PAGE.action(name, arg, arg2); return }
+  const load = t.closest("[data-load]")
+  if (load) {
+    const item = findItem(load.dataset.load)
+    toggleLoad(item)
+    if (!document.getElementById("drawer").hidden) { state.keepScroll = true; openDrawer(item) }
+    render(); return
+  }
+  const unload = t.closest("[data-unload]")
+  if (unload) { toggleLoad(findItem(unload.dataset.unload)); render(); return }
+  const lp = t.closest("[data-lp]")
+  if (lp) {
+    const a = lp.dataset.lp
+    const info = spaceInfo()
+    if (a === "fold") { state.lpOpen = !state.lpOpen; render() }
+    if (a === "clear") {
+      const n = Object.keys(info.loaded).length
+      info.loaded = {}
+      toast(`已清空「${state.space}」的 ${n} 个已加载${PAGE.unit}`)
+      render()
+    }
+    return
+  }
+  const fmore = t.closest("[data-fmore]")
+  if (fmore) { state.fOpen[fmore.dataset.fmore] = !state.fOpen[fmore.dataset.fmore]; render(); return }
+  if (t.closest("[data-fclear]")) { DIMS.forEach(([k]) => { state[k] = "全部" }); render(); return }
+  const filter = t.closest("[data-filter]")
+  if (filter) { state[filter.dataset.filter] = filter.dataset.value; render(); return }
+  const tab = t.closest("[data-tab]")
+  if (tab) { state.tab = tab.dataset.tab; render(); return }
+  const view = t.closest("[data-view]")
+  if (view) { state.view = view.dataset.view; render(); return }
+  const more = t.closest("[data-more]")
+  if (more) { state.menu = state.menu === more.dataset.more ? null : more.dataset.more; render(); return }
+  const detail = t.closest("[data-detail]")
+  if (detail) { state.dtab = ""; openDrawer(findItem(detail.dataset.detail)); render(); return }
+  const dtab = t.closest("[data-dtab]")
+  if (dtab) { state.dtab = dtab.dataset.dtab; openDrawer(findItem(openId())); return }
+  const cp = t.closest("[data-copytext]")
+  if (cp) {
+    const el = document.getElementById(cp.dataset.copytext)
+    if (el && navigator.clipboard) navigator.clipboard.writeText(el.textContent).catch(() => {})
+    toast("已复制"); return
+  }
+  const copy = t.closest("[data-copy]")
+  if (copy) {
+    const name = findItem(copy.dataset.copy).name
+    if (navigator.clipboard) navigator.clipboard.writeText(name).catch(() => {})
+    state.menu = null; render(); toast(`已复制「${name}」`); return
+  }
+  const fav = t.closest("[data-fav]")
+  if (fav) {
+    const id = fav.dataset.fav
+    const item = findItem(id)
+    if (favs.has(id)) { favs.delete(id); item.favs -= 1; toast("已取消收藏") } else { favs.add(id); item.favs += 1; toast("已收藏") }
+    state.menu = null
+    if (!document.getElementById("drawer").hidden) { state.keepScroll = true; openDrawer(item) }
+    render(); return
+  }
+  const close = t.closest("[data-close]")
+  if (close) { document.getElementById(close.dataset.close).hidden = true; return }
+  const space = t.closest("[data-space]")
+  if (space) {
+    state.space = space.dataset.space
+    state.lpOpen = false
+    document.getElementById("scope-label").textContent = state.space
+    toggleMenu(null)
+    document.getElementById("drawer").hidden = true
+    render()
+    const n = Object.keys(loadedOf()).length
+    toast(`课题空间已切换为${state.space}，${n ? `已加载 ${n} 个${PAGE.unit}` : `还没有加载${PAGE.unit}`}`)
+    return
+  }
+  if (t.id === "drawer" || t.id === "modal") t.hidden = true
+  if (!inMenu) {
+    toggleMenu(null)
+    if (state.menu) { state.menu = null; render() }
+  }
+})
+document.body.addEventListener("change", (e) => {
+  if (e.target.name === "field" && e.target.closest("#create-form")) {
+    document.getElementById("dir-checks").innerHTML = dirChecks(e.target.value)
+    return
+  }
+  if (PAGE.onChange) PAGE.onChange(e)
+})
+document.body.addEventListener("submit", (e) => {
+  if (e.target.id !== "create-form") return
+  e.preventDefault()
+  const res = PAGE.createSubmit(new FormData(e.target))
+  if (typeof res === "string") { toast(res); return }
+  addItem(res.item)
+  document.getElementById("modal").hidden = true
+  state.tab = PAGE.tabs[0]
+  toast(res.msg)
+  render()
+})
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return
+  document.getElementById("drawer").hidden = true
+  document.getElementById("modal").hidden = true
+  toggleMenu(null)
+  if (state.menu) { state.menu = null; render() }
+})
+
+paintIcons(document)
+// 从独立配置页发布后回到列表：#created=<JSON>
+;(function takeCreated() {
+  const m = /^#created=(.+)$/.exec(location.hash || "")
+  if (!m || !PAGE.fromCreated) return
+  try {
+    const res = PAGE.fromCreated(JSON.parse(decodeURIComponent(m[1])))
+    addItem(res.item)
+    state.tab = "我创建的"
+    if (location.protocol !== "about:" && history.replaceState) history.replaceState(null, "", location.pathname)
+    setTimeout(() => toast(res.msg), 0)
+  } catch (err) { /* 参数损坏时忽略 */ }
+})()
+render()
+
+</script>
+</body>
+</html>

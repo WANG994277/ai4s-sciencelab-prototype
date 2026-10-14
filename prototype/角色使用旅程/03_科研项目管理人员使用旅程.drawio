@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17" type="device" compressed="false" modified="2026-10-10T00:00:00.000Z">
+  <diagram id="manageEntryJourney" name="03_科研项目管理人员使用旅程">
+    <mxGraphModel dx="1520" dy="2670" grid="1" gridSize="10" guides="1" connect="1" arrows="1" page="0" pageScale="1" pageWidth="1520" pageHeight="2670" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="band0" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F8F6F1;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="180" width="1450" height="790" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="AI4S 科研管理  /  目标与过程" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="188" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F1F6FF;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="995" width="1450" height="340" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="AI4S 课题空间  /  核查依据" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="1003" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" parent="1" style="rounded=0;fillColor=#F8F6F1;strokeColor=#DAE4EE;connectable=0;">
+          <mxGeometry as="geometry" x="35" y="1358" width="1450" height="1065" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="AI4S 科研管理  /  评审与归档" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="65" y="1366" width="1360" height="40" />
+        </mxCell>
+        <mxCell id="edge0" edge="1" parent="1" source="manageEntry" target="objectives" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="objectives" target="track" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="track" target="riskGate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="riskGate" target="riskAction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="riskGate" target="evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="riskAction" target="evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1257.5" y="930" />
+              <mxPoint x="710" y="930" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge6" edge="1" parent="1" source="evidence" target="scopeReview" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge7" edge="1" parent="1" source="scopeReview" target="reviewMeeting" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge8" edge="1" parent="1" source="reviewMeeting" target="acceptGate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge9" edge="1" parent="1" source="acceptGate" target="returnTask" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="975.0" y="1670.0" />
+              <mxPoint x="975.0" y="1672.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge10" edge="1" parent="1" source="returnTask" target="track" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1460" y="1672.5" />
+              <mxPoint x="1460" y="602" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge11" edge="1" parent="1" source="acceptGate" target="accept" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge12" edge="1" parent="1" source="accept" target="continueGate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge13" edge="1" parent="1" source="continueGate" target="nextMilestone" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="975.0" y="2030.0" />
+              <mxPoint x="975.0" y="2032.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge14" edge="1" parent="1" source="nextMilestone" target="objectives" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=1.0;exitY=0.5;entryX=1.0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1435" y="2032.5" />
+              <mxPoint x="1435" y="442" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge15" edge="1" parent="1" source="continueGate" target="archive" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#526782;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="manageEntry" value="01  进入科研管理&#10;定位目标项目与待办事项&#10;[门户 → 科研管理]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="235" width="360" height="104" />
+        </mxCell>
+        <mxCell id="objectives" value="02  核对目标与阶段交付要求&#10;明确里程碑、职责与验收依据&#10;[立项管理 / 项目资料]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="390" width="360" height="104" />
+        </mxCell>
+        <mxCell id="track" value="03  查看进度与关键节点&#10;识别材料缺口、风险与变更&#10;[科研管理 · 过程管理]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="550" width="360" height="104" />
+        </mxCell>
+        <mxCell id="riskGate" value="存在需要处理的&#10;风险或变更？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="570" y="715" width="280" height="140" />
+        </mxCell>
+        <mxCell id="riskAction" value="明确影响、责任与处理措施&#10;按权限确认计划或资源调整&#10;[过程管理 · 管理决策]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="728" width="315" height="114" />
+        </mxCell>
+        <mxCell id="evidence" value="04  进入课题核查阶段依据&#10;查看任务、报告、证据与验证计划&#10;[空间概览 · 科学问题 · 科研任务]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="1060" width="360" height="104" />
+        </mxCell>
+        <mxCell id="scopeReview" value="05  明确本次评审对象与版本&#10;核对研究材料和工具交付资料&#10;[任务产出 / 空间资产 / 评审记录]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#085FD7;strokeWidth=2;spacing=8;">
+          <mxGeometry as="geometry" x="530" y="1210" width="360" height="104" />
+        </mxCell>
+        <mxCell id="reviewMeeting" value="06  组织负责人和专家评审&#10;专家评科学证据，管理者评阶段交付&#10;[科研管理 / 任务评审]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="1430" width="360" height="104" />
+        </mxCell>
+        <mxCell id="acceptGate" value="是否满足本阶段&#10;约定的交付要求？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="570" y="1600" width="280" height="140" />
+        </mxCell>
+        <mxCell id="returnTask" value="形成补充或整改意见&#10;指定责任人、所需材料与复核条件&#10;[评审反馈 → 科研 / 工具任务]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="1615" width="315" height="115" />
+        </mxCell>
+        <mxCell id="accept" value="07  确认阶段交付并留痕&#10;保留评审依据和遗留事项&#10;[成果管理 · 阶段确认]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="1800" width="360" height="104" />
+        </mxCell>
+        <mxCell id="continueGate" value="项目是否还有&#10;后续研究阶段？" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFF8E8;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="570" y="1960" width="280" height="140" />
+        </mxCell>
+        <mxCell id="nextMilestone" value="确定下一阶段目标与节点&#10;将责任和资源安排交回课题&#10;[过程管理 · 下一阶段]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="1100" y="1975" width="315" height="115" />
+        </mxCell>
+        <mxCell id="archive" value="08  完成最终验收与归档&#10;对照项目条件核查材料、版本与确认&#10;[科研管理 · 成果管理]" vertex="1" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#0B2146;fillColor=#FFFFFF;strokeColor=#526782;strokeWidth=2;spacing=8;dashed=1;dashPattern=7 5;">
+          <mxGeometry as="geometry" x="530" y="2170" width="360" height="104" />
+        </mxCell>
+        <mxCell id="edgeText3" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="962.0" y="750" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText4" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="727.0" y="893" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText5" value="处置后继续核查" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="1044.0" y="891" width="132" height="30" />
+        </mxCell>
+        <mxCell id="edgeText7" value="材料与评审对象" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="749.0" y="1345" width="132" height="30" />
+        </mxCell>
+        <mxCell id="edgeText9" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="962.0" y="1635" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText11" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="727.0" y="1763" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText13" value="是" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="957.0" y="1995" width="46" height="30" />
+        </mxCell>
+        <mxCell id="edgeText15" value="否" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;fontColor=#526782;fontStyle=0;fillColor=#FFFFFF;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="727.0" y="2120" width="46" height="30" />
+        </mxCell>
+        <mxCell id="title" value="ScienceLab AI4S  /  科研项目管理人员使用旅程" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=30;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="25" width="1440" height="53" />
+        </mxCell>
+        <mxCell id="subtitle" value="管理主线：定位项目 → 明确阶段要求 → 跟踪风险 → 核查材料与组织评审 → 跟进整改或确认交付" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=19;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="91" width="1440" height="52" />
+        </mxCell>
+        <mxCell id="note0" value="管理人员围绕项目和阶段决策。&#10;科研超级中枢的读、算结果&#10;是核查材料的一部分，&#10;不能用任务完成数替代&#10;科研进展与交付依据。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="90" y="450" width="340" height="155" />
+        </mxCell>
+        <mxCell id="note1" value="科研人员提交：报告、证据、验证计划。&#10;工具创建人员提交：能力版本、&#10;测试依据、适用边界与维护说明。&#10;当前管理页到课题可能需手动转场。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="90" y="1080" width="340" height="150" />
+        </mxCell>
+        <mxCell id="note2" value="管理反馈必须对应具体问题：&#10;谁来处理、补什么材料，&#10;以及下一次如何判定完成。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="1100" y="1390" width="325" height="120" />
+        </mxCell>
+        <mxCell id="note3" value="专家判断科学证据是否充分；&#10;管理人员按授权确认项目交付。&#10;阶段验收通过不意味着&#10;所有科研假设都获得支持。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="90" y="1660" width="340" height="150" />
+        </mxCell>
+        <mxCell id="note4" value="配套管理：外协、人才、考核与日程。&#10;按项目需要参与本旅程，&#10;不要求每次都依次办理。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="1100" y="2200" width="330" height="115" />
+        </mxCell>
+        <mxCell id="note5" value="图例：实框＝原型已有可查看页面；虚框＝管理业务要求，正式台账或流转尚待接入。&#10;实箭头＝正常推进；虚箭头＝跨角色交接、整改与下一阶段循环。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#0B2146;fontStyle=1;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2460" width="1440" height="75" />
+        </mxCell>
+        <mxCell id="note6" value="交付：有依据的阶段决定、责任分工、复核条件、后续节点及最终归档材料。&#10;当前管理模块和管理智能体多为入口提示；本图不代表真实审批、会签、通知、验收或权限控制已经完成。" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=17;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2560" width="1440" height="80" />
+        </mxCell>
+        <mxCell id="date" value="角色与系统分工依据用户确认；对应原型模块参考本工作区。更新：2026-10-10" vertex="1" parent="1" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=14;fontColor=#526782;fontStyle=0;fillColor=none;strokeColor=none;spacing=0;">
+          <mxGeometry as="geometry" x="40" y="2640" width="1440" height="22" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

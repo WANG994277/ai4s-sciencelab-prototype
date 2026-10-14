@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>新建科研智能体 · AI4S</title>
+  <style>
+:root {
+  --blue: #2f5bea;
+  --blue-hover: #234bd6;
+  --blue-soft: #eef2ff;
+  --blue-line: #b9c8f7;
+  --ink: #1f2329;
+  --ink-2: #3b4250;
+  --muted: #7a8190;
+  --muted-2: #a2a8b3;
+  --line: #e7e9ee;
+  --line-2: #dcdfe6;
+  --field: #f7f8fa;
+  --bg: #f5f6f8;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #fff; }
+body { overflow: hidden; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+button:disabled { cursor: not-allowed; opacity: .5; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+h1, h2, h3, h4, p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+svg { display: block; flex: none; }
+a { color: var(--blue); text-decoration: none; }
+[hidden] { display: none !important; }
+
+/* ---------- 顶栏 ---------- */
+.top { height: 62px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 20px 0 14px; border-bottom: 1px solid var(--line); background: #fff; position: relative; z-index: 5; }
+.top-l { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.back { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 6px; color: var(--ink); }
+.back:hover { background: var(--bg); }
+.avatar { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #e6edff; color: var(--blue); flex: none; position: relative; }
+.avatar:hover::after { content: "更换"; position: absolute; inset: 0; border-radius: 10px; background: rgba(31, 35, 41, .55); color: #fff; font-size: 11px; display: grid; place-items: center; }
+.avatar.purple { background: #f0e9ff; color: #7a4be0; }
+.avatar.green { background: #e3f6ec; color: #1c8a52; }
+.avatar.orange { background: #fdefe2; color: #d0650f; }
+.avatar.teal { background: #e0f5f5; color: #13868a; }
+.avatar.pink { background: #fde8f0; color: #c93c74; }
+.title-box { min-width: 0; }
+.title-row { display: flex; align-items: center; gap: 6px; }
+.title-row b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px; }
+.title-row input { font-size: 15px; font-weight: 600; border: 1px solid var(--blue); border-radius: 6px; padding: 2px 8px; width: 260px; outline: none; }
+.icon-btn { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 6px; color: var(--ink-2); }
+.icon-btn:hover { background: var(--bg); color: var(--ink); }
+.badges { display: flex; gap: 6px; margin-top: 3px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 7px; border-radius: 4px; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line-2); background: #fff; }
+.badge.gray { background: #eceef2; border-color: #eceef2; color: #5b6270; }
+.badge.ok { background: #e7f6ee; border-color: #e7f6ee; color: #1c8a52; }
+.seg { display: flex; padding: 3px; border-radius: 8px; background: #f0f1f4; }
+.seg button { height: 30px; padding: 0 16px; border-radius: 6px; font-size: 14px; color: var(--muted); }
+.seg button.on { background: #fff; color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
+.top-r { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 16px; border-radius: 8px; background: var(--blue); color: #fff; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.btn:hover { background: var(--blue-hover); }
+.btn.lg { height: 38px; padding: 0 18px; font-size: 15px; }
+.btn.ghost { background: #fff; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+.btn.ghost:hover { background: var(--bg); }
+.btn.sm { height: 28px; padding: 0 10px; font-size: 13px; border-radius: 6px; }
+.menu { position: absolute; top: 54px; right: 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(20, 30, 50, .12); padding: 6px; min-width: 200px; z-index: 20; }
+.menu button { display: flex; width: 100%; align-items: center; gap: 8px; height: 34px; padding: 0 10px; border-radius: 6px; font-size: 13.5px; color: var(--ink-2); text-align: left; }
+.menu button:hover { background: var(--bg); }
+.menu button.danger { color: #d23b3b; }
+.menu .mh { padding: 6px 10px 8px; font-size: 12.5px; color: var(--muted); border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.menu .hrow { padding: 8px 10px; font-size: 13px; color: var(--ink-2); border-radius: 6px; }
+.menu .hrow small { display: block; color: var(--muted); font-size: 12px; }
+
+/* ---------- 主体：左配置 右预览 ---------- */
+.main { display: grid; grid-template-columns: var(--lw, 800px) 10px 1fr; height: calc(100vh - 62px); }
+.cfg { overflow: auto; padding: 18px 30px 60px 30px; border-right: 1px solid var(--line); scrollbar-width: thin; }
+.splitter { position: relative; cursor: col-resize; background: #fff; }
+.splitter::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 18px; transform: translate(-50%, -50%); background: radial-gradient(circle, #9aa1ad 1px, transparent 1.4px) 0 0 / 4px 4px; }
+.splitter:hover { background: #f1f3f7; }
+
+.group > .gh { display: flex; align-items: center; gap: 8px; height: 36px; font-size: 15px; color: var(--ink-2); width: 100%; }
+.group > .gh svg { transition: transform .15s; }
+.group.fold > .gh svg { transform: rotate(-90deg); }
+.group.fold > .gbody { display: none; }
+.gbody { padding: 2px 0 10px 32px; }
+
+.item { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.item:last-child { border-bottom: 0; }
+.ih { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.ih > svg { color: var(--ink-2); }
+.ih h3 { font-size: 16px; font-weight: 600; color: var(--ink); }
+.ih .tg { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; color: var(--ink-2); }
+.ih .tg:hover { background: var(--bg); }
+.ih .tg svg { transition: transform .15s; }
+.item.fold .ih .tg svg { transform: rotate(180deg); }
+.item.fold .ib { display: none; }
+.ih .sp { flex: 1; }
+.ih .add { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; color: var(--ink-2); }
+.ih .add:hover { background: var(--bg); color: var(--blue); }
+.idesc { color: var(--muted); font-size: 13.5px; margin-top: 6px; line-height: 1.7; }
+.ib { margin-top: 10px; }
+.ib.flat { margin-top: 0; }
+.none { color: var(--muted); font-size: 13.5px; margin-top: 10px; }
+
+.sel { position: relative; }
+.sel select { appearance: none; -webkit-appearance: none; height: 40px; min-width: 180px; padding: 0 36px 0 14px; border: 1px solid var(--line-2); border-radius: 8px; background: #fff; font-size: 14px; color: var(--ink); cursor: pointer; }
+.sel select:hover { border-color: #c4c9d3; }
+.sel > svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted-2); pointer-events: none; }
+.sel.w360 select { width: 360px; }
+.sel.sm select { height: 34px; min-width: 130px; font-size: 13.5px; }
+
+.ta { position: relative; border: 1px solid var(--line); border-radius: 10px; background: var(--field); }
+.ta:focus-within { border-color: var(--blue-line); background: #fff; }
+.ta textarea { display: block; width: 100%; border: 0; background: none; resize: vertical; padding: 12px 14px 4px; font-size: 14px; line-height: 1.75; color: var(--ink); outline: none; min-height: 90px; }
+.ta .cnt { text-align: right; padding: 0 12px 8px; font-size: 12.5px; color: var(--muted-2); }
+.ta.code textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+.inp { height: 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--field); padding: 0 12px; font-size: 14px; width: 100%; outline: none; }
+.inp:focus { border-color: var(--blue-line); background: #fff; }
+.row { display: flex; align-items: center; gap: 12px; }
+.row.between { justify-content: space-between; }
+.lbl { font-size: 14px; color: var(--ink-2); }
+.lbl small { color: var(--muted); margin-left: 6px; font-size: 12.5px; }
+.q-ic { color: var(--muted-2); display: inline-grid; vertical-align: -3px; margin-left: 4px; cursor: help; }
+.link-btn { color: var(--blue); font-size: 13px; }
+.link-btn:hover { text-decoration: underline; }
+
+.color { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; border: 1px solid var(--line-2); border-radius: 8px; width: 160px; font-family: ui-monospace, Menlo, monospace; font-size: 13.5px; cursor: pointer; position: relative; }
+.color i { width: 20px; height: 20px; border-radius: 4px; border: 1px solid var(--line-2); }
+.color input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.range { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+.range input { flex: 1; accent-color: var(--blue); height: 6px; }
+.range span { font-size: 13.5px; color: var(--ink-2); white-space: nowrap; width: 110px; }
+
+.qlist { display: grid; gap: 10px; margin-top: 12px; }
+.qrow { display: flex; align-items: center; gap: 12px; }
+.qrow label { flex: 1; display: flex; align-items: center; height: 38px; border: 1px solid var(--line-2); border-radius: 8px; padding: 0 12px; background: #fff; }
+.qrow label:focus-within { border-color: var(--blue-line); }
+.qrow input { flex: 1; min-width: 0; border: 0; outline: none; font-size: 14px; background: none; }
+.qrow em { font-style: normal; font-size: 12.5px; color: var(--muted-2); margin-left: 8px; }
+.minus { width: 24px; height: 24px; display: grid; place-items: center; color: var(--muted); border-radius: 50%; }
+.minus:hover { color: #d23b3b; }
+.adder { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; color: var(--blue); font-size: 14px; }
+.adder small { color: var(--muted); margin-left: 6px; font-size: 13px; }
+
+.subh { font-size: 15px; font-weight: 600; margin-top: 4px; }
+.cards { display: grid; gap: 10px; margin-top: 12px; }
+.card { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fafbfc; }
+.card:hover { border-color: #d4d8e0; }
+.card .cm { flex: 1; min-width: 0; }
+.card .cm b { font-size: 14.5px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.card .cm p { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 400; }
+.card .srcb { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 12.5px; color: var(--ink-2); background: #fff; flex: none; }
+.card .del { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; color: var(--ink-2); flex: none; }
+.card .del:hover { color: #d23b3b; background: #fdeeee; }
+.card.tall { align-items: flex-start; }
+.card.tall .srcb, .card.tall .del { margin-top: 2px; }
+.card .kind { font-size: 11.5px; font-weight: 400; color: #4b6bd8; background: #edf1fe; padding: 1px 6px; border-radius: 4px; }
+
+.sw { position: relative; width: 44px; height: 24px; flex: none; }
+.sw input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.sw i { position: absolute; inset: 0; border-radius: 12px; background: #dcdfe5; transition: background .15s; }
+.sw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .2); transition: transform .15s; }
+.sw input:checked + i { background: var(--blue); }
+.sw input:checked + i::after { transform: translateX(20px); }
+.sw input:disabled + i { opacity: .55; }
+
+.env { display: grid; grid-template-columns: 1fr 1.3fr 96px 30px; gap: 8px; align-items: center; margin-top: 10px; }
+.env .inp { height: 34px; font-size: 13px; font-family: ui-monospace, Menlo, monospace; }
+.env .sel select { height: 34px; min-width: 0; width: 100%; font-size: 13px; padding-left: 10px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip { height: 30px; padding: 0 12px; border-radius: 15px; border: 1px solid var(--line-2); font-size: 13px; color: var(--ink-2); background: #fff; }
+.chip:hover { border-color: var(--blue-line); color: var(--blue); }
+.chip.on { background: var(--blue-soft); border-color: var(--blue-line); color: var(--blue); }
+.kvrow { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: start; margin-top: 14px; }
+.kvrow > span { font-size: 14px; color: var(--ink-2); line-height: 34px; }
+.tip { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.params { display: grid; gap: 14px; margin-top: 12px; }
+.param { display: grid; grid-template-columns: 150px 1fr 70px; gap: 14px; align-items: center; }
+.param span { font-size: 13.5px; color: var(--ink-2); }
+.param span small { display: block; font-size: 12px; color: var(--muted); }
+.param input[type=range] { accent-color: var(--blue); }
+.param input[type=number] { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 8px; font-size: 13px; width: 70px; }
+
+.acl { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fafbfc; margin-top: 12px; }
+.acl .av { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; font-size: 16px; background: #fff; flex: none; }
+.acl .cm { flex: 1; }
+.acl .cm b { font-weight: 500; font-size: 14.5px; }
+.acl .cm p { font-size: 12.5px; color: var(--muted); }
+.acl .role { height: 28px; padding: 0 12px; border-radius: 14px; background: var(--blue); color: #fff; font-size: 12.5px; display: inline-flex; align-items: center; }
+.acl .sel select { height: 30px; min-width: 110px; font-size: 13px; }
+
+/* ---------- 调试预览 ---------- */
+.pv { position: relative; display: flex; flex-direction: column; min-width: 0; background: #fff; }
+.pv-head { display: flex; align-items: center; justify-content: space-between; padding: 30px 0 0 36px; }
+.pv-head h2 { font-size: 17px; font-weight: 600; }
+.pv-tools { display: flex; gap: 6px; padding: 6px 12px; background: #fff; border: 1px solid var(--line); border-right: 0; border-radius: 24px 0 0 24px; }
+.pv-tools button { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; color: var(--ink-2); }
+.pv-tools button:hover { background: var(--bg); color: var(--ink); }
+.chat { flex: 1; overflow: auto; padding: 40px 36px 20px; display: flex; flex-direction: column; gap: 12px; }
+.bubble { max-width: 100%; align-self: flex-start; background: #f6f7f9; border-radius: 12px; padding: 14px 18px; font-size: 14.5px; line-height: 1.8; color: var(--ink); white-space: pre-wrap; }
+.bubble.me { align-self: flex-end; background: var(--blue); color: #fff; max-width: 70%; }
+.bubble.card { display: flex; gap: 12px; border: 1px solid var(--line); }
+.bubble.card .avatar { width: 36px; height: 36px; }
+.bubble.card b { display: block; margin-bottom: 2px; }
+.sugs { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.sug { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 9px 18px; font-size: 14px; color: var(--ink); text-align: left; }
+.sug:hover { border-color: var(--blue-line); color: var(--blue); }
+.trace { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--ink-2); align-self: flex-start; min-width: 320px; }
+.trace summary { cursor: pointer; color: var(--muted); list-style: none; display: flex; align-items: center; gap: 6px; }
+.trace summary::-webkit-details-marker { display: none; }
+.trace li { display: flex; gap: 8px; align-items: center; padding: 4px 0; }
+.trace li em { font-style: normal; font-size: 11.5px; padding: 0 6px; border-radius: 4px; background: #edf1fe; color: #4b6bd8; }
+.trace li em.sk { background: #f3ecfc; color: #8a4bd0; }
+.trace li em.kb { background: #e7f6ee; color: #1c8a52; }
+.trace li em.ag { background: #fdf0e6; color: #c2560c; }
+.trace li em.ok { background: #fff6e0; color: #a86b00; }
+.dots3 { display: inline-flex; gap: 4px; }
+.dots3 i { width: 6px; height: 6px; border-radius: 50%; background: #b3b9c4; animation: blink 1s infinite; }
+.dots3 i:nth-child(2) { animation-delay: .2s; }
+.dots3 i:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 50% { opacity: .25; } }
+.composer { margin: 0 36px; background: #fff; border: 1px solid var(--line-2); border-radius: 14px; padding: 14px 16px 12px 22px; box-shadow: 0 2px 8px rgba(20, 30, 50, .04); }
+.composer textarea { width: 100%; border: 0; outline: none; resize: none; font-size: 14.5px; height: 44px; background: none; }
+.composer .crow { display: flex; align-items: center; gap: 10px; }
+.composer .crow .sp { flex: 1; }
+.cbtn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; color: var(--ink-2); }
+.cbtn:hover { background: var(--bg); }
+.cbtn.think { width: auto; padding: 0 12px; border-radius: 18px; height: 30px; font-size: 13px; gap: 4px; display: inline-flex; align-items: center; border: 1px solid var(--line-2); }
+.cbtn.think.on { background: var(--blue-soft); border-color: var(--blue-line); color: var(--blue); }
+.send { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--blue); color: #fff; }
+.send:disabled { background: #9db1f3; opacity: 1; }
+.pv-foot { text-align: center; font-size: 13px; color: var(--muted-2); padding: 16px 0 18px; }
+.float-bot { position: absolute; right: 22px; bottom: 150px; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 35% 30%, #8fb0ff, #3a5ee8 70%); box-shadow: 0 6px 20px rgba(60, 90, 230, .35), 0 0 0 6px rgba(140, 170, 255, .18); }
+
+/* ---------- 分析 ---------- */
+.ana { grid-column: 1 / -1; overflow: auto; padding: 32px 40px; background: var(--bg); }
+.ana h2 { font-size: 17px; margin-bottom: 16px; }
+.mgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.mbox { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+.mbox b { display: block; font-size: 24px; font-weight: 600; }
+.mbox span { font-size: 13px; color: var(--muted); }
+.ana-empty { margin-top: 18px; background: #fff; border: 1px dashed var(--line-2); border-radius: 10px; padding: 48px; text-align: center; color: var(--muted); }
+
+/* ---------- 弹窗 ---------- */
+.mask { position: fixed; inset: 0; background: rgba(20, 26, 38, .38); display: grid; place-items: center; z-index: 50; }
+.dlg { width: min(640px, calc(100% - 32px)); max-height: calc(100vh - 80px); display: flex; flex-direction: column; background: #fff; border-radius: 12px; box-shadow: 0 20px 50px rgba(0, 0, 0, .18); }
+.dlg header { display: flex; align-items: center; padding: 18px 22px 12px; }
+.dlg header h3 { flex: 1; font-size: 16px; }
+.dlg .dsearch { margin: 0 22px 10px; display: flex; align-items: center; gap: 8px; height: 38px; border: 1px solid var(--line-2); border-radius: 8px; padding: 0 12px; color: var(--muted); }
+.dlg .dsearch input { flex: 1; border: 0; outline: none; font-size: 14px; color: var(--ink); }
+.dlg .dnote { margin: 0 22px 8px; font-size: 12.5px; color: var(--muted); }
+.dlg .dfilter { margin: 0 22px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.dlg .dfilter .chip { height: 26px; font-size: 12.5px; padding: 0 10px; }
+.dlg .dbody { overflow: auto; padding: 0 22px; flex: 1; }
+.pick { display: flex; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; cursor: pointer; align-items: flex-start; }
+.pick:hover { border-color: #cfd5df; }
+.pick input { margin-top: 4px; accent-color: var(--blue); }
+.pick b { font-weight: 500; font-size: 14px; }
+.pick p { font-size: 12.5px; color: var(--muted); margin-top: 2px; line-height: 1.55; }
+.pick small { font-size: 11.5px; color: var(--muted); margin-left: 6px; font-weight: 400; }
+.pick.dis { opacity: .55; cursor: default; }
+.dlg footer { display: flex; align-items: center; gap: 10px; padding: 14px 22px 18px; border-top: 1px solid var(--line); margin-top: 8px; }
+.dlg footer .note { flex: 1; font-size: 12.5px; color: var(--muted); }
+.form { padding: 0 22px 6px; display: grid; gap: 14px; overflow: auto; }
+.form label { display: grid; gap: 6px; font-size: 13.5px; color: var(--ink-2); }
+.form textarea { border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 12px; min-height: 70px; resize: vertical; outline: none; }
+.checklist { display: grid; gap: 6px; font-size: 13px; background: var(--field); border-radius: 8px; padding: 10px 14px; }
+.checklist li { display: flex; gap: 8px; align-items: center; }
+.checklist li.bad { color: #c2410c; }
+.checklist li.good { color: #1c8a52; }
+.toast { position: fixed; left: 50%; top: 76px; transform: translateX(-50%); background: #1f2329; color: #fff; padding: 9px 18px; border-radius: 8px; font-size: 13.5px; z-index: 80; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+
+/* 补充 */
+.main.wide { grid-template-columns: 0 0 1fr; }
+.main.wide .cfg, .main.wide .splitter { visibility: hidden; overflow: hidden; }
+.ana { height: calc(100vh - 62px); }
+.menu .hrow b { display: flex; gap: 8px; align-items: center; font-weight: 600; }
+.menu .hrow b small { display: inline; color: var(--blue); font-weight: 400; }
+.menu .hrow span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.btn.danger { background: #d23b3b; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+pre.yaml { margin: 0 22px; max-height: 56vh; overflow: auto; background: #f7f8fa; border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; font: 12.5px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
+
+  </style>
+</head>
+<body>
+<!--
+  科研智能体配置页（独立页面）
+  1. 从「科研智能体.html」点「新建智能体」进入；左侧是配置，右侧是调试预览，配置改动实时反映到预览。
+  2. 可选的技能、工具、MCP 服务器、可调用的科研智能体来自科研技能 / 科学工具箱 / 科研智能体页面的条目（见底部 CATALOG）。
+  3. 点「发布」通过检查后，带 #created=<配置 JSON> 回到科研智能体页面，新条目出现在「我创建的」。
+  4. 视觉参考用户提供的智能体配置截图（配置 / 分析、基础设置、能力扩展、高级设置、权限设置）。
+-->
+<header class="top">
+  <div class="top-l">
+    <a class="back" href="科研智能体.html" id="back" aria-label="返回科研智能体" data-icon="back" data-size="22"></a>
+    <button class="avatar" type="button" id="avatar" title="更换图标"></button>
+    <div class="title-box">
+      <div class="title-row" id="title-row"></div>
+      <div class="badges"><span class="badge"><span data-icon="bot" data-size="14"></span>科研智能体</span><span class="badge gray" id="pub-badge">未发布</span></div>
+    </div>
+  </div>
+  <div class="seg" role="tablist"><button type="button" class="on" data-mode="cfg">配置</button><button type="button" data-mode="ana">分析</button></div>
+  <div class="top-r">
+    <button class="icon-btn" type="button" data-menu="hist-menu" title="版本记录" style="width:34px;height:34px"><span data-icon="history" data-size="20"></span></button>
+    <button class="btn lg" type="button" id="publish"><span data-icon="send" data-size="17"></span>发布</button>
+    <button class="icon-btn" type="button" data-menu="more-menu" title="更多" style="width:34px;height:34px"><span data-icon="dots" data-size="20"></span></button>
+  </div>
+  <div class="menu" id="hist-menu" style="right:150px;width:260px" hidden>
+    <div class="mh">版本记录</div>
+    <div id="hist-list"></div>
+  </div>
+  <div class="menu" id="more-menu" hidden>
+    <button type="button" data-more="yaml"><span data-icon="doc" data-size="16"></span>查看 agent.yaml</button>
+    <button type="button" data-more="template"><span data-icon="spark" data-size="16"></span>用示例填充（材料研发助手）</button>
+    <button type="button" data-more="reset" class="danger"><span data-icon="trash" data-size="16"></span>清空草稿</button>
+  </div>
+</header>
+
+<main class="main" id="main">
+  <section class="cfg" id="cfg" aria-label="配置"></section>
+  <div class="splitter" id="splitter" title="拖动调整宽度"></div>
+  <section class="pv" aria-label="调试预览">
+    <div class="pv-head">
+      <h2>调试预览</h2>
+      <div class="pv-tools">
+        <button type="button" data-pv="new" title="新会话"><span data-icon="chatplus" data-size="20"></span></button>
+        <button type="button" data-pv="clear" title="清空对话"><span data-icon="brush" data-size="20"></span></button>
+        <button type="button" data-pv="wide" title="收起配置栏"><span data-icon="sidebar" data-size="20"></span></button>
+      </div>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="composer">
+      <textarea id="pv-q" placeholder="输入你的问题" aria-label="输入你的问题"></textarea>
+      <div class="crow">
+        <button class="cbtn" type="button" data-pv="attach" title="上传文件"><span data-icon="plus" data-size="20"></span></button>
+        <span id="think-slot"></span>
+        <span class="sp"></span>
+        <button class="cbtn" type="button" data-pv="mic" title="语音输入"><span data-icon="mic" data-size="19"></span></button>
+        <button class="send" type="button" id="pv-send" title="发送" disabled><span data-icon="up" data-size="19"></span></button>
+      </div>
+    </div>
+    <p class="pv-foot">当前为应用调试环境，发布后在科研超级中枢由 Research Agent 分派或 @名称 调用即可体验发布效果</p>
+    <button class="float-bot" type="button" data-pv="bot" title="智能体助手：根据描述帮你生成配置"><span data-icon="bot" data-size="26"></span></button>
+  </section>
+  <section class="ana" id="ana" hidden></section>
+</main>
+<div class="mask" id="mask" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ========== 图标 ========== */
+const ICONS = {
+  back: '<path d="M19.5 12H5"/><path d="m11 5.5-6.5 6.5 6.5 6.5"/>',
+  bot: '<rect x="4.5" y="8" width="15" height="11" rx="2.5"/><path d="M12 8V4.5"/><circle cx="12" cy="3.8" r=".9"/><path d="M9.3 13v1.4M14.7 13v1.4"/><path d="M2.5 12.5v3M21.5 12.5v3"/>',
+  edit: '<path d="M11.5 4.5H6a2 2 0 0 0-2 2v11.5a2 2 0 0 0 2 2h11.5a2 2 0 0 0 2-2V12.5"/><path d="M17.8 3.7a2 2 0 0 1 2.8 2.8L12.5 14.6 9 15.5l.9-3.5z"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8.2"/><path d="M3 3.5v4.7h4.7"/><path d="M12 7.5V12l3 2"/>',
+  send: '<path d="m21 3-9.8 9.8"/><path d="M21 3 14.5 21l-3.3-8.2L3 9.5z"/>',
+  dots: '<circle cx="5" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/>',
+  doc: '<path d="M14 3H6.5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8.5z"/><path d="M14 3v5.5h5.5M8.5 13h7M8.5 17h5"/>',
+  spark: '<path d="M12 3.5 13.9 9 19.5 11 13.9 13 12 18.5 10.1 13 4.5 11 10.1 9z"/><path d="M19 3.5v3M17.5 5h3M5 17.5v3M3.5 19h3"/>',
+  trash: '<path d="M4.5 6.5h15"/><path d="M9.5 6.5V4.5h5v2"/><path d="M6.5 6.5 7.3 20h9.4l.8-13.5"/><path d="M10.2 10.5v6M13.8 10.5v6"/>',
+  chatplus: '<path d="M20.5 12.5V5.5a2 2 0 0 0-2-2h-13a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3l3.5 3.5 3.5-3.5h3a2 2 0 0 0 2-2"/><path d="M12 7v7M8.5 10.5h7"/>',
+  brush: '<path d="m14.5 4.5 5 5"/><path d="M19.5 9.5 12 17l-5-5 7.5-7.5a1.5 1.5 0 0 1 2 0l3 3a1.5 1.5 0 0 1 0 2z"/><path d="M7 12c-2.2.3-3.5 2-3.5 4.2V20h3.8C9.5 20 11.3 18.6 12 17"/>',
+  sidebar: '<rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M14.5 4v16"/><path d="m10 10-2 2 2 2"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
+  up: '<path d="M12 19V5.5"/><path d="m6 11 6-6 6 6"/>',
+  cube: '<path d="M20.5 7.5 12 3 3.5 7.5v9L12 21l8.5-4.5z"/><path d="m3.5 7.5 8.5 4.5 8.5-4.5M12 12v9"/>',
+  prompt: '<path d="M6 3.5h9.5L20 8v10.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2z"/><path d="M4 7.5h3M4 12h3M4 16.5h3M10.5 9h6M10.5 13h6M10.5 17h4"/>',
+  hi: '<path d="M20.5 12a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.2-4.1A8.5 8.5 0 1 1 20.5 12z"/><path d="M8.5 9v6M8.5 12h3M11.5 9v6M15 10.5V15M15 8.8v.2"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 4"/><path d="M12 17.2v.3"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  upc: '<path d="m6 15 6-6 6 6"/>',
+  minus: '<circle cx="12" cy="12" r="8.5"/><path d="M8 12h8"/>',
+  pluscircle: '<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
+  kb: '<rect x="3.5" y="3.5" width="7" height="17" rx="2"/><path d="M10.5 8 15 4.3a2 2 0 0 1 2.8.3l2.7 3.3a2 2 0 0 1-.3 2.8L10.5 18"/><circle cx="7" cy="16.5" r="1"/><path d="M13 20.5h5.5a2 2 0 0 0 2-2v-4"/>',
+  skill: '<path d="M9.5 5 11 9.5l4.5 1.5-4.5 1.5L9.5 17 8 12.5 3.5 11 8 9.5z"/><path d="M17.5 3v4M15.5 5h4M17.5 15v5M15 17.5h5"/>',
+  key: '<circle cx="7.5" cy="15.5" r="4"/><path d="m10.5 12.5 9-9M16.5 6.5l2.5 2.5M14 9l2 2"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/>',
+  cloud: '<path d="M7 18.5h10.5a4 4 0 0 0 .6-8A6 6 0 0 0 6.6 9.1 4.7 4.7 0 0 0 7 18.5z"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9S14.5 18.4 12 21c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/>',
+  brain: '<path d="M9 4.5a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3 3 3 0 0 0 3-3V7.5a3 3 0 0 0-3-3z"/><path d="M15 4.5a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3 3 3 0 0 1-3-3"/><path d="M6 12.5h2.5M15.5 12.5H18M9 8.5h.5M14.5 16.5h.5"/>',
+  sliders: '<path d="M4 7.5h9M17.5 7.5H20M4 16.5h2.5M11 16.5h9"/><circle cx="15.2" cy="7.5" r="2.2"/><circle cx="8.8" cy="16.5" r="2.2"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  bookopen: '<path d="M3 5.5h5.5A3.5 3.5 0 0 1 12 9v11a2.8 2.8 0 0 0-2.8-2.8H3z"/><path d="M21 5.5h-5.5A3.5 3.5 0 0 0 12 9v11a2.8 2.8 0 0 1 2.8-2.8H21z"/><path d="M5.5 9.5h3M5.5 13h3M15.5 9.5h3M15.5 13h3"/>',
+  book: '<path d="M3 5.5h5.5A3.5 3.5 0 0 1 12 9v11a2.8 2.8 0 0 0-2.8-2.8H3z"/><path d="M21 5.5h-5.5A3.5 3.5 0 0 0 12 9v11a2.8 2.8 0 0 1 2.8-2.8H21z"/>',
+  window: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8.5h18M6 6.3h.1M8.5 6.3h.1"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  lock: '<circle cx="15.5" cy="8.5" r="4.5"/><path d="M12.3 11.7 4 20M6.5 17.5l2 2M8.5 15.5l1.5 1.5"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  close: '<path d="M7 7l10 10M17 7 7 17"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  tag: '<path d="M3.5 12.3V4.5a1 1 0 0 1 1-1h7.8l8.4 8.4a1.5 1.5 0 0 1 0 2.1l-6.7 6.7a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8" cy="8" r="1.4"/>',
+  play: '<circle cx="12" cy="12" r="9"/><path d="m10 8.5 5.5 3.5-5.5 3.5z"/>',
+  network: '<rect x="9" y="3" width="6" height="5.5" rx="1"/><rect x="3" y="15.5" width="6" height="5.5" rx="1"/><rect x="15" y="15.5" width="6" height="5.5" rx="1"/><path d="M12 8.5V12M6 15.5V12h12v3.5"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6.3L4.7 18.1A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.7-2.9L14 9.3V3"/><path d="M7.5 15h9"/>',
+  chart: '<path d="M4 20h16"/><path d="M7 16.5v-4M12 16.5v-8M17 16.5V6"/>',
+  atom: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/>',
+  dna: '<path d="M7 3c0 6 10 6 10 12s-10 6-10 6"/><path d="M17 3c0 6-10 6-10 12s10 6 10 6"/><path d="M8.5 7h7M8.5 17h7"/>',
+  layers: '<path d="m12 3 9.5 4.8L12 12.6 2.5 7.8z"/><path d="m2.5 12 9.5 4.8 9.5-4.8M2.5 16.2 12 21l9.5-4.8"/>'
+}
+function icon(name, size, sw) {
+  const s = size || 18
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.spark}</svg>`
+}
+function paintIcons(root) {
+  root.querySelectorAll("[data-icon]").forEach((el) => { el.innerHTML = icon(el.dataset.icon, +el.dataset.size || 18); el.style.display = el.style.display || "inline-grid" })
+}
+function esc(v) { return String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])) }
+let toastTimer = 0
+function toast(text) {
+  const t = document.getElementById("toast")
+  t.textContent = text
+  t.hidden = false
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { t.hidden = true }, 2600)
+}
+
+/* ========== 可选项 ==========
+   CATALOG 由构建脚本从科学工具箱 / 科研技能 / 科研智能体页面的条目导出：
+   mcp = 能力类型为 MCP 服务的工具箱；tool = 单个工具；skills = 科研技能；agents = 科研智能体 */
+const CATALOG = {"mcp": [{"n": "GROMACS", "d": "分子动力学模拟与轨迹分析。", "f": "材料科学"}, {"n": "内部文献库连接", "d": "访问已授权的企业文献资源。", "f": "通用"}, {"n": "VASP", "d": "第一性原理电子结构计算，输出能带、态密度与电荷密度。", "f": "材料科学"}, {"n": "Gaussian", "d": "量子化学计算，用于分子结构优化与能量计算。", "f": "材料科学"}, {"n": "LAMMPS", "d": "大规模分子动力学，适用于配方体系长时间轨迹。", "f": "材料科学"}, {"n": "专利库", "d": "连接专利数据源，按技术主题召回专利族。", "f": "通用"}, {"n": "RDKit", "d": "化学信息学工具包，支持结构标准化、子结构与相似性检索、构象生成、描述符与指纹计算。", "f": "材料科学"}, {"n": "ORCA", "d": "量子化学程序，支持 DFT、耦合簇、TDDFT 与过渡态搜索；商业用途需单独授权。", "f": "材料科学"}, {"n": "PySCF", "d": "Python 量子化学库，可脚本化完成 HF/DFT 单点、结构优化、电荷与轨道分析。", "f": "材料科学"}, {"n": "Q-Chem", "d": "量子化学软件，擅长 DFT、激发态与隐式溶剂模型计算。", "f": "材料科学"}, {"n": "Quantum ESPRESSO", "d": "平面波赝势第一性原理套件，计算能带、态密度、声子、NEB 路径与 AIMD。", "f": "材料科学"}, {"n": "CP2K", "d": "基于 GPW 方法的 DFT/AIMD 程序，适合大体系界面、液相与表面吸附模拟。", "f": "材料科学"}, {"n": "CASTEP", "d": "平面波 DFT 程序（Materials Studio 模块），计算晶体结构、能带、声子与弹性常数。", "f": "材料科学"}, {"n": "CoolProp", "d": "纯流体与混合物物性库，基于高精度状态方程计算热力学与输运性质。", "f": "通用"}, {"n": "ThermoPack", "d": "SINTEF 热力学库，提供多种状态方程下的 Flash、相包络与临界点计算。", "f": "通用"}, {"n": "OpenPNM", "d": "孔隙网络建模库，求解 Stokes 流、Fickian 扩散、排驱与侵入渗流。", "f": "地球科学"}, {"n": "PoreSpy", "d": "多孔介质图像分析库，用于孔隙分割、孔网提取与孔径分布统计。", "f": "地球科学"}, {"n": "Ansys Fluent", "d": "通用 CFD 求解器，模拟湍流、传热、多相流与反应流。", "f": "通用"}, {"n": "OpenFOAM", "d": "有限体积 CFD 工具箱，支持稳态/瞬态流动、传热、多相流与反应流求解。", "f": "通用"}, {"n": "ECLIPSE", "d": "油藏数值模拟器，支持黑油与组分模型的历史拟合和开发方案预测。", "f": "地球科学"}, {"n": "CMG", "d": "油藏模拟套件（IMEX / GEM / STARS），覆盖黑油、组分、热采与化学驱。", "f": "地球科学"}, {"n": "OPM Flow", "d": "兼容 ECLIPSE deck 的油藏模拟器，支持黑油模型与 CO2 封存模拟。", "f": "地球科学"}, {"n": "GeoEast", "d": "东方物探自主研发的地震数据处理解释一体化系统，覆盖处理、成像、正演与解释。", "f": "地球科学"}, {"n": "Devito", "d": "由符号表达式自动生成有限差分代码的 Python 框架，用于地震正演、RTM 与 FWI。", "f": "地球科学"}, {"n": "SimPEG", "d": "地球物理正反演框架，覆盖重力、磁法、直流电法、电磁与 MT。", "f": "地球科学"}, {"n": "ProMAX / SeisSpace", "d": "Landmark 地震资料处理系统，支持叠前处理、速度分析与偏移。", "f": "地球科学"}, {"n": "SLB Omega", "d": "SLB 地震处理与成像平台，支持大规模叠前深度偏移。", "f": "地球科学"}, {"n": "Madagascar / Seismic Unix", "d": "地震处理工具集，支持可复现处理流程、SEG-Y 读写与批处理。", "f": "地球科学"}, {"n": "PyVista", "d": "基于 VTK 的 Python 三维可视化接口，适合网格、反演体与波场快照展示。", "f": "通用"}, {"n": "Matplotlib", "d": "在计算集群上导出论文级静态图（png/svg/pdf），如曲线、剖面、波场与反演结果图；会话内的交互图表由前端组件展示。", "f": "通用"}, {"n": "Open Babel", "d": "化学文件格式转换工具包，支持 100+ 种格式与 3D 坐标生成。", "f": "材料科学"}, {"n": "ASE", "d": "原子模拟环境，构建晶胞、表面与吸附构型，并驱动多种 DFT 计算器。", "f": "材料科学"}, {"n": "pymatgen", "d": "材料结构分析库，生成表面与缺陷结构、读写 VASP 输入输出，对接 Materials Project。", "f": "材料科学"}, {"n": "Packmol", "d": "按空间约束填充分子，构建溶液、混合物与界面初始构型。", "f": "材料科学"}, {"n": "Moltemplate", "d": "LAMMPS 输入文件构建工具，以模板方式组装分子与力场参数。", "f": "材料科学"}, {"n": "Polymatic / pysimm", "d": "聚合物模拟退火成键与交联构建，生成无定形聚合物体系。", "f": "材料科学"}, {"n": "segyio", "d": "SEG-Y 地震数据快速读写 Python 库，访问道头与道数据。", "f": "地球科学"}, {"n": "discretize", "d": "SimPEG 生态的有限体积网格库，支持张量、柱坐标与八叉树网格。", "f": "地球科学"}, {"n": "AlphaFold2 / ColabFold", "d": "蛋白质三维结构预测，ColabFold 以 MMseqs2 加速多序列比对，支持复合物预测。", "f": "合成生物学"}, {"n": "ESM-2 / ESMFold", "d": "蛋白质语言模型，提取序列表征、预测突变效应，并可单序列快速预测结构。", "f": "合成生物学"}, {"n": "RFdiffusion", "d": "基于扩散模型的蛋白骨架从头设计，支持结合蛋白、对称组装与基序支架设计。", "f": "合成生物学"}, {"n": "ProteinMPNN", "d": "给定蛋白骨架反向设计氨基酸序列，常与 RFdiffusion、AlphaFold 组成设计-验证流程。", "f": "合成生物学"}, {"n": "Rosetta", "d": "蛋白结构建模与设计套件，用于酶设计、稳定性优化、对接与能量打分；商业用途需授权。", "f": "合成生物学"}, {"n": "AutoDock Vina", "d": "小分子-蛋白对接与结合亲和力打分，用于底物、抑制剂与酶活性口袋筛选。", "f": "合成生物学"}, {"n": "OpenMM", "d": "GPU 加速的生物分子动力学库，可用 Python 脚本定制模拟流程与力场。", "f": "合成生物学"}, {"n": "BLAST+", "d": "NCBI 本地序列相似性检索，支持核酸与蛋白数据库比对和同源基因发现。", "f": "合成生物学"}, {"n": "Biopython", "d": "生物信息 Python 库，读写 FASTA/GenBank、调用 NCBI 接口与处理序列。", "f": "合成生物学"}, {"n": "ViennaRNA", "d": "RNA 二级结构与最小自由能预测，用于核糖开关、sgRNA 与 RBS 设计评估。", "f": "合成生物学"}, {"n": "Primer3", "d": "PCR 与测序引物设计，控制熔解温度、GC 含量与二聚体风险。", "f": "合成生物学"}, {"n": "DNA Chisel", "d": "按约束与目标优化 DNA 序列，完成密码子优化、去除酶切位点与 GC 调控。", "f": "合成生物学"}, {"n": "Cello", "d": "由 Verilog 逻辑描述自动设计遗传线路，完成元件分配与表达行为预测。", "f": "合成生物学"}, {"n": "COBRApy", "d": "基因组尺度代谢模型的通量平衡分析，预测敲除靶点与产物合成途径。", "f": "合成生物学"}, {"n": "antiSMASH", "d": "基因组中次级代谢产物生物合成基因簇的识别与注释。", "f": "合成生物学"}, {"n": "DESeq2", "d": "RNA-seq 差异表达分析 R 包，用于工程菌株与调控元件表达评估。", "f": "合成生物学"}, {"n": "Nextflow / nf-core", "d": "可复现的组学分析流程编排，nf-core 提供 RNA-seq、宏基因组等标准流程。", "f": "合成生物学"}, {"n": "lasio / welly", "d": "LAS/DLIS 测井数据读写与曲线质控，计算泥质含量、孔隙度与含水饱和度。", "f": "地球科学"}, {"n": "GemPy", "d": "基于隐式势场的三维地质建模库，由层面点与产状构建构造模型并评估不确定性。", "f": "地球科学"}, {"n": "GSTools / PyKrige", "d": "变差函数分析、克里金插值与序贯高斯模拟，用于属性建模与空间插值。", "f": "地球科学"}, {"n": "bruges", "d": "岩石物理与地震正演小工具库，计算弹性参数、AVO 响应与合成地震记录。", "f": "地球科学"}, {"n": "ObsPy", "d": "地震学数据处理框架，下载 FDSN 台站数据，去仪器响应、滤波与震相拾取。", "f": "地球科学"}, {"n": "SPECFEM3D", "d": "谱元法三维地震波传播模拟，支持区域/全球正演与伴随层析成像。", "f": "地球科学"}, {"n": "pyGIMLi", "d": "地球物理建模与反演库，覆盖电阻率层析（ERT）、折射层析与探地雷达。", "f": "地球科学"}, {"n": "MRST", "d": "SINTEF 开源油藏模拟工具箱，含黑油模型、CO2 封存（co2lab）与粗化方法。", "f": "地球科学"}, {"n": "PHREEQC", "d": "USGS 水文地球化学程序，计算物种形态、矿物饱和指数、水岩反应与一维反应运移。", "f": "地球科学"}, {"n": "PFLOTRAN", "d": "大规模并行多相流与反应运移模拟器，用于 CO2 地质封存、地下水与地热模拟。", "f": "地球科学"}, {"n": "GDAL / Rasterio", "d": "栅格与矢量地理数据读写、坐标转换与裁剪，支持 GeoTIFF、Shapefile、NetCDF 等格式。", "f": "地球科学"}, {"n": "PyGMT", "d": "GMT 的 Python 接口，绘制地形底图、构造图、震中分布与剖面图（静态出图）。", "f": "地球科学"}, {"n": "LaTeX 排版（TeX Live）", "d": "按期刊模板编译 LaTeX 论文，生成参考文献与修订对比稿。", "f": "通用"}, {"n": "Zotero 文献管理", "d": "连接个人与课题组文献库，检索条目、插入引文并导出 BibTeX。", "f": "通用"}, {"n": "Pandoc 文档转换", "d": "Markdown、LaTeX、Word 互转，按 CSL 样式排版引文，生成投稿或汇报文档。", "f": "通用"}, {"n": "远程计算", "d": "对接 HPC 集群、GPU 集群与工作站等远程资源；每个资源单独配置调度系统（Slurm、PBS、LSF、SGE 或 SSH 直连）、地址与密钥，提交作业、查询状态、传输文件。", "f": "通用"}], "tool": [{"n": "科研数据格式转换", "d": "将 CSV 数据转换为结构化 JSON。", "f": "通用"}, {"n": "科研数据清洗工具", "d": "处理缺失值、异常值、重复记录并生成质量报告。", "f": "通用"}, {"n": "分子格式转换工具", "d": "支持 PDB、MOL、SDF 与 SMILES 格式转换。", "f": "材料科学"}, {"n": "标准条款解析", "d": "解析标准全文并抽取测试条件、指标和限值。", "f": "通用"}], "skills": [{"n": "文献自动综述", "d": "按主题检索文献并去重，抽取研究问题、方法与结论，生成带引用的结构化综述。", "s": "平台官方", "f": "通用", "t": ["内部文献库连接", "Zotero 文献管理"]}, {"n": "文献证据抽取", "d": "从论文中提取实验条件、关键结论与证据引用，输出可追溯的证据表。", "s": "平台官方", "f": "通用", "t": ["内部文献库连接"]}, {"n": "研究空白识别", "d": "融合多来源证据，识别争议点、口径差异与可验证的研究空白。", "s": "平台官方", "f": "通用", "t": []}, {"n": "论文图表提取", "d": "从论文中提取图表、标题、坐标单位，并把曲线数字化为结构化数值。", "s": "平台官方", "f": "通用", "t": ["Plotly.js"]}, {"n": "科研数据清洗", "d": "检查缺失值、异常值、重复记录与单位一致性，输出清洗后数据和质量报告。", "s": "平台官方", "f": "通用", "t": ["科研数据清洗工具", "科研数据格式转换"]}, {"n": "数据趋势分析", "d": "对实验或观测数据做描述统计、相关性与回归分析，自动出图并解读趋势。", "s": "平台官方", "f": "通用", "t": ["Apache ECharts", "Matplotlib"]}, {"n": "实验方案设计", "d": "根据研究目标与约束，给出正交 / 响应面等实验设计方案与样本表。", "s": "平台官方", "f": "通用", "t": []}, {"n": "科研报告生成", "d": "基于任务历程、引用和科研产出组织研究报告，导出 Word / PDF。", "s": "平台官方", "f": "通用", "t": ["Pandoc 文档转换"]}, {"n": "论文写作辅助", "d": "按目标期刊组织论文结构，润色表达，管理引用并排版。", "s": "平台官方", "f": "通用", "t": ["LaTeX 排版（TeX Live）", "Zotero 文献管理"]}, {"n": "技术交底书撰写", "d": "从研究成果中提炼技术方案，检索现有技术，生成专利技术交底书初稿。", "s": "平台官方", "f": "通用", "t": ["专利库"]}, {"n": "专利技术路线分析", "d": "提取核心专利、技术路线与差异点，形成技术路线图与对比分析。", "s": "平台官方", "f": "通用", "t": ["专利库", "Apache ECharts"]}, {"n": "标准条款对标", "d": "把产品指标或实验方法与国标、行标条款逐条对标，标出差距。", "s": "团队共享", "f": "通用", "t": ["标准条款解析"]}, {"n": "代码生成与调试", "d": "为数据处理、仿真前后处理生成 Python 代码，在沙箱中运行并修复报错。", "s": "平台官方", "f": "通用", "t": []}, {"n": "计算作业编排", "d": "生成计算作业脚本，提交到远程集群，监控状态并回收结果。", "s": "团队共享", "f": "通用", "t": ["远程计算"]}, {"n": "分子动力学模拟编排", "d": "生成模拟参数，调用计算软件完成建模、平衡与生产模拟，并整理轨迹分析结果。", "s": "平台官方", "f": "材料科学", "t": ["Packmol", "GROMACS", "3Dmol.js", "远程计算"]}, {"n": "配方相容性评估", "d": "计算组分溶解度参数与混合能，评估配方相容性并推荐候选配比。", "s": "团队共享", "f": "材料科学", "t": ["RDKit", "LAMMPS"]}, {"n": "催化实验条件抽取", "d": "从文献中整理催化剂组成、反应条件、转化率与选择性，并标注来源。", "s": "平台官方", "f": "材料科学", "t": ["内部文献库连接"]}, {"n": "DFT 计算编排", "d": "从结构到能带、态密度与吸附能，自动生成第一性原理计算流程并汇总结果。", "s": "平台官方", "f": "材料科学", "t": ["pymatgen", "Quantum ESPRESSO", "VASP", "远程计算"]}, {"n": "电镜图像识别分析", "d": "识别 TEM / SEM 图像中的颗粒与孔隙，统计粒径分布与形貌参数。", "s": "团队共享", "f": "材料科学", "t": ["Matplotlib"]}, {"n": "地震数据质控", "d": "读取 SEG-Y 数据，检查道头、振幅、频谱与坏道，输出质控报告。", "s": "平台官方", "f": "地球科学", "t": ["segyio", "Madagascar / Seismic Unix"]}, {"n": "测井曲线解释", "d": "读取 LAS 测井数据，计算泥质含量、孔隙度、饱和度，划分储层段。", "s": "团队共享", "f": "地球科学", "t": ["lasio / welly"]}, {"n": "油藏数值模拟编排", "d": "准备油藏模型输入，提交数值模拟，对比多方案的产量与压力。", "s": "平台官方", "f": "地球科学", "t": ["OPM Flow", "PyVista", "远程计算"]}, {"n": "震相拾取与定位", "d": "下载台站波形，拾取 P / S 震相并完成地震定位与目录整理。", "s": "团队共享", "f": "地球科学", "t": ["ObsPy"]}, {"n": "蛋白质结构解析", "d": "预测蛋白三维结构，评估置信度并标注活性位点与关键残基。", "s": "平台官方", "f": "合成生物学", "t": ["AlphaFold2 / ColabFold", "Mol*"]}, {"n": "序列特征提取", "d": "提取序列基础特征、同源信息与功能注释。", "s": "平台官方", "f": "合成生物学", "t": ["Biopython", "BLAST+"]}, {"n": "引物与基因片段设计", "d": "为克隆与组装设计引物，按宿主做密码子优化并检查合成约束。", "s": "团队共享", "f": "合成生物学", "t": ["Primer3", "DNA Chisel"]}, {"n": "代谢通量分析", "d": "基于基因组尺度代谢模型做通量平衡分析，找出提高目标产物的改造靶点。", "s": "团队共享", "f": "合成生物学", "t": ["COBRApy"]}, {"n": "配方优化课题周报", "d": "汇总本周空间内的计算任务与实验结果，按课题组周报模板生成。", "s": "个人创建", "f": "材料科学", "t": []}], "agents": [{"n": "文献调研智能体", "d": "围绕一个研究问题多轮检索、筛选和精读文献，输出带引用的调研报告与证据表。", "f": "通用"}, {"n": "专利与标准分析智能体", "d": "检索相关专利与标准，梳理技术路线和权利要求，对标标准条款并起草技术交底书。", "f": "通用"}, {"n": "数据分析智能体", "d": "读取实验或仿真数据，清洗、统计建模、出图并解读趋势，全过程代码可复现。", "f": "通用"}, {"n": "论文写作智能体", "d": "按目标期刊结构组织材料，逐节起草、润色并排版，引用与图表编号自动对齐。", "f": "通用"}, {"n": "计算作业调度智能体", "d": "把计算任务拆成作业，通过远程计算提交到空间配置的集群，监控状态、失败重提并回收结果。", "f": "通用"}, {"n": "DFT 计算智能体", "d": "从结构出发完成收敛测试、弛豫与自洽、能带与态密度计算，自动监控作业并汇总结果。", "f": "材料科学"}, {"n": "分子动力学智能体", "d": "搭建多组分体系、选择力场、跑平衡与生产模拟，分析密度、Tg 与相容性。", "f": "材料科学"}, {"n": "催化机理研究智能体", "d": "结合文献中的反应条件和量化计算，提出反应路径假设并计算关键中间体与过渡态。", "f": "材料科学"}, {"n": "配方筛选智能体", "d": "根据目标性能和历史实验数据生成候选配方，打分排序并给出下一轮实验方案。", "f": "材料科学"}, {"n": "地震资料处理智能体", "d": "读取 SEG-Y 道头做质控，格式转换后小数据试算处理流程，确认后全量处理并输出叠加剖面。", "f": "地球科学"}, {"n": "地震正演反演智能体", "d": "根据地质模型做波动方程正演，与实测资料对比后做全波形反演，迭代更新速度模型。", "f": "地球科学"}, {"n": "测井解释智能体", "d": "读取 LAS 测井曲线，做环境校正、岩性识别与孔渗饱计算，输出解释成果表。", "f": "地球科学"}, {"n": "油藏数值模拟智能体", "d": "准备油藏模拟输入、跑历史拟合与开发方案对比，输出产量曲线和压力场。", "f": "地球科学"}, {"n": "天然地震监测智能体", "d": "下载连续波形，自动拾取震相、关联定位并估算震级，输出事件目录。", "f": "地球科学"}, {"n": "蛋白设计智能体", "d": "确认靶点后用 RFdiffusion 生成骨架、ProteinMPNN 设计序列、AlphaFold 回验，按 pLDDT/iPAE 筛选候选。", "f": "合成生物学"}, {"n": "基因线路设计智能体", "d": "根据目标逻辑功能选择元件、设计线路与引物，并做序列合成性检查。", "f": "合成生物学"}, {"n": "代谢工程智能体", "d": "基于基因组尺度代谢模型做通量分析，找出提高目标产物的敲除与过表达靶点。", "f": "合成生物学"}, {"n": "转录组分析智能体", "d": "从原始测序数据跑标准流程，完成差异表达与富集分析，输出火山图与通路图。", "f": "合成生物学"}, {"n": "实验方案设计智能体", "d": "根据研究假设设计对照组、变量水平与样本量，生成可执行的实验方案与记录表。", "f": "通用"}]}
+const FIELDS = ["通用", "材料科学", "地球科学", "合成生物学"]
+const DIRS = {
+  "材料科学": ["合成橡胶", "聚合物复合材料", "配方设计", "多相催化", "均相催化", "反应机理", "电池材料", "光电材料", "多孔材料", "功能分子设计"],
+  "地球科学": ["地震勘探", "储层表征", "油气藏开发", "地质建模", "盆地模拟", "天然地震"],
+  "合成生物学": ["蛋白质设计", "酶工程", "基因线路设计", "代谢工程", "组学分析"]
+}
+const SCENES = ["文献调研", "数据分析", "实验设计", "科学计算", "科研绘图", "论文写作", "专利与标准", "编程与自动化"]
+const CONFIRMS = ["提交计算作业前", "覆盖或删除数据前", "导出交付物前", "调用付费服务前", "对外发送内容前"]
+const MODELS = ["组织默认", "平台默认大模型", "推理增强模型", "长上下文模型"]
+const TIMEOUTS = ["30 分钟", "1 小时", "2 小时", "6 小时", "12 小时", "24 小时"]
+const VIS = [["仅自己可见", "只有你和访问控制里的成员能看到"], ["团队内可见", "所在团队成员可在科研智能体中看到并加载"], ["组织内可见", "组织内所有成员可见，可在科研智能体中加载"]]
+const BUILTIN = [
+  ["execute_command", "可关闭。关闭后该 Agent 将无法执行 shell 命令"],
+  ["code_execution", "可关闭。关闭后该 Agent 将无法在沙箱中运行 Python 代码"]
+]
+const KBS = [
+  ["科研文献", "本地", "空间内上传的论文 PDF 与笔记"],
+  ["配方文献知识库", "本地", "配方组成、工艺参数与性能数据"],
+  ["专利全文库", "团队", "已授权的专利全文与法律状态"],
+  ["标准规范库", "团队", "国家、行业与企业标准条款"],
+  ["实验记录库", "本地", "电子实验记录本导出的实验条件与结果"],
+  ["地震资料解释报告库", "团队", "历年资料处理与解释报告"],
+  ["蛋白结构注释库", "团队", "内部表达、纯化与结构注释记录"]
+]
+const GUARDS = [
+  ["敏感信息脱敏", "输入 / 输出", "识别人员信息、账号与密钥并遮盖"],
+  ["提示词注入检测", "输入", "拦截试图改写系统指令或越权调用工具的输入"],
+  ["引用真实性校验", "输出", "检查回复中的 DOI、专利号是否来自实际检索结果"],
+  ["危险化学品与生物安全", "输出", "涉及危险化学品合成、病原体改造等内容时拦截并提示规范"],
+  ["不当内容过滤", "输入 / 输出", "过滤违法、辱骂等不当内容"]
+]
+const PEOPLE = [["陈博士", "chen@example.com"], ["王工", "wang@example.com"], ["李研究员", "li@example.com"], ["赵老师", "zhao@example.com"]]
+const ROLES = ["可使用", "可编辑", "完全访问"]
+const COLORS = ["blue", "purple", "green", "orange", "teal", "pink"]
+const AVATAR_ICONS = ["bot", "flask", "atom", "dna", "chart", "network", "book", "layers"]
+
+/* ========== 草稿 ========== */
+function blankDraft() {
+  return {
+    name: "未命名科研智能体", icon: "bot", color: "blue", desc: "", field: "通用", dirs: [], scenes: [],
+    model: "组织默认", prompt: "", welcomeMode: "简洁模式", welcome: "", bg: "#ffffff", alpha: 100, questions: [],
+    builtin: { execute_command: true, code_execution: true }, kbs: [], skills: [], envs: [], tools: [], agentType: "独立智能体", subAgents: [], mcps: [],
+    web: false, think: false, params: { temperature: 0.7, top_p: 0.9, max_tokens: 4096, turns: 10 },
+    guards: [], guardAction: "拦截并提示", learn: false, sessionKb: true, genUI: false,
+    maxSteps: 30, timeout: "2 小时", confirm: ["提交计算作业前"],
+    visibility: "仅自己可见", acl: [["林夏", "linxia@example.com", "完全访问 · 创建者"]]
+  }
+}
+const SAMPLE = {
+  name: "材料研发助手", icon: "flask", color: "blue", desc: "检索文献专利、解析配方与工艺、做材料计算模拟并整理研发报告。",
+  field: "材料科学", dirs: ["配方设计", "合成橡胶"], scenes: ["文献调研", "数据分析", "科学计算"],
+  prompt: `你是「材料研发助手」，服务材料科学、化工与高分子领域的研发人员，帮助完成从调研、配方解析到计算模拟与结果交付的全流程工作。
+
+## 核心职责
+1. 文献与专利调研：检索学术论文与专利，提炼可复用的配方、工艺、性能数据与技术路线。
+2. 配方与工艺解析：从文献、专利和实验记录中抽取配方组成与工艺参数，整理成对比表。
+3. 计算模拟：按需调用分子动力学、第一性原理等工具，给出方法、参数与结果解读。
+4. 报告交付：把结论整理成结构化的对比报告或研发报告。
+
+## 工作流程
+1. 确认材料体系、目标性能指标与约束（成本、工艺、环保合规）
+2. 检索并筛选相关文献与专利
+3. 抽取配方与工艺参数，形成对比表
+4. 需要时设计并提交计算，解读结果
+5. 输出结构化报告，列出引用来源
+
+## 执行边界
+- 只引用实际检索到的文献与专利，不编造 DOI 或专利号
+- 提交计算作业前说明核时预估并请用户确认
+- 实验数据只读，结果另存为新版本`,
+  welcome: "你好，我是材料研发助手。可以帮你检索文献专利、解析配方与工艺、做材料计算模拟，或整理研发报告。请告诉我材料体系和你关注的目标（例如性能指标、成本或工艺约束）。",
+  questions: ["帮我检索近三年聚丙烯增韧改性的文献，总结主流技术路线", "从这几篇专利里提取配方组成和工艺参数，做一张对比表", "预测这个聚合物体系的玻璃化转变温度，并说明计算方法", "帮我分析这段配方文献数据，生成一份结构化的对比报告", "对比 A、B 两种阻燃体系的性能、成本与环保合规性"],
+  kbs: ["科研文献", "配方文献知识库"],
+  skills: ["文献自动综述", "文献证据抽取", "配方相容性评估", "科研报告生成"],
+  tools: ["科研数据清洗工具"], mcps: ["内部文献库连接", "Zotero 文献管理", "专利库", "RDKit", "GROMACS", "LAMMPS", "远程计算", "Pandoc 文档转换"],
+  guards: ["引用真实性校验"], web: true
+}
+let draft = blankDraft()
+let dirty = false
+let published = null            // { ver, at, note }
+const pubLog = []               // 发布记录
+const fold = {}                 // 折叠状态：group:xxx / item:xxx
+let chat = []                   // 调试会话 [{ role, text, trace, think }]
+let busy = false
+let thinkOn = false
+let mode = "cfg"
+
+function touch() { dirty = true; paintPublishBadge() }
+function paintPublishBadge() {
+  const b = document.getElementById("pub-badge")
+  if (!published) { b.className = "badge gray"; b.textContent = "未发布" }
+  else if (dirty) { b.className = "badge gray"; b.textContent = `${published.ver} · 有未发布修改` }
+  else { b.className = "badge ok"; b.textContent = `已发布 ${published.ver}` }
+}
+
+/* ========== 配置区渲染 ========== */
+const qmark = (t) => `<span class="q-ic" title="${esc(t)}">${icon("help", 16)}</span>`
+const sel = (name, list, val, cls) => `<div class="sel ${cls || ""}"><select data-f="${name}">${list.map((x) => { const v = Array.isArray(x) ? x[0] : x; return `<option ${v === val ? "selected" : ""}>${esc(v)}</option>` }).join("")}</select>${icon("down", 16)}</div>`
+const sw = (name, on, dis) => `<label class="sw"><input type="checkbox" data-f="${name}" ${on ? "checked" : ""} ${dis ? "disabled" : ""} /><i></i></label>`
+function group(key, title, inner) {
+  return `<div class="group ${fold["g:" + key] ? "fold" : ""}" data-group="${key}"><button type="button" class="gh" data-fold="g:${key}">${icon("upc", 16)}${esc(title)}</button><div class="gbody">${inner}</div></div>`
+}
+// item：ic 图标、title 标题、opt { right 右侧控件, add 右侧加号动作, desc 说明, fold 可折叠, body 内容 }
+function item(key, ic, title, o) {
+  const f = o.fold !== false && fold["i:" + key] !== undefined ? fold["i:" + key] : !!o.folded
+  return `<div class="item ${o.fold !== false && f ? "fold" : ""}" data-item="${key}">
+    <div class="ih">${icon(ic, 21)}<h3>${esc(title)}</h3>${o.q ? qmark(o.q) : ""}${o.fold !== false ? `<button type="button" class="tg" data-fold="i:${key}" aria-label="展开或收起">${icon("upc", 16)}</button>` : ""}<span class="sp"></span>${o.right || ""}${o.add ? `<button type="button" class="add" data-add="${o.add}" title="添加">${icon("plus", 20)}</button>` : ""}</div>
+    ${o.desc ? `<p class="idesc">${o.desc}</p>` : ""}
+    ${o.body ? `<div class="ib">${o.body}</div>` : ""}
+  </div>`
+}
+function cardList(list, empty, fn) { return list.length ? `<div class="cards">${list.map(fn).join("")}</div>` : `<p class="none">${esc(empty)}</p>` }
+const findBy = (arr, n) => arr.find((x) => x.n === n) || { n, d: "" }
+const srcLabel = (s) => s === "个人创建" ? "自定义" : s || "自定义"
+
+function renderCfg() {
+  const d = draft
+  const box = document.getElementById("cfg")
+  const top = box.scrollTop
+  const dirs = DIRS[d.field] || []
+  const basic = [
+    item("model", "cube", "模型选择", { fold: false, right: sel("model", MODELS, d.model, "w360") }),
+    item("meta", "tag", "描述与分类", {
+      desc: "描述展示在科研智能体卡片上；分类用于科研智能体页面的筛选，也帮助 Research Agent 判断何时把任务分派给它",
+      body: `<input class="inp" data-f="desc" maxlength="80" placeholder="一句话说明它做什么，例如：检索文献专利、解析配方与工艺并整理研发报告" value="${esc(d.desc)}" />
+        <div class="kvrow"><span>学科领域</span><div>${sel("field", FIELDS, d.field, "sm")}</div></div>
+        ${dirs.length ? `<div class="kvrow"><span>研究方向</span><div class="chips" style="margin-top:0">${dirs.map((x) => `<button type="button" class="chip ${d.dirs.includes(x) ? "on" : ""}" data-chip="dirs|${esc(x)}">${esc(x)}</button>`).join("")}</div></div>` : ""}
+        <div class="kvrow"><span>应用场景</span><div class="chips" style="margin-top:0">${SCENES.map((x) => `<button type="button" class="chip ${d.scenes.includes(x) ? "on" : ""}" data-chip="scenes|${esc(x)}">${esc(x)}</button>`).join("")}</div></div>`
+    }),
+    item("prompt", "prompt", "提示词编辑", {
+      desc: `定义智能体行为的指令（支持 Markdown 文件）<button type="button" class="link-btn" data-act="tpl" style="margin-left:10px">插入结构模板</button><label class="link-btn" style="margin-left:10px;cursor:pointer">导入 .md<input type="file" accept=".md,.txt" id="prompt-file" hidden /></label>`,
+      body: `<div class="ta"><textarea data-f="prompt" rows="7" maxlength="20000" placeholder="例如：你是「催化剂表征分析助手」，服务……&#10;&#10;## 核心职责&#10;## 工作流程（每行一步，发布后作为工作流程展示）&#10;## 执行边界">${esc(d.prompt)}</textarea><div class="cnt"><span data-cnt="prompt">${d.prompt.length}</span> / 20000</div></div>`
+    }),
+    item("welcome", "hi", "欢迎语", {
+      right: sel("welcomeMode", ["简洁模式", "卡片模式"], d.welcomeMode, "sm"),
+      body: `<div class="ta"><textarea data-f="welcome" rows="4" maxlength="20000" placeholder="用户打开会话时看到的第一句话，例如：你好，我是……可以帮你……">${esc(d.welcome)}</textarea><div class="cnt"><span data-cnt="welcome">${d.welcome.length}</span> / 20000</div></div>
+        <div class="row between" style="margin-top:18px"><span class="lbl">背景色</span><label class="color"><i style="background:${esc(d.bg)}"></i><span>${esc(d.bg)}</span><input type="color" data-f="bg" value="${esc(d.bg)}" /></label></div>
+        <div class="range"><input type="range" min="0" max="100" data-f="alpha" value="${d.alpha}" /><span>透明度(${d.alpha}%)</span></div>
+        <div class="lbl" style="margin-top:20px">推荐问题${qmark("展示在欢迎语下方，用户点击即可发问；最多 10 个")}</div>
+        <div class="qlist">${d.questions.map((q, i) => `<div class="qrow"><label><input data-q="${i}" maxlength="100" value="${esc(q)}" placeholder="输入推荐问题" /><em><span data-qc="${i}">${q.length}</span> / 100</em></label><button type="button" class="minus" data-qdel="${i}" title="删除">${icon("minus", 20)}</button></div>`).join("")}</div>
+        <button type="button" class="adder" data-act="qadd" ${d.questions.length >= 10 ? "disabled" : ""}>${icon("pluscircle", 20)}添加<small>${d.questions.length}/10</small></button>`
+    })
+  ].join("")
+
+  const cap = [
+    `<div class="item"><h4 class="subh">平台内置工具</h4><p class="idesc" style="margin-top:4px">所有 Agent 自动包含；部分工具可在下方关闭。read_file、write_file、list_files 等基础文件工具不可关闭。</p>
+      <div class="cards">${BUILTIN.map(([n, t]) => `<div class="card"><div class="cm"><b class="mono">${n}</b><p>${esc(t)}</p></div>${sw("builtin." + n, d.builtin[n])}</div>`).join("")}</div></div>`,
+    item("kbs", "kb", "知识库", { add: "kbs", desc: "添加后，智能体可根据知识库内容回答问题", body: cardList(d.kbs, "暂未添加知识库，点击右侧 + 添加", (n) => { const k = KBS.find((x) => x[0] === n) || [n, "本地", ""]; return `<div class="card"><div class="cm"><b>${esc(k[0])} (${esc(k[1])})</b></div><button type="button" class="del" data-del="kbs|${esc(n)}" title="移除">${icon("trash", 19)}</button></div>` }) }),
+    item("skills", "skill", "技能", { add: "skills", desc: `添加智能体可以使用的专业技能（来自<a href="科研技能.html">科研技能</a>）`, body: cardList(d.skills, "暂未添加技能，点击右侧 + 添加", (n) => { const s = findBy(CATALOG.skills, n); return `<div class="card tall"><div class="cm"><b>${esc(n)}</b><p>${esc(s.d)}</p></div><span class="srcb">${icon("cube", 14)}${esc(srcLabel(s.s))}</span><button type="button" class="del" data-del="skills|${esc(n)}" title="移除">${icon("trash", 19)}</button></div>` }) }),
+    item("envs", "key", "环境变量", { add: "envs", desc: "配置注入沙箱的环境变量，供技能脚本、代码执行通过 os.environ 读取（如 API Key）。密钥类型会加密存储并遮盖显示，不会传给大模型",
+      body: d.envs.length ? d.envs.map((e, i) => `<div class="env"><input class="inp" data-env="${i}|k" placeholder="变量名，如 MP_API_KEY" value="${esc(e.k)}" /><input class="inp" data-env="${i}|v" type="${e.t === "密钥" ? "password" : "text"}" placeholder="${e.t === "密钥" ? "密钥值（加密存储）" : "变量值"}" value="${esc(e.v)}" autocomplete="off" /><div class="sel"><select data-env="${i}|t"><option ${e.t === "普通" ? "selected" : ""}>普通</option><option ${e.t === "密钥" ? "selected" : ""}>密钥</option></select>${icon("down", 14)}</div><button type="button" class="del" data-envdel="${i}" title="删除" style="width:30px;height:30px;display:grid;place-items:center;color:var(--muted)">${icon("trash", 17)}</button></div>`).join("") : "" }),
+    item("tools", "wrench", "工具", { add: "tools", folded: true, desc: `添加智能体可以使用的工具（来自<a href="科学工具箱.html">科学工具箱</a>中能力类型为「工具」的条目）`, body: cardList(d.tools, "暂未添加工具，点击右侧 + 添加", (n) => { const s = findBy(CATALOG.tool, n); return `<div class="card tall"><div class="cm"><b>${esc(n)}<span class="kind">工具</span></b><p>${esc(s.d)}</p></div><button type="button" class="del" data-del="tools|${esc(n)}" title="移除">${icon("trash", 19)}</button></div>` }) }),
+    item("atype", "bot", "智能体类型", { right: sel("agentType", ["独立智能体", "团队智能体"], d.agentType, "sm"), add: d.agentType === "团队智能体" ? "subAgents" : "",
+      desc: "根据使用场景选择模式，选择「团队智能体」后，可在下方配置它可调用的其他科研智能体，实现复杂任务的拆解与协作",
+      body: d.agentType === "团队智能体" ? cardList(d.subAgents, "还没有可调用的科研智能体，点击右侧 + 添加", (n) => { const s = findBy(CATALOG.agents, n); return `<div class="card tall"><div class="cm"><b>${esc(n)}</b><p>${esc(s.d)}</p></div><button type="button" class="del" data-del="subAgents|${esc(n)}" title="移除">${icon("trash", 19)}</button></div>` }) : "" }),
+    item("mcps", "cloud", "MCP服务器", { add: "mcps", desc: `添加智能体可以连接的 MCP 服务器（来自<a href="科学工具箱.html">科学工具箱</a>，一个工具箱就是一个 MCP 服务）`, body: cardList(d.mcps, "暂未添加 MCP 服务器，点击右侧 + 添加", (n) => { const s = findBy(CATALOG.mcp, n); return `<div class="card tall"><div class="cm"><b>${esc(n)}<span class="kind">MCP 服务</span></b><p>${esc(s.d)}${n === "远程计算" ? " 凭据由密钥库注入，不经过大模型。" : ""}</p></div><button type="button" class="del" data-del="mcps|${esc(n)}" title="移除">${icon("trash", 19)}</button></div>` }) }),
+    item("web", "globe", "联网搜索", { fold: false, right: sw("web", d.web), desc: "开启后，智能体在对话中可以搜索网络获取实时信息" }),
+    item("think", "brain", "深度思考", { fold: false, right: sw("think", d.think), desc: "开启后，用户可在对话输入框切换深度思考；开启会消耗更多 Token，但提升推理质量" })
+  ].join("")
+
+  const P = d.params
+  const adv = [
+    item("params", "sliders", "模型参数", { folded: true, body: `<div class="params">
+      <div class="param"><span>温度<small>越高越发散</small></span><input type="range" min="0" max="2" step="0.1" data-p="temperature" value="${P.temperature}" /><input type="number" min="0" max="2" step="0.1" data-p="temperature" value="${P.temperature}" /></div>
+      <div class="param"><span>Top P<small>核采样阈值</small></span><input type="range" min="0" max="1" step="0.05" data-p="top_p" value="${P.top_p}" /><input type="number" min="0" max="1" step="0.05" data-p="top_p" value="${P.top_p}" /></div>
+      <div class="param"><span>最大输出 Token</span><input type="range" min="512" max="32768" step="512" data-p="max_tokens" value="${P.max_tokens}" /><input type="number" min="512" max="32768" step="512" data-p="max_tokens" value="${P.max_tokens}" /></div>
+      <div class="param"><span>携带上下文轮数</span><input type="range" min="1" max="50" step="1" data-p="turns" value="${P.turns}" /><input type="number" min="1" max="50" data-p="turns" value="${P.turns}" /></div></div>` }),
+    item("exec", "play", "执行控制", { desc: "多步执行时需要用户确认的节点，以及单次任务的步数和时间上限", body: `
+      <div class="kvrow"><span>确认节点</span><div><div class="chips" style="margin-top:0">${CONFIRMS.map((x) => `<button type="button" class="chip ${d.confirm.includes(x) ? "on" : ""}" data-chip="confirm|${esc(x)}">${esc(x)}</button>`).join("")}</div><p class="tip">执行到选中的节点前暂停，请用户确认；不选则自动执行到结束再汇报</p></div></div>
+      <div class="kvrow"><span>最大步数</span><div class="row"><input class="inp" type="number" min="5" max="200" data-f="maxSteps" value="${d.maxSteps}" style="width:120px" /><span class="tip" style="margin:0">超过后暂停并请用户决定是否继续</span></div></div>
+      <div class="kvrow"><span>单次超时</span><div>${sel("timeout", TIMEOUTS, d.timeout, "sm")}</div></div>` }),
+    item("guards", "shield", "安全护栏", { add: "guards", right: `<button type="button" class="add" data-act="guardcfg" title="护栏设置">${icon("gear", 19)}</button>`,
+      desc: "为智能体挂载安全护栏，对输入和输出进行过滤。护栏在每次智能体响应前后执行。",
+      body: d.guards.length ? `<div class="cards">${d.guards.map((n) => { const g = GUARDS.find((x) => x[0] === n); return `<div class="card"><div class="cm"><b>${esc(n)}<span class="kind">${esc(g[1])}</span></b><p>${esc(g[2])} · 命中时${esc(d.guardAction)}</p></div><button type="button" class="del" data-del="guards|${esc(n)}" title="移除">${icon("trash", 19)}</button></div>` }).join("")}</div>` : `<p class="none">暂未挂载护栏，点击右侧 + 添加</p>` }),
+    item("learn", "bookopen", "学习系统", { fold: false, right: sw("learn", d.learn), desc: "开启后，将允许此智能体从历史对话中学习" }),
+    item("sessionKb", "book", "会话知识库", { fold: false, right: sw("sessionKb", d.sessionKb), desc: "启用后，用户上传的文件将自动嵌入知识库供智能体检索；关闭后，文件仅存储在沙箱中" }),
+    item("genUI", "window", "生成式 UI", { fold: false, right: sw("genUI", d.genUI), desc: "启用后，智能体将自行判断是否在回复中输出界面（使用科学工具箱中的前端组件，如图表、流程图、分子 3D）" })
+  ].join("")
+
+  const perm = [
+    item("vis", "eye", "可见性", { fold: false, right: sel("visibility", VIS, d.visibility, "sm"), desc: `设置资源的组织级可见范围${qmark(VIS.map((v) => `${v[0]}：${v[1]}`).join("\n"))}` }),
+    item("acl", "lock", "访问控制", { add: "acl", desc: "配置指定用户的访问权限", body: d.acl.map((a, i) => `<div class="acl"><span class="av">${esc(a[0][0])}</span><div class="cm"><b>${esc(a[0])}</b><p>${esc(a[1])}</p></div>${i === 0 ? `<span class="role">${esc(a[2])}</span>` : `<div class="sel sm">${`<select data-acl="${i}">${ROLES.map((r) => `<option ${r === a[2] ? "selected" : ""}>${r}</option>`).join("")}</select>`}${icon("down", 14)}</div><button type="button" class="del" data-acldel="${i}" title="移除" style="width:30px;height:30px;display:grid;place-items:center;color:var(--muted)">${icon("trash", 18)}</button>`}</div>`).join("") })
+  ].join("")
+
+  box.innerHTML = group("basic", "基础设置", basic) + group("cap", "能力扩展", cap) + group("adv", "高级设置", adv) + group("perm", "权限设置", perm)
+  box.scrollTop = top
+}
+function renderTitle(editing) {
+  const row = document.getElementById("title-row")
+  row.innerHTML = editing
+    ? `<input id="name-inp" maxlength="30" value="${esc(draft.name)}" aria-label="智能体名称" />`
+    : `<b title="${esc(draft.name)}">${esc(draft.name)}</b><button class="icon-btn" type="button" id="name-edit" title="编辑名称">${icon("edit", 18)}</button>`
+  if (editing) { const i = document.getElementById("name-inp"); i.focus(); i.select() }
+  const av = document.getElementById("avatar")
+  av.className = `avatar ${draft.color}`
+  av.innerHTML = icon(draft.icon, 22)
+  document.title = `${draft.name} · 科研智能体配置 · AI4S`
+}
+
+/* ========== 调试预览 ========== */
+function hexA(hex, a) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || "")
+  if (!m) return "#fff"
+  const n = parseInt(m[1], 16)
+  return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a / 100})`
+}
+function welcomeText() { return draft.welcome.trim() || `你好，我是${draft.name}。${draft.desc ? draft.desc : "告诉我你要完成的科研任务。"}` }
+function renderChat() {
+  const box = document.getElementById("chat")
+  box.parentElement.style.background = hexA(draft.bg, draft.alpha)
+  const w = draft.welcomeMode === "卡片模式"
+    ? `<div class="bubble card"><span class="avatar ${draft.color}">${icon(draft.icon, 20)}</span><div><b>${esc(draft.name)}</b>${esc(welcomeText())}</div></div>`
+    : `<div class="bubble">${esc(welcomeText())}</div>`
+  const qs = draft.questions.filter((q) => q.trim())
+  const msgs = chat.map((m) => {
+    if (m.role === "me") return `<div class="bubble me">${esc(m.text)}</div>`
+    if (m.pending) return `<div class="bubble"><span class="dots3"><i></i><i></i><i></i></span></div>`
+    return `${m.trace && m.trace.length ? `<details class="trace" ${m.open ? "open" : ""}><summary>${icon("down", 14)}执行过程 · ${m.trace.length} 步</summary><ul>${m.trace.map((t) => `<li><em class="${t[0]}">${esc(t[1])}</em>${esc(t[2])}</li>`).join("")}</ul></details>` : ""}<div class="bubble">${esc(m.text)}</div>`
+  }).join("")
+  box.innerHTML = w + (qs.length && !chat.length ? `<div class="sugs">${qs.map((q) => `<button type="button" class="sug" data-sug="${esc(q)}">${esc(q)}</button>`).join("")}</div>` : "") + msgs
+  box.scrollTop = box.scrollHeight
+  document.getElementById("think-slot").innerHTML = draft.think ? `<button type="button" class="cbtn think ${thinkOn ? "on" : ""}" data-pv="think">${icon("brain", 15)}深度思考</button>` : ""
+  document.getElementById("pv-send").disabled = busy || !document.getElementById("pv-q").value.trim()
+}
+// 调试回复是模拟的：按问题里的关键词匹配已配置的知识库、技能、工具与可调用智能体，展示执行过程
+function overlap(q, name) {
+  const words = name.replace(/[（）()·/、]/g, " ").split(/\s+/).filter(Boolean)
+  return words.some((w) => w.length >= 2 && [...Array(Math.max(1, w.length - 1)).keys()].some((i) => q.includes(w.slice(i, i + 2))))
+}
+function mockReply(q) {
+  const d = draft
+  const trace = []
+  if (thinkOn && d.think) trace.push(["ok", "思考", "拆解问题、确定需要的信息与步骤"])
+  if (d.web && /近|最新|今年|趋势|新闻|\d{4}/.test(q)) trace.push(["", "联网搜索", `搜索「${q.slice(0, 18)}」相关的最新信息`])
+  d.kbs.forEach((k) => { if (overlap(q, k) || d.kbs.length === 1) trace.push(["kb", "知识库", `检索「${k}」，命中 ${3 + (k.length % 4)} 个片段`]) })
+  const sk = d.skills.filter((s) => overlap(q, s))
+  const skill = sk[0] || (d.skills.length ? d.skills[0] : null)
+  if (skill) trace.push(["sk", "技能", `读取「${skill}」的 SKILL.md，按其步骤执行`])
+  const caps = [...d.mcps, ...d.tools].filter((t) => overlap(q, t)).slice(0, 2)
+  if (!caps.length && [...d.mcps, ...d.tools].length) caps.push([...d.mcps, ...d.tools][0])
+  caps.forEach((t) => trace.push(["", d.mcps.includes(t) ? "MCP" : "工具", t === "远程计算" ? "估算核时，调试环境不真正提交作业" : `调用「${t}」`]))
+  if (d.agentType === "团队智能体" && d.subAgents.length) {
+    const a = d.subAgents.find((x) => overlap(q, x)) || d.subAgents[0]
+    trace.push(["ag", "分派", `把子任务交给「${a}」执行并汇总结果`])
+  }
+  if (d.confirm.length && caps.some((t) => t === "远程计算")) trace.push(["ok", "确认", `${d.confirm[0]}请用户确认`])
+  if (d.guards.length) trace.push(["ok", "护栏", `${d.guards.join("、")}：通过`])
+  const lines = []
+  if (!d.prompt.trim()) lines.push("（提示词还是空的，下面的回复只基于模型默认行为。）")
+  lines.push(`收到。关于「${q}」，我会这样处理：`)
+  if (skill) lines.push(`按「${skill}」的步骤${caps.length ? `，调用 ${caps.join("、")}` : ""}完成分析；`)
+  else if (caps.length) lines.push(`调用 ${caps.join("、")} 完成分析；`)
+  else lines.push("当前没有绑定技能或工具，只能基于提示词和模型给出建议；")
+  lines.push("结果会整理成结构化结论，并列出引用来源。")
+  lines.push("\n这是调试环境的模拟回复，发布后在科研超级中枢里会真实执行。")
+  return { role: "ai", text: lines.join("\n"), trace, open: true }
+}
+function ask(q) {
+  q = q.trim()
+  if (!q || busy) return
+  chat.forEach((m) => { m.open = false })
+  chat.push({ role: "me", text: q })
+  chat.push({ role: "ai", pending: true })
+  busy = true
+  document.getElementById("pv-q").value = ""
+  renderChat()
+  setTimeout(() => {
+    chat.pop()
+    chat.push(mockReply(q))
+    busy = false
+    renderChat()
+  }, 650)
+}
+
+/* ========== 选择弹窗 ========== */
+const PICKERS = {
+  kbs: { title: "添加知识库", list: () => KBS.map((k) => ({ n: k[0], d: `${k[2]} · ${k[1]}` })), note: "知识库在空间的资料管理中维护，这里只选择智能体可检索的范围" },
+  skills: { title: "添加技能", list: () => CATALOG.skills.map((s) => ({ n: s.n, d: s.d, tag: `${s.f} · ${srcLabel(s.s)}`, f: s.f })), note: "技能依赖的工具需要同时添加，发布检查会提示", filter: true },
+  tools: { title: "添加工具", list: () => CATALOG.tool.map((s) => ({ n: s.n, d: s.d, tag: s.f })), note: "前端组件无需添加，开启「生成式 UI」后自动可用" },
+  mcps: { title: "添加 MCP 服务器", list: () => CATALOG.mcp.map((s) => ({ n: s.n, d: s.d, tag: s.f, f: s.f })), note: "一个 MCP 服务器对应科学工具箱中的一个工具箱，添加后其中的工具都可调用", filter: true },
+  subAgents: { title: "添加可调用的科研智能体", list: () => CATALOG.agents.map((s) => ({ n: s.n, d: s.d, tag: s.f, f: s.f })), note: "团队智能体会把子任务分派给这些科研智能体执行", filter: true },
+  guards: { title: "添加安全护栏", list: () => GUARDS.map((g) => ({ n: g[0], d: g[2], tag: g[1] })), note: "护栏在每次响应前后执行" },
+  acl: { title: "添加成员", list: () => PEOPLE.filter((p) => !draft.acl.some((a) => a[0] === p[0])).map((p) => ({ n: p[0], d: p[1] })), note: "新成员默认「可使用」，添加后可调整权限" }
+}
+let picking = null
+function openPicker(key) {
+  const p = PICKERS[key]
+  const cur = key === "acl" ? [] : draft[key]
+  picking = { key, sel: new Set(cur), q: "", f: "全部" }
+  paintPicker()
+}
+function paintPicker() {
+  const { key, sel: s, q, f } = picking
+  const p = PICKERS[key]
+  const all = p.list()
+  const fields = p.filter ? ["全部", ...new Set(all.map((x) => x.f).filter(Boolean))] : []
+  const list = all.filter((x) => (f === "全部" || x.f === f) && (!q || `${x.n} ${x.d} ${x.tag || ""}`.toLowerCase().includes(q.toLowerCase())))
+  const m = document.getElementById("mask")
+  m.hidden = false
+  m.innerHTML = `<div class="dlg" role="dialog" aria-label="${esc(p.title)}">
+    <header><h3>${esc(p.title)}</h3><button class="icon-btn" type="button" data-close>${icon("close", 18)}</button></header>
+    <label class="dsearch">${icon("search", 16)}<input id="pk-q" placeholder="搜索名称或说明" value="${esc(q)}" /></label>
+    ${fields.length > 2 ? `<div class="dfilter">${fields.map((x) => `<button type="button" class="chip ${x === f ? "on" : ""}" data-pkf="${esc(x)}">${esc(x)}</button>`).join("")}</div>` : ""}
+    <p class="dnote">${esc(p.note)}</p>
+    <div class="dbody">${list.map((x) => `<label class="pick"><input type="checkbox" data-pk="${esc(x.n)}" ${s.has(x.n) ? "checked" : ""} /><div><b>${esc(x.n)}${x.tag ? `<small>${esc(x.tag)}</small>` : ""}</b><p>${esc(x.d)}</p></div></label>`).join("") || `<p class="none" style="padding:20px 0">没有匹配的条目</p>`}</div>
+    <footer><span class="note" id="pk-note">已选 ${s.size} 个</span><button class="btn ghost" type="button" data-close>取消</button><button class="btn" type="button" data-pk-ok>确定</button></footer>
+  </div>`
+}
+function applyPicker() {
+  const { key, sel: s } = picking
+  if (key === "acl") s.forEach((n) => { const p = PEOPLE.find((x) => x[0] === n); draft.acl.push([p[0], p[1], "可使用"]) })
+  else draft[key] = [...s]
+  closeMask()
+  touch()
+  renderCfg()
+  renderChat()
+}
+function closeMask() { const m = document.getElementById("mask"); m.hidden = true; m.innerHTML = ""; picking = null }
+function dialog(title, inner, foot) {
+  const m = document.getElementById("mask")
+  m.hidden = false
+  m.innerHTML = `<div class="dlg" role="dialog" aria-label="${esc(title)}"><header><h3>${esc(title)}</h3><button class="icon-btn" type="button" data-close>${icon("close", 18)}</button></header>${inner}<footer>${foot}</footer></div>`
+}
+
+/* ========== 发布 ========== */
+function section(text, head) {
+  const re = new RegExp(`^##\\s*${head}[^\\n]*\\n([\\s\\S]*?)(?=^##\\s|$(?![\\s\\S]))`, "m")
+  const m = re.exec(text)
+  return m ? m[1].split("\n").map((s) => s.replace(/^\s*(?:[-*]|\d+[.、)])\s*/, "").trim()).filter(Boolean) : []
+}
+function skillDeps() {
+  // 技能依赖的工具需在工具箱中存在；这里只提示技能引用了但智能体没有添加的 MCP 服务 / 工具
+  const have = new Set([...draft.mcps, ...draft.tools])
+  const miss = []
+  draft.skills.forEach((n) => { const s = findBy(CATALOG.skills, n); (s.t || []).forEach((t) => { if (!have.has(t) && !miss.includes(t)) miss.push(t) }) })
+  return miss
+}
+function checks() {
+  const d = draft
+  const nameOk = d.name.trim() && d.name !== "未命名科研智能体"
+  const caps = d.skills.length + d.tools.length + d.mcps.length + d.subAgents.length
+  return [
+    [nameOk, nameOk ? `名称：${d.name}` : "请修改默认名称（点标题旁的编辑按钮）"],
+    [d.prompt.trim().length >= 20, d.prompt.trim().length >= 20 ? `提示词 ${d.prompt.length} 字` : "提示词至少 20 字，说明它的职责、工作流程和执行边界"],
+    [d.scenes.length > 0, d.scenes.length ? `分类：${d.field}${d.dirs.length ? " · " + d.dirs.join("、") : ""} · ${d.scenes.join("、")}` : "请在「描述与分类」里至少选择一个应用场景"],
+    [caps > 0, caps ? `能力：技能 ${d.skills.length} · 工具 ${d.tools.length} · MCP ${d.mcps.length}${d.agentType === "团队智能体" ? ` · 科研智能体 ${d.subAgents.length}` : ""}` : "请至少添加一个技能、工具或 MCP 服务器"],
+    [d.agentType !== "团队智能体" || d.subAgents.length > 0, d.agentType === "团队智能体" && !d.subAgents.length ? "团队智能体需要至少一个可调用的科研智能体" : `类型：${d.agentType} · ${d.auto}`]
+  ]
+}
+function openPublish() {
+  const cs = checks()
+  const ok = cs.every((c) => c[0])
+  const miss = skillDeps()
+  const ver = published ? `V1.${pubLog.length}` : "V1.0"
+  dialog("发布科研智能体", `<div class="form">
+      <ul class="checklist">${cs.map(([g, t]) => `<li class="${g ? "good" : "bad"}">${icon(g ? "check" : "close", 15, 2.2)}${esc(t)}</li>`).join("")}${miss.length ? `<li class="bad">${icon("help", 15)}技能用到但未添加：${esc(miss.join("、"))}（可发布，运行时这些步骤会跳过）</li>` : ""}</ul>
+      <label>版本号<input class="inp" id="pub-ver" value="${ver}" /></label>
+      <label>更新说明<textarea id="pub-note" placeholder="例如：首次发布">${published ? "" : "首次发布"}</textarea></label>
+      <p class="tip">发布后按「${esc(draft.visibility)}」出现在科研智能体页面，可被加载到空间，由 Research Agent 分派或 @${esc(draft.name)} 调用。</p>
+    </div>`,
+    `<span class="note">${ok ? "检查通过" : "有未完成的项，请先补充"}</span><button class="btn ghost" type="button" data-close>取消</button><button class="btn" type="button" data-pub-ok ${ok ? "" : "disabled"}>${icon("send", 15)}确认发布</button>`)
+}
+function payload(ver) {
+  const d = draft
+  const steps = section(d.prompt, "工作流程")
+  const guard = [...section(d.prompt, "执行边界"), ...d.guards.map((g) => `安全护栏：${g}`)]
+  const goal = section(d.prompt, "目标")[0] || d.desc
+  return {
+    name: d.name.trim(), desc: d.desc.trim() || goal || "用户创建的科研智能体。", goal, field: d.field, dirs: d.dirs, scenes: d.scenes,
+    src: d.visibility === "仅自己可见" ? "个人创建" : "团队共享", steps: steps.length ? steps : d.skills.map((s) => `按「${s}」执行`),
+    tools: d.tools, mcps: d.mcps, skills: d.skills, guard, model: d.model === "组织默认" ? "平台默认大模型" : d.model, maxSteps: +d.maxSteps || 30, timeout: d.timeout,
+    confirm: d.confirm, icon: d.icon === "bot" ? "network" : d.icon, color: d.color, ver
+  }
+}
+function doPublish() {
+  const ver = document.getElementById("pub-ver").value.trim() || "V1.0"
+  const note = document.getElementById("pub-note").value.trim() || "更新配置"
+  published = { ver, note, at: "2026-09-30 " + new Date().toTimeString().slice(0, 5) }
+  pubLog.unshift(published)
+  dirty = false
+  paintPublishBadge()
+  const data = payload(ver)
+  dialog("已发布", `<div class="form"><p>「${esc(data.name)}」${esc(ver)} 已发布，可以回到科研智能体页面查看，或继续调试。</p></div>`,
+    `<span class="note"></span><button class="btn ghost" type="button" data-close>继续编辑</button><a class="btn" id="go-list" href="科研智能体.html#created=${encodeURIComponent(JSON.stringify(data))}">回到科研智能体</a>`)
+}
+function yaml() {
+  const d = payload(published ? published.ver : "草稿")
+  const list = (k, a) => a.length ? `${k}:\n${a.map((x) => `  - ${x}`).join("\n")}` : `${k}: []`
+  return [`name: ${d.name}`, `version: ${d.ver}`, `field: ${d.field}`, list("directions", d.dirs), list("scenes", d.scenes), `model: ${d.model}`, `max_steps: ${d.maxSteps}`, `timeout: ${d.timeout}`,
+    list("confirm", d.confirm), list("skills", d.skills), list("mcp_servers", d.mcps), list("tools", d.tools),
+    list("builtin_disabled", BUILTIN.map((b) => b[0]).filter((n) => !draft.builtin[n])), list("knowledge", draft.kbs), list("sub_agents", draft.agentType === "团队智能体" ? draft.subAgents : []),
+    list("guardrails", draft.guards), `web_search: ${draft.web}`, `deep_thinking: ${draft.think}`, `generative_ui: ${draft.genUI}`, `visibility: ${draft.visibility}`,
+    list("env", draft.envs.filter((e) => e.k).map((e) => `${e.k}${e.t === "密钥" ? " (secret, 由密钥库注入)" : ""}`)), "prompt: |", ...draft.prompt.split("\n").map((l) => "  " + l)].join("\n")
+}
+
+/* ========== 分析 ========== */
+function renderAna() {
+  const a = document.getElementById("ana")
+  a.innerHTML = `<h2>运行分析</h2>
+    <div class="mgrid"><div class="mbox"><b>${published ? 0 : "—"}</b><span>累计运行</span></div><div class="mbox"><b>—</b><span>成功率</span></div><div class="mbox"><b>—</b><span>平均步数</span></div><div class="mbox"><b>${chat.filter((m) => m.role === "me").length}</b><span>本次调试提问</span></div></div>
+    <div class="ana-empty">${published ? `已发布 ${esc(published.ver)}，被 Research Agent 分派或 @ 调用后，这里展示运行次数、成功率、工具调用分布和失败原因。` : "发布后，这里展示运行次数、成功率、工具调用分布和失败原因。"}</div>`
+}
+
+/* ========== 事件 ========== */
+const PROMPT_TPL = `你是「${"{名称}"}」，服务于……（说明面向的课题和用户）。
+
+## 核心职责
+- ……
+
+## 工作流程
+1. 明确任务目标和输入数据
+2. ……
+3. 汇总结果，附引用来源
+
+## 执行边界
+- 结论必须附来源，不编造数据
+- 提交计算作业、删除数据前先请用户确认`
+const RESTRUCTURE = new Set(["field", "agentType", "welcomeMode", "visibility", "model", "timeout"])
+function setField(path, val) {
+  if (path.startsWith("builtin.")) draft.builtin[path.slice(8)] = val
+  else draft[path] = val
+}
+const cfg = document.getElementById("cfg")
+cfg.addEventListener("input", (e) => {
+  const t = e.target
+  if (t.dataset.f && t.type !== "checkbox" && t.tagName !== "SELECT") {
+    const v = t.type === "number" ? t.value : t.value
+    setField(t.dataset.f, t.type === "range" ? +v : v)
+    const c = cfg.querySelector(`[data-cnt="${t.dataset.f}"]`)
+    if (c) c.textContent = t.value.length
+    if (t.dataset.f === "alpha") t.nextElementSibling.textContent = `透明度(${t.value}%)`
+    if (t.dataset.f === "bg") { const l = t.closest(".color"); l.querySelector("i").style.background = t.value; l.querySelector("span").textContent = t.value }
+    touch()
+    if (["welcome", "bg", "alpha", "desc"].includes(t.dataset.f)) renderChat()
+  } else if (t.dataset.q !== undefined) {
+    draft.questions[+t.dataset.q] = t.value
+    cfg.querySelector(`[data-qc="${t.dataset.q}"]`).textContent = t.value.length
+    touch(); renderChat()
+  } else if (t.dataset.env) {
+    const [i, k] = t.dataset.env.split("|")
+    if (k !== "t") { draft.envs[+i][k] = t.value; touch() }
+  } else if (t.dataset.p) {
+    const v = +t.value
+    draft.params[t.dataset.p] = v
+    cfg.querySelectorAll(`[data-p="${t.dataset.p}"]`).forEach((x) => { if (x !== t) x.value = v })
+    touch()
+  }
+})
+cfg.addEventListener("change", (e) => {
+  const t = e.target
+  if (t.id === "prompt-file") {
+    const f = t.files && t.files[0]
+    if (!f) return
+    const r = new FileReader()
+    r.onload = () => { draft.prompt = String(r.result).slice(0, 20000); touch(); renderCfg(); toast(`已导入 ${f.name}`) }
+    r.readAsText(f)
+    return
+  }
+  if (t.dataset.f && (t.type === "checkbox" || t.tagName === "SELECT")) {
+    const f = t.dataset.f
+    setField(f, t.type === "checkbox" ? t.checked : t.value)
+    if (f === "field") draft.dirs = []
+    if (f === "agentType" && t.value === "团队智能体") fold["i:atype"] = false
+    touch()
+    if (RESTRUCTURE.has(f)) renderCfg()
+    renderChat()
+  } else if (t.dataset.f === "maxSteps") {
+    draft.maxSteps = Math.max(5, Math.min(200, +t.value || 30)); t.value = draft.maxSteps
+  } else if (t.dataset.env && t.dataset.env.endsWith("|t")) {
+    draft.envs[+t.dataset.env.split("|")[0]].t = t.value; touch(); renderCfg()
+  } else if (t.dataset.acl) {
+    draft.acl[+t.dataset.acl][2] = t.value; touch()
+  }
+})
+cfg.addEventListener("click", (e) => {
+  const b = e.target.closest("button")
+  if (!b) return
+  if (b.dataset.fold) { const k = b.dataset.fold; const el = b.closest(k.startsWith("g:") ? ".group" : ".item"); fold[k] = !el.classList.contains("fold"); el.classList.toggle("fold", fold[k]); return }
+  if (b.dataset.chip) {
+    const [k, v] = b.dataset.chip.split("|")
+    const arr = draft[k]
+    const i = arr.indexOf(v)
+    if (i >= 0) arr.splice(i, 1); else arr.push(v)
+    b.classList.toggle("on", i < 0)
+    touch(); return
+  }
+  if (b.dataset.del) {
+    const [k, v] = b.dataset.del.split("|")
+    draft[k] = draft[k].filter((x) => x !== v)
+    touch(); renderCfg(); renderChat(); return
+  }
+  if (b.dataset.qdel !== undefined) { draft.questions.splice(+b.dataset.qdel, 1); touch(); renderCfg(); renderChat(); return }
+  if (b.dataset.envdel !== undefined) { draft.envs.splice(+b.dataset.envdel, 1); touch(); renderCfg(); return }
+  if (b.dataset.acldel !== undefined) { draft.acl.splice(+b.dataset.acldel, 1); touch(); renderCfg(); return }
+  if (b.dataset.add) {
+    const k = b.dataset.add
+    fold["i:" + (k === "subAgents" ? "atype" : k)] = false
+    if (k === "envs") { draft.envs.push({ k: "", v: "", t: "密钥" }); touch(); renderCfg(); const ins = cfg.querySelectorAll("[data-env$='|k']"); ins[ins.length - 1].focus(); return }
+    openPicker(k); return
+  }
+  const act = b.dataset.act
+  if (act === "qadd") { if (draft.questions.length < 10) { draft.questions.push(""); touch(); renderCfg(); const q = cfg.querySelectorAll("[data-q]"); q[q.length - 1].focus() } }
+  else if (act === "tpl") {
+    if (draft.prompt.trim() && !confirmReplace()) return
+    draft.prompt = PROMPT_TPL.replace("{名称}", draft.name); touch(); renderCfg()
+  } else if (act === "guardcfg") {
+    dialog("护栏设置", `<div class="form"><label>命中后的处理<div class="sel"><select id="g-act">${["拦截并提示", "仅记录", "改写后放行"].map((x) => `<option ${x === draft.guardAction ? "selected" : ""}>${x}</option>`).join("")}</select>${icon("down", 16)}</div></label><p class="tip">对所有已挂载的护栏生效；「仅记录」会在运行记录里标出命中内容。</p></div>`,
+      `<span class="note"></span><button class="btn ghost" type="button" data-close>取消</button><button class="btn" type="button" data-guard-ok>保存</button>`)
+  }
+})
+function confirmReplace() { return typeof window.confirm === "function" ? window.confirm("将覆盖当前提示词，继续吗？") : true }
+
+// 标题
+document.getElementById("title-row").addEventListener("click", (e) => { if (e.target.closest("#name-edit")) renderTitle(true) })
+document.getElementById("title-row").addEventListener("keydown", (e) => {
+  if (e.target.id !== "name-inp") return
+  if (e.key === "Enter") e.target.blur()
+  if (e.key === "Escape") { e.target.value = draft.name; e.target.blur() }
+})
+document.getElementById("title-row").addEventListener("focusout", (e) => {
+  if (e.target.id !== "name-inp") return
+  const v = e.target.value.trim()
+  if (v && v !== draft.name) { draft.name = v; touch(); renderChat() }
+  renderTitle(false)
+})
+document.getElementById("avatar").addEventListener("click", () => {
+  const i = AVATAR_ICONS.indexOf(draft.icon)
+  draft.icon = AVATAR_ICONS[(i + 1) % AVATAR_ICONS.length]
+  if (draft.icon === AVATAR_ICONS[0]) draft.color = COLORS[(COLORS.indexOf(draft.color) + 1) % COLORS.length]
+  touch(); renderTitle(false); renderChat()
+})
+
+// 配置 / 分析
+document.querySelector(".seg").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-mode]")
+  if (!b) return
+  mode = b.dataset.mode
+  document.querySelectorAll(".seg button").forEach((x) => x.classList.toggle("on", x === b))
+  const ana = mode === "ana"
+  document.getElementById("main").hidden = ana
+  document.getElementById("ana").hidden = !ana
+  if (ana) renderAna()
+})
+// 分析区在 main 外无法显示，挂到 body 下
+document.body.insertBefore(document.getElementById("ana"), document.getElementById("mask"))
+
+// 顶部菜单
+function closeMenus() { document.querySelectorAll(".menu").forEach((m) => { m.hidden = true }) }
+document.addEventListener("click", (e) => {
+  const mb = e.target.closest("[data-menu]")
+  if (mb) {
+    const m = document.getElementById(mb.dataset.menu)
+    const open = m.hidden
+    closeMenus()
+    if (open) {
+      if (m.id === "hist-menu") document.getElementById("hist-list").innerHTML = pubLog.length ? pubLog.map((h, i) => `<div class="hrow"><b>${esc(h.ver)}${i === 0 ? "<small>当前</small>" : ""}</b><span>${esc(h.at)} · ${esc(h.note)}</span></div>`).join("") : `<p class="none" style="padding:10px 14px">还没有发布记录。发布后每个版本会记在这里。</p>`
+      m.hidden = false
+    }
+    return
+  }
+  if (!e.target.closest(".menu")) closeMenus()
+})
+document.getElementById("more-menu").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-more]")
+  if (!b) return
+  closeMenus()
+  const k = b.dataset.more
+  if (k === "yaml") dialog("agent.yaml", `<pre class="yaml">${esc(yaml())}</pre>`, `<span class="note">发布时按此配置生成，密钥类环境变量只记录名称</span><button class="btn" type="button" data-close>关闭</button>`)
+  else if (k === "template") { const keep = { acl: draft.acl, visibility: draft.visibility }; draft = Object.assign(blankDraft(), JSON.parse(JSON.stringify(SAMPLE)), keep); chat = []; touch(); renderAll(); toast("已用「材料研发助手」示例填充，可在此基础上修改") }
+  else if (k === "reset") {
+    dialog("清空草稿", `<div class="form"><p>清空后，当前的所有配置和调试对话都会丢失${published ? "（已发布的版本不受影响）" : ""}。</p></div>`, `<span class="note"></span><button class="btn ghost" type="button" data-close>取消</button><button class="btn danger" type="button" data-reset-ok>清空</button>`)
+  }
+})
+
+// 发布
+document.getElementById("publish").addEventListener("click", openPublish)
+
+// 弹窗
+const mask = document.getElementById("mask")
+mask.addEventListener("click", (e) => {
+  if (e.target === mask || e.target.closest("[data-close]")) { closeMask(); return }
+  const f = e.target.closest("[data-pkf]")
+  if (f) { picking.f = f.dataset.pkf; paintPicker(); return }
+  if (e.target.closest("[data-pk-ok]")) { applyPicker(); return }
+  if (e.target.closest("[data-pub-ok]")) { doPublish(); return }
+  if (e.target.closest("[data-guard-ok]")) { draft.guardAction = document.getElementById("g-act").value; closeMask(); touch(); renderCfg(); return }
+  if (e.target.closest("[data-reset-ok]")) { draft = blankDraft(); chat = []; dirty = false; closeMask(); renderAll(); paintPublishBadge(); toast("草稿已清空"); return }
+  if (e.target.closest("[data-leave-ok]")) { location.href = "科研智能体.html"; return }
+  if (e.target.closest("[data-bot-ok]")) { applyBot(); return }
+})
+mask.addEventListener("input", (e) => {
+  if (e.target.id === "pk-q") {
+    picking.q = e.target.value
+    const pos = e.target.selectionStart
+    paintPicker()
+    const i = document.getElementById("pk-q"); i.focus(); i.setSelectionRange(pos, pos)
+  }
+})
+mask.addEventListener("change", (e) => {
+  const c = e.target.closest("[data-pk]")
+  if (!c) return
+  if (c.checked) picking.sel.add(c.dataset.pk); else picking.sel.delete(c.dataset.pk)
+  document.getElementById("pk-note").textContent = `已选 ${picking.sel.size} 个`
+})
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !mask.hidden) closeMask() })
+
+// 返回：有未发布的修改时确认
+document.getElementById("back").addEventListener("click", (e) => {
+  if (!dirty) return
+  e.preventDefault()
+  dialog("离开配置页", `<div class="form"><p>${published ? "有修改还没有发布，" : "这个科研智能体还没有发布，"}离开后当前配置会丢失。</p></div>`,
+    `<span class="note"></span><button class="btn ghost" type="button" data-close>继续编辑</button><button class="btn danger" type="button" data-leave-ok>离开</button>`)
+})
+
+// 拖动分隔条
+;(function splitter() {
+  const sp = document.getElementById("splitter")
+  const main = document.getElementById("main")
+  let on = false
+  sp.addEventListener("mousedown", (e) => { on = true; e.preventDefault(); document.body.style.cursor = "col-resize" })
+  document.addEventListener("mousemove", (e) => {
+    if (!on) return
+    const w = Math.max(520, Math.min(e.clientX - main.getBoundingClientRect().left, main.clientWidth - 380))
+    main.style.setProperty("--lw", w + "px")
+  })
+  document.addEventListener("mouseup", () => { on = false; document.body.style.cursor = "" })
+})()
+
+// 调试预览
+const pvq = document.getElementById("pv-q")
+pvq.addEventListener("input", () => { document.getElementById("pv-send").disabled = busy || !pvq.value.trim() })
+pvq.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); ask(pvq.value) } })
+document.getElementById("pv-send").addEventListener("click", () => ask(pvq.value))
+document.querySelector(".pv").addEventListener("click", (e) => {
+  const s = e.target.closest("[data-sug]")
+  if (s) { ask(s.dataset.sug); return }
+  const b = e.target.closest("[data-pv]")
+  if (!b) return
+  const k = b.dataset.pv
+  if (k === "new" || k === "clear") { if (busy) return; chat = []; renderChat(); toast(k === "new" ? "已开始新会话" : "对话已清空") }
+  else if (k === "wide") { const m = document.getElementById("main"); m.classList.toggle("wide"); b.title = m.classList.contains("wide") ? "展开配置栏" : "收起配置栏" }
+  else if (k === "think") { thinkOn = !thinkOn; renderChat() }
+  else if (k === "attach") toast(draft.sessionKb ? "调试环境不上传文件；发布后上传的文件会进入会话知识库" : "调试环境不上传文件；发布后上传的文件只存放在沙箱中")
+  else if (k === "mic") toast("调试环境不支持语音输入")
+  else if (k === "bot") openBot()
+})
+
+// 智能体助手：只根据描述生成提示词、欢迎语和推荐问题；技能 / 工具仍由用户自己添加
+function openBot() {
+  dialog("智能体助手", `<div class="form">
+      <label>描述你想要的科研智能体<textarea id="bot-q" rows="4" placeholder="例如：帮我做催化剂表征数据分析，读 XRD、XPS 结果，给出物相和价态结论，并写成报告">${esc(draft.desc)}</textarea></label>
+      <p class="tip">助手会生成名称、提示词、欢迎语和推荐问题并覆盖当前内容；技能、工具和 MCP 服务器请在「能力扩展」里自己添加。</p></div>`,
+    `<span class="note"></span><button class="btn ghost" type="button" data-close>取消</button><button class="btn" type="button" data-bot-ok>${icon("spark", 15)}生成</button>`)
+}
+function applyBot() {
+  const q = document.getElementById("bot-q").value.trim()
+  if (!q) { toast("先写一句描述"); return }
+  const topic = q.replace(/^(帮我|我想|需要|请)?(做|一个|创建)?/, "").split(/[，,。；]/)[0].slice(0, 16) || "科研任务"
+  const name = draft.name === "未命名科研智能体" ? `${topic.replace(/(分析|处理)$/, "")}助手`.slice(0, 14) : draft.name
+  draft.name = name
+  if (!draft.desc) draft.desc = q.slice(0, 80)
+  draft.prompt = `你是「${name}」，帮助科研人员完成：${q}
+
+## 核心职责
+- 理解用户提供的数据和问题，给出有依据的结论
+- 需要计算或检索时调用已配置的技能、工具和 MCP 服务器
+
+## 工作流程
+1. 确认任务目标、输入数据和期望的交付物
+2. 检查数据完整性，缺失时先向用户说明
+3. 按任务调用技能和工具完成分析
+4. 汇总结论，列出依据和引用来源
+
+## 执行边界
+- 不编造数据和文献，无法确定时明确说明
+- 提交计算作业、覆盖数据前先请用户确认`
+  draft.welcome = `你好，我是${name}。可以帮你${q.replace(/^(帮我|我想|需要|请)/, "").slice(0, 40)}。把数据或问题发给我吧。`
+  draft.questions = [`${topic}一般分几步做？`, "我需要准备哪些输入数据？", "帮我看看这份数据有没有问题"]
+  closeMask(); touch(); renderAll(); toast("已生成提示词、欢迎语和推荐问题")
+}
+
+function renderAll() { renderTitle(false); renderCfg(); renderChat() }
+paintIcons(document)
+renderAll()
+paintPublishBadge()
+
+</script>
+
+<script>(function(){var b=document.getElementById("back");if(b){b.addEventListener("click",function(e){e.preventDefault();try{var n=parent.document.getElementById("nav-space-act");if(n)n.click();}catch(_){}}); }})();</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="2670" viewBox="0 0 1520 2670">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#526782"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<rect x="35" y="180" width="1450" height="790" fill="#F8F6F1" stroke="#DAE4EE"/>
+<text x="65" y="208.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI4S 科研管理  /  目标与过程</tspan></text>
+<rect x="35" y="995" width="1450" height="340" fill="#F1F6FF" stroke="#DAE4EE"/>
+<text x="65" y="1023.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI4S 课题空间  /  核查依据</tspan></text>
+<rect x="35" y="1358" width="1450" height="1065" fill="#F8F6F1" stroke="#DAE4EE"/>
+<text x="65" y="1386.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI4S 科研管理  /  评审与归档</tspan></text>
+<polyline points="710.0,339 710.0,390" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,494 710.0,550" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,654 710.0,715" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,785.0 1100,785.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,855 710.0,1060" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="1257.5,842 1257.5,930 710,930 710.0,1060" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1164 710.0,1210" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1314 710.0,1430" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,1534 710.0,1600" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,1670.0 975.0,1670.0 975.0,1672.5 1100,1672.5" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1415,1672.5 1460,1672.5 1460,602 890,602.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,1740 710.0,1800" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1904 710.0,1960" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,2030.0 975.0,2030.0 975.0,2032.5 1100,2032.5" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1415,2032.5 1435,2032.5 1435,442 890,442.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,2100 710.0,2170" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<rect x="530" y="235" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="261.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">01  进入科研管理</tspan><tspan x="710.0" dy="25.840000000000003">定位目标项目与待办事项</tspan><tspan x="710.0" dy="25.840000000000003">[门户 → 科研管理]</tspan></text>
+<rect x="530" y="390" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="416.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">02  核对目标与阶段交付要求</tspan><tspan x="710.0" dy="25.840000000000003">明确里程碑、职责与验收依据</tspan><tspan x="710.0" dy="25.840000000000003">[立项管理 / 项目资料]</tspan></text>
+<rect x="530" y="550" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="576.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">03  查看进度与关键节点</tspan><tspan x="710.0" dy="25.840000000000003">识别材料缺口、风险与变更</tspan><tspan x="710.0" dy="25.840000000000003">[科研管理 · 过程管理]</tspan></text>
+<polygon points="710.0,715 850,785.0 710.0,855 570,785.0" fill="#FFF8E8" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="772.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">存在需要处理的</tspan><tspan x="710.0" dy="25.840000000000003">风险或变更？</tspan></text>
+<rect x="1100" y="728" width="315" height="114" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="759.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">明确影响、责任与处理措施</tspan><tspan x="1257.5" dy="25.840000000000003">按权限确认计划或资源调整</tspan><tspan x="1257.5" dy="25.840000000000003">[过程管理 · 管理决策]</tspan></text>
+<rect x="530" y="1060" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="1086.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">04  进入课题核查阶段依据</tspan><tspan x="710.0" dy="25.840000000000003">查看任务、报告、证据与验证计划</tspan><tspan x="710.0" dy="25.840000000000003">[空间概览 · 科学问题 · 科研任务]</tspan></text>
+<rect x="530" y="1210" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="1236.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">05  明确本次评审对象与版本</tspan><tspan x="710.0" dy="25.840000000000003">核对研究材料和工具交付资料</tspan><tspan x="710.0" dy="25.840000000000003">[任务产出 / 空间资产 / 评审记录]</tspan></text>
+<rect x="530" y="1430" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1456.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">06  组织负责人和专家评审</tspan><tspan x="710.0" dy="25.840000000000003">专家评科学证据，管理者评阶段交付</tspan><tspan x="710.0" dy="25.840000000000003">[科研管理 / 任务评审]</tspan></text>
+<polygon points="710.0,1600 850,1670.0 710.0,1740 570,1670.0" fill="#FFF8E8" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1657.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">是否满足本阶段</tspan><tspan x="710.0" dy="25.840000000000003">约定的交付要求？</tspan></text>
+<rect x="1100" y="1615" width="315" height="115" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="1646.66" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">形成补充或整改意见</tspan><tspan x="1257.5" dy="25.840000000000003">指定责任人、所需材料与复核条件</tspan><tspan x="1257.5" dy="25.840000000000003">[评审反馈 → 科研 / 工具任务]</tspan></text>
+<rect x="530" y="1800" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="1826.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">07  确认阶段交付并留痕</tspan><tspan x="710.0" dy="25.840000000000003">保留评审依据和遗留事项</tspan><tspan x="710.0" dy="25.840000000000003">[成果管理 · 阶段确认]</tspan></text>
+<polygon points="710.0,1960 850,2030.0 710.0,2100 570,2030.0" fill="#FFF8E8" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="2017.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">项目是否还有</tspan><tspan x="710.0" dy="25.840000000000003">后续研究阶段？</tspan></text>
+<rect x="1100" y="1975" width="315" height="115" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="2006.66" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">确定下一阶段目标与节点</tspan><tspan x="1257.5" dy="25.840000000000003">将责任和资源安排交回课题</tspan><tspan x="1257.5" dy="25.840000000000003">[过程管理 · 下一阶段]</tspan></text>
+<rect x="530" y="2170" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="710.0" y="2196.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">08  完成最终验收与归档</tspan><tspan x="710.0" dy="25.840000000000003">对照项目条件核查材料、版本与确认</tspan><tspan x="710.0" dy="25.840000000000003">[科研管理 · 成果管理]</tspan></text>
+<rect x="962.0" y="750" width="46" height="30" fill="white" rx="3"/>
+<text x="985.0" y="765.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="985.0" dy="0">是</tspan></text>
+<rect x="727.0" y="893" width="46" height="30" fill="white" rx="3"/>
+<text x="750.0" y="908.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="750.0" dy="0">否</tspan></text>
+<rect x="1044.0" y="891" width="132" height="30" fill="white" rx="3"/>
+<text x="1110.0" y="906.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1110.0" dy="0">处置后继续核查</tspan></text>
+<rect x="749.0" y="1345" width="132" height="30" fill="white" rx="3"/>
+<text x="815.0" y="1360.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="815.0" dy="0">材料与评审对象</tspan></text>
+<rect x="962.0" y="1635" width="46" height="30" fill="white" rx="3"/>
+<text x="985.0" y="1650.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="985.0" dy="0">否</tspan></text>
+<rect x="727.0" y="1763" width="46" height="30" fill="white" rx="3"/>
+<text x="750.0" y="1778.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="750.0" dy="0">是</tspan></text>
+<rect x="957.0" y="1995" width="46" height="30" fill="white" rx="3"/>
+<text x="980.0" y="2010.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="980.0" dy="0">是</tspan></text>
+<rect x="727.0" y="2120" width="46" height="30" fill="white" rx="3"/>
+<text x="750.0" y="2135.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="750.0" dy="0">否</tspan></text>
+<text x="40" y="51.5" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="30" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">ScienceLab AI4S  /  科研项目管理人员使用旅程</tspan></text>
+<text x="40" y="117.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#526782"><tspan x="40" dy="0">管理主线：定位项目 → 明确阶段要求 → 跟踪风险 → 核查材料与组织评审 → 跟进整改或确认交付</tspan></text>
+<text x="90" y="478.54" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="18" font-weight="400" fill="#526782"><tspan x="90" dy="0">管理人员围绕项目和阶段决策。</tspan><tspan x="90" dy="24.48">科研超级中枢的读、算结果</tspan><tspan x="90" dy="24.48">是核查材料的一部分，</tspan><tspan x="90" dy="24.48">不能用任务完成数替代</tspan><tspan x="90" dy="24.48">科研进展与交付依据。</tspan></text>
+<text x="90" y="1120.32" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="90" dy="0">科研人员提交：报告、证据、验证计划。</tspan><tspan x="90" dy="23.12">工具创建人员提交：能力版本、</tspan><tspan x="90" dy="23.12">测试依据、适用边界与维护说明。</tspan><tspan x="90" dy="23.12">当前管理页到课题可能需手动转场。</tspan></text>
+<text x="1100" y="1426.88" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="1100" dy="0">管理反馈必须对应具体问题：</tspan><tspan x="1100" dy="23.12">谁来处理、补什么材料，</tspan><tspan x="1100" dy="23.12">以及下一次如何判定完成。</tspan></text>
+<text x="90" y="1698.28" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="18" font-weight="650" fill="#0B2146"><tspan x="90" dy="0">专家判断科学证据是否充分；</tspan><tspan x="90" dy="24.48">管理人员按授权确认项目交付。</tspan><tspan x="90" dy="24.48">阶段验收通过不意味着</tspan><tspan x="90" dy="24.48">所有科研假设都获得支持。</tspan></text>
+<text x="1100" y="2234.38" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="1100" dy="0">配套管理：外协、人才、考核与日程。</tspan><tspan x="1100" dy="23.12">按项目需要参与本旅程，</tspan><tspan x="1100" dy="23.12">不要求每次都依次办理。</tspan></text>
+<text x="40" y="2485.94" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">图例：实框＝原型已有可查看页面；虚框＝管理业务要求，正式台账或流转尚待接入。</tspan><tspan x="40" dy="23.12">实箭头＝正常推进；虚箭头＝跨角色交接、整改与下一阶段循环。</tspan></text>
+<text x="40" y="2588.44" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="40" dy="0">交付：有依据的阶段决定、责任分工、复核条件、后续节点及最终归档材料。</tspan><tspan x="40" dy="23.12">当前管理模块和管理智能体多为入口提示；本图不代表真实审批、会签、通知、验收或权限控制已经完成。</tspan></text>
+<text x="40" y="2651.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" font-weight="400" fill="#526782"><tspan x="40" dy="0">角色与系统分工依据用户确认；对应原型模块参考本工作区。更新：2026-10-10</tspan></text>
+</svg>

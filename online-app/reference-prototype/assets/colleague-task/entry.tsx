@@ -1,0 +1,1 @@
+import React from "react";import{createRoot}from"react-dom/client";import{ResearchTaskWorkspace}from"./research-task-workspace";createRoot(document.getElementById("task-root")!).render(<ResearchTaskWorkspace/>);

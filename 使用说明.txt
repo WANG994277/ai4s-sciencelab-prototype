@@ -1,0 +1,1 @@
+prototype 为本地静态原型，已包含科研资源与科研活动所需的离线资源包；online-app 为新版工程源码。可直接打开 prototype/index.html，或在 prototype 目录使用 python3 -m http.server 8766 启动。修改 online-app 源码后，在 online-app 目录安装依赖并运行 npm run build:offline 更新离线资源包。浏览静态原型不需要单独启动 3002 端口。压缩包原始内容未包含依赖、缓存、Git 历史或授权配置。

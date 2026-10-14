@@ -1,0 +1,2 @@
+import {Route} from "react-router-dom";
+export const routeManifest = <><Route path="/"/><Route path="/resource/knowledge"/><Route path="/resource/datasets"/><Route path="/resource/models"/><Route path="/resource/tools"/><Route path="/resource/skills"/><Route path="/resource/execution-detail"/><Route path="/resource/execution-list"/></>;

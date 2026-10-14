@@ -1,0 +1,2491 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>科学工具箱 · AI4S</title>
+  <style>
+:root {
+  --blue: #1765e3;
+  --blue-hover: #0f58cf;
+  --blue-soft: #ebf3ff;
+  --blue-line: #8fb5ec;
+  --ink: #15233b;
+  --ink-2: #33415a;
+  --muted: #6b7a90;
+  --muted-2: #8e9bb0;
+  --line: #e2e9f3;
+  --line-2: #d5dfeb;
+  --bg: #f4f7fc;
+  --sider: 236px;
+  --rail: 68px;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+input, textarea { border: 0; background: none; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+svg { display: block; flex: none; }
+[hidden] { display: none !important; }
+
+/* ---------- 外壳 ---------- */
+.app { display: grid; grid-template-columns: var(--sider) 1fr; min-height: 100vh; }
+.app.is-rail { grid-template-columns: var(--rail) 1fr; }
+.sider { background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; z-index: 25; }
+.sider-logo { height: 56px; display: flex; align-items: center; padding: 0 30px; border-bottom: 1px solid var(--line); }
+.logo { display: flex; gap: 4px; align-items: center; color: var(--ink); text-decoration: none; }
+.logo strong { display: block; font-size: 19px; line-height: 1; font-weight: 800; letter-spacing: .2px; color: #0e1c35; font-family: "Helvetica Neue", Arial, sans-serif; }
+.logo em { display: block; font-style: normal; color: #2b5fb8; font-size: 10.5px; line-height: 1.1; margin-top: 2px; font-family: "Helvetica Neue", Arial, sans-serif; }
+.sider-nav { padding: 12px 12px; display: flex; flex-direction: column; overflow: auto; flex: 1; }
+.nav-sep { height: 1px; background: var(--line); margin: 8px 0; }
+.nav-label { color: #7c8aa0; font-size: 12px; padding: 8px 12px 4px; }
+.nav-item { display: flex; align-items: center; gap: 12px; height: 42px; padding: 0 12px; border-radius: 6px; color: var(--ink-2); text-decoration: none; position: relative; font-size: 14px; }
+.nav-item svg { color: #3b475b; }
+.nav-item .arrow { margin-left: auto; color: #6e7b90; }
+.nav-item:hover { background: #f5f8fd; }
+.nav-item.active { background: #eaf2fd; color: #1452b8; font-weight: 600; }
+.nav-item.active svg { color: #1452b8; }
+.nav-item.active::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; border-radius: 2px 0 0 2px; background: var(--blue); }
+.is-rail .sider-logo { padding: 0; justify-content: center; }
+.is-rail .logo span, .is-rail .nav-item > span, .is-rail .nav-item .arrow, .is-rail .nav-label, .is-rail .sider-foot span:last-child { display: none; }
+.is-rail .nav-item { justify-content: center; padding: 0; }
+.sider-foot { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #8b98ab; font-size: 12px; border-top: 1px solid var(--line); }
+.mark-n { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; padding: 0 20px 0 24px; position: sticky; top: 0; z-index: 20; }
+.crumb { color: var(--muted); white-space: nowrap; font-size: 13px; margin-left: 4px; }
+.crumb b { color: var(--ink); font-weight: 600; margin-left: 6px; }
+.top-search { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #f6f8fb; border: 1px solid #e3e9f1; height: 34px; border-radius: 6px; padding: 0 12px; width: 300px; color: #7d8aa0; }
+.top-search input { width: 100%; outline: none; font-size: 13px; }
+.top-search input::placeholder { color: #98a4b6; }
+.top-actions { display: flex; align-items: center; gap: 12px; position: relative; }
+.scope-btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; border-radius: 6px; padding: 0 12px; background: #f6f8fb; border: 1px solid #e3e9f1; font-size: 13px; }
+.scope-btn span { color: var(--muted); }
+.scope-btn b { font-weight: 600; font-size: 12.5px; }
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; display: inline-grid; place-items: center; color: #3a475c; position: relative; }
+.icon-btn:hover, .scope-btn:hover, .user-btn:hover { background: #f1f5fb; }
+.has-dot::after { content: ""; position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #e5484d; }
+.user-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 6px; border-radius: 8px; font-size: 14px; }
+.user-btn i { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(145deg, #6ea6f4, #3b7be0); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 13px; }
+.menu { position: absolute; top: 44px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 32px rgba(24, 60, 120, .12); min-width: 170px; padding: 6px; z-index: 30; }
+.menu button { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+.menu button:hover { background: #f3f7fd; }
+.menu button.on { color: var(--blue); background: var(--blue-soft); }
+.menu-h { font-weight: 600; padding: 6px 10px 4px; font-size: 13px; }
+.menu-p { color: var(--muted); padding: 0 10px 8px; font-size: 12px; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #16263f; color: #fff; padding: 10px 18px; border-radius: 999px; z-index: 90; box-shadow: 0 10px 30px rgba(0,0,0,.18); font-size: 13px; }
+
+/* ---------- 科学工具箱页面 ---------- */
+.stage { position: relative; background:
+  radial-gradient(900px 260px at 62% 60px, rgba(214, 229, 250, .75), rgba(244, 247, 252, 0) 70%),
+  linear-gradient(180deg, #f2f6fc 0, #f5f8fc 420px, #f5f8fc 100%); flex: 1; }
+.page { max-width: 1520px; margin: 0 auto; padding: 38px 60px 60px 100px; }
+.tb-head { display: flex; align-items: flex-start; gap: 24px; min-height: 118px; position: relative; }
+.tb-title h1 { font-size: 32px; line-height: 1.25; font-weight: 700; color: #0f1f3d; letter-spacing: .5px; }
+.tb-title .kicker { font-size: 15.5px; font-weight: 700; color: #1b2c4b; margin-top: 4px; }
+.tb-title .sub { font-size: 14.5px; color: #56657c; margin-top: 10px; }
+.tb-art { position: absolute; left: 50%; top: -12px; width: 300px; height: 118px; transform: translateX(-4%); pointer-events: none; }
+.tb-art .glow { position: absolute; inset: -30px -60px; background: radial-gradient(closest-side, rgba(196, 218, 250, .75), rgba(196, 218, 250, 0)); }
+.tb-art svg.orbit { position: absolute; left: 0; top: 0; }
+.tile { position: absolute; display: grid; place-items: center; color: #fff; border-radius: 8px; }
+.tile-ai { left: 116px; top: 3px; width: 64px; height: 64px; border-radius: 10px; font-size: 25px; font-weight: 500; font-family: "Helvetica Neue", Arial, sans-serif; background: linear-gradient(160deg, #7cb2f7 0%, #3f82ea 100%); box-shadow: 0 10px 22px rgba(61, 125, 232, .32), inset 0 1px 0 rgba(255,255,255,.35); }
+.tile-l { left: 0; top: 55px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tile-r { left: 265px; top: 64px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tb-actions { margin-left: auto; display: flex; gap: 14px; margin-top: 22px; position: relative; z-index: 1; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 6px; height: 34px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+.btn:hover { background: var(--blue-hover); }
+.btn.lg { height: 42px; padding: 0 22px; font-size: 14.5px; box-shadow: 0 6px 14px rgba(23, 101, 227, .22); }
+.btn.ghost { background: #fff; color: #1d2a40; border: 1px solid var(--line-2); box-shadow: none; }
+.btn.ghost:hover { border-color: #b9cbe3; background: #fbfcff; }
+.btn:disabled { background: #a8c6f4; cursor: not-allowed; }
+.btn.sm { height: 28px; padding: 0 12px; font-size: 13px; border-radius: 5px; }
+.btn.sm.ghost { color: #25324a; }
+
+.tb-search { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 18px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.tb-search form { display: flex; align-items: stretch; height: 46px; }
+.tb-search label { flex: 1; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-2); border-right: 0; border-radius: 6px 0 0 6px; padding: 0 16px; color: #5d6b80; }
+.tb-search input { flex: 1; outline: none; font-size: 14px; height: 100%; }
+.tb-search input::placeholder { color: #9aa6b8; }
+.tb-search .btn { height: auto; border-radius: 0 6px 6px 0; width: 88px; font-size: 14.5px; }
+
+.filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.filters[data-group="field"] { margin-top: 18px; }
+.filters .lbl { width: 76px; flex: none; font-weight: 600; color: #1d2a40; font-size: 13px; margin-right: -8px; }
+.filter-box { margin-top: 18px; }
+.filter-box .filters { margin-top: 8px; }
+.filter-box .filters[data-group="field"] { margin-top: 0; }
+.filters[hidden] { display: none; }
+.filters.sub .chip { height: 24px; font-size: 12px; background: #fafbfd; }
+.fmore, .fclear { height: 26px; padding: 0 6px; font-size: 12.5px; color: var(--blue); display: inline-flex; align-items: center; gap: 2px; background: none; }
+.fclear { color: var(--muted); margin-left: 6px; }
+.fclear:hover { color: var(--blue); }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: #34425a; }
+.field .checks input { padding: 0; width: auto; }
+.field small.opt { font-size: 12px; color: var(--muted); margin-left: 6px; }
+.field .inline { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-top: 4px; }
+.kv-note { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.chip { height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: #fff; color: #34425a; font-size: 12.5px; }
+.chip:hover { border-color: #aac3e6; color: var(--blue); }
+.chip.on { background: #eaf2fe; border-color: var(--blue-line); color: #1356c2; }
+
+.tb-bar { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 18px; border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 0; }
+.tabs button { height: 48px; padding: 0 12px; margin-right: 18px; font-size: 14px; color: #3a475d; position: relative; }
+.tabs button:hover { color: var(--blue); }
+.tabs button.on { color: #1356c2; }
+.tabs button.on::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: -1px; height: 3px; border-radius: 2px; background: var(--blue); }
+.bar-tools { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; color: #56657c; font-size: 12.5px; }
+.bar-tools .count { margin-right: 4px; }
+.select { position: relative; }
+.select select { appearance: none; -webkit-appearance: none; height: 34px; width: 122px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; padding: 0 30px 0 14px; font-size: 13.5px; color: #25324a; outline: none; }
+.select svg { position: absolute; right: 9px; top: 10px; color: #5d6b80; pointer-events: none; }
+.view-btn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; color: #6b7a90; font-size: 13.5px; }
+.view-btn.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.hot { margin-top: 26px; border-radius: 12px; padding: 14px 14px 16px; background: linear-gradient(100deg, #ecf3fd 0%, #eaf2fd 60%, #e7f0fc 100%); border: 1px solid #e4edf9; }
+.hot > header { display: flex; align-items: baseline; gap: 8px; padding: 0 2px 12px; }
+.hot > header svg { color: #e2a12b; align-self: center; }
+.hot > header b { font-size: 16px; font-weight: 500; color: #1c2a42; }
+.hot > header span { font-size: 12px; color: #6b7a90; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.hot .grid { gap: 16px; }
+
+.card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 12px; padding: 14px 16px; min-width: 0; }
+.card.feature { padding: 14px 16px; border-color: #e3ebf6; }
+.tools-grid { margin-top: 14px; }
+.tools-grid .card { grid-template-rows: 1fr auto; padding: 14px 16px 12px; transition: box-shadow .15s, border-color .15s; }
+.tools-grid .card:hover { border-color: #c8d9f1; box-shadow: 0 8px 22px rgba(30, 80, 150, .07); }
+.ic { width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center; color: #fff; }
+.ic-blue   { background: linear-gradient(160deg, #5aa1fb 0%, #2f78ea 100%); box-shadow: 0 6px 14px rgba(47, 120, 234, .28); }
+.ic-purple { background: linear-gradient(160deg, #b36bf8 0%, #8a3fe8 100%); box-shadow: 0 6px 14px rgba(138, 63, 232, .26); }
+.ic-green  { background: linear-gradient(160deg, #4fd083 0%, #1fa75c 100%); box-shadow: 0 6px 14px rgba(31, 167, 92, .26); }
+.ic-orange { background: linear-gradient(160deg, #ff9a52 0%, #f46a26 100%); box-shadow: 0 6px 14px rgba(244, 106, 38, .26); }
+.ic-pink   { background: linear-gradient(160deg, #f76aa3 0%, #e63d7f 100%); box-shadow: 0 6px 14px rgba(230, 61, 127, .26); }
+.ic-teal   { background: linear-gradient(160deg, #3ed1d6 0%, #13a8b4 100%); box-shadow: 0 6px 14px rgba(19, 168, 180, .26); }
+.body { min-width: 0; display: flex; flex-direction: column; }
+.body b.name { font-size: 15px; font-weight: 500; color: #15233b; line-height: 1.4; padding-right: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+.tags em { font-style: normal; font-size: 12px; line-height: 20px; height: 20px; padding: 0 6px; border-radius: 3px; color: #637188; background: #f1f4f8; white-space: nowrap; }
+.tags em.ok { color: #1f9a57; background: #e8f7ee; }
+.tags em.official { color: #2167d4; background: #e7f0fd; }
+.tags em.kind { font-weight: 600; }
+.tags em.k-mcp { color: #2167d4; background: #eaf2fe; }
+.tags em.k-fn { color: #4a5a73; background: #eef1f5; }
+.tags em.k-comp { color: #0f8a7e; background: #e5f6f4; }
+.pbox ol.steps { margin: 6px 0 0; padding-left: 20px; }
+.pbox ol.steps li { margin: 3px 0; }
+.desc { font-size: 13px; color: #4c5a70; margin-top: 6px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.card footer { grid-column: 2; align-self: end; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.meta { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; color: #7a879b; font-size: 12px; white-space: nowrap; overflow: hidden; }
+.meta span { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.meta span.owner { flex: 0 1 auto; min-width: 0; }
+.meta span.owner i { font-style: normal; overflow: hidden; text-overflow: ellipsis; }
+.meta svg { color: #7a879b; }
+.ops { display: flex; gap: 8px; flex: none; }
+.more { position: absolute; right: 12px; top: 8px; width: 26px; height: 24px; border-radius: 5px; display: grid; place-items: center; color: #5b687d; }
+.more:hover { background: #f1f5fb; }
+.more-menu { right: 8px; top: 34px; min-width: 132px; }
+
+.list { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.list-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 280px auto; gap: 16px; align-items: center; padding: 14px 20px; border-top: 1px solid #eef2f8; }
+.list-row:first-child { border-top: 0; }
+.list-row .ic { width: 40px; height: 40px; margin: 0; }
+.empty { margin-top: 16px; background: #fff; border: 1px dashed var(--line-2); border-radius: 8px; padding: 36px; text-align: center; color: var(--muted); }
+
+.mask { position: fixed; inset: 0; background: rgba(15, 28, 50, .3); z-index: 60; display: flex; }
+.mask.drawer-mask { justify-content: flex-end; }
+.drawer { width: min(440px, 100%); height: 100%; background: #fff; padding: 18px 22px; box-shadow: -12px 0 40px rgba(0,0,0,.08); overflow: auto; }
+.drawer.wide { width: min(640px, 100%); }
+.btn.auto { cursor: default; background: #effaf3; color: #1f7a45; box-shadow: inset 0 0 0 1px #bfe5cd; }
+.btn.auto:hover { background: #effaf3; }
+.kbind { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.kbind > span { font-size: 12px; color: #8390a4; }
+.bchip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 5px; font-size: 12px; color: #25324a; background: #f4f8fe; border: 1px solid #d6e4f8; cursor: default; }
+a.bchip { cursor: pointer; }
+a.bchip:hover { border-color: var(--blue-line); color: var(--blue); }
+.bchip.tool { background: #f6f4fd; border-color: #e0daf6; }
+.bchip em { font-style: normal; font-size: 11px; color: #1356c2; }
+.bchip.tool em { color: #6547c9; }
+.bchip small { font-size: 11.5px; color: var(--muted); }
+.bchip small::before { content: "· "; }
+.bchip i { font-style: normal; font-size: 11px; color: #1f7a45; }
+.bmore { font-size: 12px; color: var(--muted); }
+.bind-field > span small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.brow { display: grid; grid-template-columns: minmax(0, 1.4fr) 92px minmax(0, 1fr) 28px; gap: 8px; align-items: center; margin-bottom: 8px; }
+.brow select, .brow input { min-width: 0; border: 1px solid var(--line-2); border-radius: 6px; padding: 6px 8px; background: #fff; font-size: 12.5px; }
+.brow select:disabled { background: #f6f8fb; color: #56657c; }
+.bquick { display: flex; flex-wrap: wrap; gap: 6px; }
+.bempty { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; }
+.lchip.grp { cursor: pointer; padding-right: 8px; color: #43516a; background: #f6f8fb; border-style: dashed; }
+.lchip.grp .ic { background: #eef2f8; color: #56657c; }
+.lchip.grp svg:last-child { transition: transform .15s; }
+.lchip.grp.on svg:last-child { transform: rotate(180deg); }
+.lp-chips.sub { margin-top: 8px; padding: 8px; border-radius: 6px; background: #f6f8fb; }
+.lchip.comp { padding-right: 8px; }
+.lchip .src.ok { color: #1f7a45; background: #effaf3; }
+.lp-note { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.lp-note a { color: var(--blue); cursor: pointer; }
+.dtabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line-2); margin: 16px 0 14px; }
+.dtabs button { height: 36px; padding: 0 14px; font-size: 13.5px; color: #43516a; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.dtabs button.on { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+.pbox { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; font-size: 13px; color: #43516a; line-height: 1.65; }
+.pbox h4 { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: #1d2b44; margin-bottom: 6px; }
+.pbox h4 i { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.pbox ul { padding-left: 16px; margin: 0; }
+.pbox code, .etable code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.etable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+.etable th, .etable td { text-align: left; padding: 6px 8px; border-top: 1px solid #eef2f8; vertical-align: top; }
+.etable th { color: var(--muted); font-weight: 500; }
+.code-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 6px; font-size: 13px; color: #1d2b44; font-weight: 600; }
+pre.code { background: #0f1c32; color: #d6e2f5; border-radius: 8px; padding: 12px 14px; font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace; overflow: auto; max-height: 360px; margin: 0 0 14px; white-space: pre; }
+.cform .prow { display: grid; grid-template-columns: 130px 1fr; gap: 4px 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eef2f8; font-size: 13px; }
+.cform .prow > span { color: #1d2b44; }
+.cform .prow small { grid-column: 2; color: var(--muted); font-size: 12px; }
+.cform input[type=text], .cform input[type=number], .cform select { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input:focus, .cform select:focus { border-color: var(--blue-line); }
+.cform .note { font-size: 12.5px; color: var(--muted); margin: 0 0 6px; }
+.cform .dirty { color: #b26a00; }
+.btn.auto.plan { background: #f3f5f8; color: #6b7a90; box-shadow: inset 0 0 0 1px #dfe4ec; }
+.pbox.plan { background: #fafbfd; border-style: dashed; }
+.pbox .alink, .alink { color: var(--blue); cursor: pointer; margin-left: 6px; }
+.pgroup { margin-top: 14px; }
+.pgroup h5 { font-size: 13.5px; color: #1d2b44; padding: 6px 0; border-bottom: 1px solid var(--line-2); display: flex; align-items: baseline; gap: 10px; }
+.pgroup h5 span { font-weight: 400; font-size: 12px; color: var(--muted); }
+.cform .num { display: inline-flex; align-items: center; gap: 6px; }
+.cform .num input { width: 140px; }
+.cform .num em { font-style: normal; color: var(--muted); font-size: 12.5px; }
+.cform .chg { font-style: normal; color: #b26a00; font-size: 9px; margin-left: 4px; vertical-align: middle; }
+.cform-foot { position: sticky; bottom: -18px; background: #fff; padding: 12px 0; margin-top: 8px; border-top: 1px solid #eef2f8; }
+.kit-line { display: flex; align-items: center; gap: 6px; margin: 6px 0 0; font-size: 12.5px; color: #43516a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kit-line b { font-weight: 500; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; flex: none; }
+.kit-line svg { flex: none; color: #1356c2; }
+.lchip .kn { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 999px; padding: 0 6px; line-height: 17px; }
+.rftabs { margin: 8px 0 4px; }
+.rftabs button { position: relative; font-size: 13px; padding: 0 12px; }
+.rdot { position: absolute; top: 8px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #e0503f; }
+.rlist { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
+.rcard { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #43516a; }
+.rcard p { margin: 5px 0 0; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.rcard code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.rcard small, .rc-sub { color: var(--muted); font-size: 12px; }
+.rc-top { display: flex; align-items: center; gap: 8px; }
+.rc-top b { color: #1d2b44; font-size: 14px; }
+.rs { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.rs.def { color: #0b7a55; background: #e3f6ee; }
+.rs.gray { color: #6b7a90; background: #f1f3f7; }
+.rst { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.rst i { width: 7px; height: 7px; border-radius: 50%; background: #c3cad6; }
+.rst.ok { color: #0b7a55; } .rst.ok i { background: #19a974; }
+.rst.fail { color: #c0392b; } .rst.fail i { background: #e0503f; }
+.rst.testing i { background: #f0a020; animation: rblink 0.8s infinite alternate; }
+@keyframes rblink { to { opacity: 0.3; } }
+.rc-act { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.btn.danger { color: #c0392b !important; }
+.cform .req { font-style: normal; color: #e0503f; margin-left: 2px; }
+.cform input[type=password], .cform input[type=file] { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input[type=file] { padding: 4px 8px; }
+.cform small.warn { color: #b26a00; }
+.cform .sw { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.rtable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+.rtable th, .rtable td { text-align: left; padding: 5px 8px; border-top: 1px solid #eef2f8; }
+.rtable th { color: var(--muted); font-weight: 500; }
+.kit-note { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+.ktools { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.ktools li { border: 1px solid #e3e9f3; border-radius: 8px; padding: 10px 12px; }
+.ktools li.off { background: #fafbfd; opacity: .65; }
+.ktools label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.ktools input { margin-top: 3px; }
+.ktools .kt-top { display: flex; align-items: center; gap: 8px; }
+.ktools .kt-top b { font-size: 13.5px; color: #1d2b44; }
+.ktools code, .kv code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; color: #43516a; background: #f3f6fb; border-radius: 3px; padding: 0 5px; }
+.ktools p { margin: 3px 0 0; font-size: 12.5px; color: #43516a; }
+.ktools small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.drawer > header, .modal > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.drawer h3, .modal h3 { font-size: 16px; }
+.drawer .card { border: 0; padding: 0; }
+.kv { margin: 16px 0; display: grid; gap: 10px; }
+.kv li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #eef2f8; padding-bottom: 8px; font-size: 13px; }
+.kv span { color: var(--muted); }
+.row-actions { display: flex; gap: 10px; }
+.row-actions.right { justify-content: flex-end; }
+.modal { width: min(480px, calc(100% - 32px)); margin: auto; background: #fff; border-radius: 12px; padding: 18px 22px 20px; }
+.field { display: grid; gap: 6px; margin-bottom: 12px; color: #43516a; font-size: 13px; }
+.field input, .field textarea, .field select { border: 1px solid var(--line-2); border-radius: 6px; padding: 8px 10px; background: #fff; outline: none; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--blue-line); }
+
+/* 课题空间已加载工具 */
+.loaded { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px 16px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.lp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lp-head > svg { color: var(--blue); }
+.lp-head b { font-size: 15px; font-weight: 600; color: #15233b; }
+.lp-space { font-size: 12.5px; color: #1356c2; background: #eaf2fe; border: 1px solid var(--blue-line); border-radius: 999px; padding: 0 10px; line-height: 22px; }
+.lp-count { font-size: 12.5px; color: var(--muted); }
+.lp-actions { margin-left: auto; display: flex; gap: 8px; }
+.lp-desc { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; font-size: 13px; color: #56657c; line-height: 1.6; }
+.lp-desc span { flex: none; color: #8390a4; }
+.lp-desc p { min-width: 0; }
+.lp-desc .from { flex: none; margin-left: auto; font-size: 12px; color: #9aa6b8; white-space: nowrap; }
+.lp-hint { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 8px 12px; border: 1px dashed var(--blue-line); border-radius: 6px; background: #f4f8fe; color: #1356c2; font-size: 13px; }
+.lp-hint svg { flex: none; }
+.lp-hint .grow { flex: 1; }
+.lp-hint .x { color: #7a879b; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lchip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 4px 0 4px; border: 1px solid var(--line-2); border-radius: 6px; background: #fbfcfe; font-size: 13px; color: #25324a; }
+.lchip:hover { border-color: #b9cbe3; }
+.lchip .ic { width: 24px; height: 24px; border-radius: 6px; box-shadow: none; }
+.lchip b { font-weight: 500; max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.lchip .x { width: 20px; height: 20px; border-radius: 4px; display: grid; place-items: center; color: #8a96a8; }
+.lchip .x:hover { background: #eef2f8; color: #c0392b; }
+.src { font-style: normal; font-size: 11px; line-height: 18px; padding: 0 5px; border-radius: 3px; white-space: nowrap; }
+.src.warn { color: #b8620f; background: #fdf2e4; }
+.lp-more { height: 32px; padding: 0 12px; border-radius: 6px; color: var(--blue); font-size: 13px; }
+.lp-more:hover { background: #f1f5fb; }
+.lp-empty { margin-top: 12px; padding: 14px; border: 1px dashed var(--line-2); border-radius: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.btn.load.on { background: #eaf2fe; box-shadow: inset 0 0 0 1px var(--blue-line); color: #1356c2; }
+.btn.load.on:hover { background: #dde9fc; }
+.ops .btn.sm { padding: 0 10px; }
+.tools-grid .card.is-loaded { border-color: #c9dbf6; }
+.tabs button .n { font-style: normal; font-size: 12px; margin-left: 4px; color: var(--muted); }
+.tabs button.on .n { color: #1356c2; }
+
+/* 宽弹窗（新建） */
+.modal.wide { width: min(720px, calc(100% - 32px)); max-height: calc(100vh - 64px); display: flex; flex-direction: column; }
+.modal.wide .scroll { overflow: auto; margin: 0 -22px; padding: 0 22px; }
+
+@media (max-width: 1600px) { .tools-grid .card footer { grid-column: 1 / -1; } }
+@media (max-width: 1440px) { .page { padding-left: 40px; padding-right: 32px; } }
+@media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb-art { display: none; } }
+@media (max-width: 900px) {
+  .app { grid-template-columns: var(--rail) 1fr; }
+  .logo span, .nav-item > span, .nav-item .arrow, .nav-label, .sider-foot span:last-child { display: none; }
+  .nav-item { justify-content: center; padding: 0; }
+  .sider-logo { padding: 0; justify-content: center; }
+  .grid { grid-template-columns: 1fr; }
+  .top-search { display: none; }
+  .page { padding: 24px 18px 40px; }
+  .tb-bar { flex-direction: column; align-items: flex-start; }
+}
+  </style>
+<style>.sider{display:none !important;}.topbar{display:none !important;}.app{grid-template-columns:1fr !important;}.main{width:100% !important;min-width:0;}</style><style>.tb-actions{display:none !important;}[data-act^="newver"]{display:none !important;}</style></head>
+<body>
+<!--
+  合并约定
+  1. 每人一个 HTML，文件名与侧栏一致：科研工作台.html、科研超级中枢.html、科研知识中心.html、科研技能.html、科研模型.html、科学工具箱.html、云上实验室.html、科研资产.html、历史任务.html。
+  2. 侧栏和顶栏是公共外壳，合并时保持不动。
+  3. 本页只改「科学工具箱页面」标记之间的内容，以及底部 TOOLS 数组。
+  4. 本页视觉按《AI4S原型截图.docx》中的科学工具箱截图复现。
+-->
+<div class="app" id="app">
+  <aside class="sider">
+    <div class="sider-logo">
+      <a class="logo" href="科研工作台.html" aria-label="AI4S 首页">
+        <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fa0ff"/><stop offset="1" stop-color="#1459d9"/></linearGradient>
+            <linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b6ef0"/><stop offset="1" stop-color="#5bb4ff"/></linearGradient>
+          </defs>
+          <path d="M13.2 2.2c1-1.9 3.7-1.9 4.7 0L32.6 27a1.8 1.8 0 0 1-1.6 2.7h-4.7a2 2 0 0 1-1.8-1.1L15.6 11 11 19.4 6.8 22.6Z" fill="url(#lg1)"/>
+          <path d="M1.3 26.8 6.8 17c1.3 2.8 4 4.6 7.2 4.6 1.6 0 3-.4 4.3-1.2l-2.6 4.6c-1.6 2.9-4.9 4.6-8.3 4.6H2.8a1.8 1.8 0 0 1-1.5-2.8Z" fill="url(#lg2)"/>
+        </svg>
+        <span><strong>AI4S</strong><em>AI for Science</em></span>
+      </a>
+    </div>
+    <nav class="sider-nav">
+      <a class="nav-item" href="科研工作台.html"><span data-icon="home"></span><span>科研工作台</span></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研超级中枢.html"><span data-icon="hub"></span><span>科研超级中枢</span></a>
+      <div class="nav-sep"></div>
+      <div class="nav-label">科研广场</div>
+      <a class="nav-item" href="科研应用.html"><span data-icon="grid"></span><span>科研应用</span></a>
+      <a class="nav-item" href="科研知识中心.html"><span data-icon="book"></span><span>科研知识中心</span></a>
+      <a class="nav-item" href="科研技能.html"><span data-icon="layers"></span><span>科研技能</span></a>
+      <a class="nav-item" href="科研智能体.html"><span data-icon="network"></span><span>科研智能体</span></a>
+      <a class="nav-item" href="科研模型.html"><span data-icon="box"></span><span>科研模型</span></a>
+      <a class="nav-item active" href="科学工具箱.html" aria-current="page"><span data-icon="wrench"></span><span>科学工具箱</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="云上实验室.html"><span data-icon="flask"></span><span>云上实验室</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研资产.html"><span data-icon="folder"></span><span>科研资产</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="历史任务.html"><span data-icon="history"></span><span>历史任务</span></a>
+    </nav>
+    <div class="sider-foot"><span class="mark-n">N</span><span>AI4S 科研平台 · 原型</span></div>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <button class="icon-btn" type="button" id="rail-btn" aria-label="收起导航"><span data-icon="panel"></span></button>
+      <div class="crumb">当前页面：<b>科学工具箱</b></div>
+      <form class="top-search" id="top-search">
+        <span data-icon="search" data-size="16"></span>
+        <input id="top-q" placeholder="搜索文献、数据、工具或提问…" />
+      </form>
+      <div class="top-actions">
+        <button class="scope-btn" type="button" id="scope-btn"><span>课题空间：</span><b id="scope-label">配方优化课题</b><span data-icon="down" data-size="15"></span></button>
+        <div class="menu" id="scope-menu" style="left:0" hidden></div>
+        <button class="icon-btn has-dot" type="button" id="bell-btn" aria-label="通知"><span data-icon="bell"></span></button>
+        <div class="menu" id="bell-menu" style="right:120px;width:280px" hidden>
+          <div class="menu-h">科研活动 · 2 条未读</div>
+          <button type="button"><b>计算任务开始运行</b><div class="menu-p" style="padding:0">GROMACS 分子动力学模拟（任务 #1025）</div></button>
+          <button type="button"><b>实验数据已同步</b><div class="menu-p" style="padding:0">实验 GB-2026-0915 数据已同步至 ELN</div></button>
+        </div>
+        <button class="icon-btn" type="button" id="help-btn" aria-label="帮助"><span data-icon="help"></span></button>
+        <div class="menu" id="help-menu" style="right:80px;width:260px" hidden>
+          <div class="menu-h">科学工具箱</div>
+          <p class="menu-p">在这里查找科研工具与工具箱（计算软件、算法库、数据服务，每个工具箱包含多个工具）。点「加载」把工具放进课题空间，再次点击可移除；上方「课题空间已加载工具」里可以查看或清空。</p>
+        </div>
+        <button class="user-btn" type="button" id="user-btn"><i>林</i> 林夏 <span data-icon="down" data-size="15"></span></button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <!-- ========== 科学工具箱页面 开始 ========== -->
+      <div class="page" id="toolbox">
+        <header class="tb-head">
+          <div class="tb-title">
+            <h1>科学工具箱</h1>
+            <p class="kicker">轻量科研能力、数据处理与科学计算工具</p>
+            <p class="sub">汇聚科研工具与计算软件工具箱，打通数据、科研活动资源</p>
+          </div>
+          <div class="tb-art" aria-hidden="true">
+            <div class="glow"></div>
+            <svg class="orbit" width="310" height="118" viewBox="0 0 310 118"><ellipse cx="155" cy="62" rx="118" ry="29" transform="rotate(-6 155 62)" fill="none" stroke="#a9c3ea" stroke-width="1.2"/></svg>
+            <span class="tile tile-l" data-icon="doc" data-size="20"></span>
+            <span class="tile tile-ai">AI</span>
+            <span class="tile tile-r" data-icon="sliders" data-size="20"></span>
+          </div>
+          <div class="tb-actions">
+            <label class="btn ghost lg"><span data-icon="upload" data-size="17"></span> 接入工具<input id="import-file" type="file" hidden /></label>
+            <button class="btn lg" type="button" id="open-create"><span data-icon="plus" data-size="17"></span> 新建工具</button>
+          </div>
+        </header>
+
+        <div class="tb-search">
+          <form id="tool-search">
+            <label><span data-icon="search" data-size="19"></span><input id="tool-q" placeholder="搜索工具名称、功能、应用场景或关键词（支持自然语言）" /></label>
+            <button class="btn" type="submit">搜索</button>
+          </form>
+        </div>
+
+        <section class="loaded" id="loaded-panel" aria-label="课题空间已加载工具"></section>
+
+        <div class="filter-box">
+          <div class="filters" data-group="field"><span class="lbl">学科领域：</span></div>
+          <div class="filters sub" data-group="dir"><span class="lbl">研究方向：</span></div>
+          <div class="filters" data-group="scene"><span class="lbl">应用场景：</span></div>
+          <div class="filters" data-group="kind"><span class="lbl">能力类型：</span></div>
+          <div class="filters" data-group="lic"><span class="lbl">授权方式：</span></div>
+        </div>
+
+        <div class="tb-bar">
+          <div class="tabs" id="tool-tabs"></div>
+          <div class="bar-tools">
+            <span class="count" id="tool-count">共 12 个工具</span>
+            <div class="select">
+              <select id="tool-sort" aria-label="排序">
+                <option>综合排序</option>
+                <option>最近更新</option>
+                <option>最多使用</option>
+                <option>名称</option>
+              </select>
+              <span data-icon="down" data-size="14"></span>
+            </div>
+            <button class="view-btn on" type="button" data-view="card"><span data-icon="grid" data-size="16"></span>卡片</button>
+            <button class="view-btn" type="button" data-view="list"><span data-icon="list" data-size="16"></span>列表</button>
+          </div>
+        </div>
+
+        <div id="tool-results"></div>
+      </div>
+      <!-- ========== 科学工具箱页面 结束 ========== -->
+    </div>
+  </section>
+</div>
+
+<div class="mask drawer-mask" id="drawer" hidden></div>
+<div class="mask" id="modal" hidden></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+/* ========== 工具数据：协作时主要改这里 ========== */
+const FIELDS = ["全部", "通用", "地球科学", "合成生物学", "材料科学"]
+const USAGES = ["全部", "数据处理", "建模仿真", "分子分析", "可视化", "文献检索", "专利分析", "实验设计", "数据转换", "报告生成", "标准对标", "计算调度"]
+const TYPES = ["全部", "科研工具", "科研软件", "算法库", "可视化组件", "数据服务"]
+// 接入方式：内部字段（运行位置），不在页面上筛选或展示；用于区分前端组件
+// 工具箱只收录 Agent 能调用的能力：Skill、科研智能体分别在「科研技能」「科研智能体」页单独管理；需要人工操作的桌面软件无法交给 Agent 调用，不收录
+const ACCESS = ["全部", "平台内置", "计算集群", "前端组件"]
+const TABS = ["全部工具", "已加载", "最近使用", "已收藏", "我可用的"]
+const SPACES = ["全部项目", "配方优化课题", "高性能合成橡胶项目"]
+
+// 空间（课题）信息由课题管理平台同步，本平台只读、不展示课题描述；
+// 本平台只维护每个空间的已加载工具。
+// loaded：工具 id → { at }，加载时间用于保持展示顺序
+const SPACE_INFO = {
+  "全部项目": { loaded: {} },
+  "配方优化课题": {
+    loaded: {
+      t10: { at: 1 }, t13: { at: 2 }, t66: { at: 3 }, t1: { at: 5 }, t113: { at: 6 }
+    }
+  },
+  "高性能合成橡胶项目": { loaded: {} }
+}
+
+// tags：卡片上展示的两个标签（与截图一致）；field / usage / type 用于筛选
+let tools = [
+  { id: "t1",  name: "GROMACS",          tags: ["分子动力学", "开源"], field: "材料科学", usage: "分子分析", type: "科研软件", access: "计算集群", desc: "分子动力学模拟与轨迹分析。", owner: "科研计算中心", calls: "1.4K", favs: 48, hot: true, enabled: true, recent: true, needAuth: false, updated: "2026-09-24", icon: "doc", color: "blue", scales: ["原子/分子动力学尺度"], license: "开源" },
+  { id: "t2",  name: "科研数据格式转换",  tags: ["数据转换", "格式转换"], field: "通用", usage: "数据转换", type: "科研工具", access: "平台内置", desc: "将 CSV 数据转换为结构化 JSON。", owner: "科研计算中心", calls: "2.0K", favs: 56, hot: true, enabled: true, recent: true, needAuth: false, updated: "2026-09-24", icon: "network", color: "purple" },
+  { id: "t3",  name: "内部文献库连接",    tags: ["文献检索", "企业授权"], field: "通用", usage: "文献检索", type: "数据服务", access: "平台内置", desc: "访问已授权的企业文献资源。", owner: "信息中心", calls: "2.2K", favs: 84, hot: true, enabled: true, recent: false, needAuth: true, updated: "2026-09-24", icon: "flask", color: "green" },
+  { id: "t4",  name: "科研数据清洗工具",  tags: ["数据处理", "通用"], field: "通用", usage: "数据处理", type: "科研工具", access: "平台内置", desc: "处理缺失值、异常值、重复记录并生成质量报告。", owner: "科研计算中心", calls: "3.2K", favs: 112, hot: false, enabled: true, recent: true, needAuth: false, updated: "2026-09-23", icon: "chart", color: "orange" },
+  { id: "t5",  name: "分子格式转换工具",  tags: ["分子分析", "材料科学"], field: "材料科学", usage: "分子分析", type: "科研工具", access: "平台内置", desc: "支持 PDB、MOL、SDF 与 SMILES 格式转换。", owner: "科研计算中心", calls: "3.8K", favs: 140, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-22", icon: "box", color: "pink" },
+  { id: "t7",  name: "VASP",             tags: ["第一性原理", "商业"], field: "材料科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "第一性原理电子结构计算，输出能带、态密度与电荷密度。", owner: "科研计算中心", calls: "2.6K", favs: 96, hot: false, enabled: true, recent: true, needAuth: true, updated: "2026-09-20", icon: "doc", color: "blue", scales: ["第一性原理尺度"], license: "商业" },
+  { id: "t8",  name: "Gaussian",         tags: ["量子化学", "商业"], field: "材料科学", usage: "分子分析", type: "科研软件", access: "计算集群", desc: "量子化学计算，用于分子结构优化与能量计算。", owner: "科研计算中心", calls: "1.9K", favs: 73, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-18", icon: "network", color: "purple", scales: ["量子化学尺度"], license: "商业" },
+  { id: "t10", name: "LAMMPS",           tags: ["分子动力学", "开源"], field: "材料科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "大规模分子动力学，适用于配方体系长时间轨迹。", owner: "科研计算中心", calls: "1.1K", favs: 41, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-12", icon: "chart", color: "orange", scales: ["原子/分子动力学尺度"], license: "开源" },
+  { id: "t11", name: "标准条款解析",      tags: ["标准对标", "通用"], field: "通用", usage: "标准对标", type: "科研工具", access: "平台内置", desc: "解析标准全文并抽取测试条件、指标和限值。", owner: "科研知识中心", calls: "860", favs: 29, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-10", icon: "box", color: "pink" },
+  { id: "t12", name: "专利库",            tags: ["专利分析", "专利数据"], field: "通用", usage: "专利分析", type: "数据服务", access: "平台内置", desc: "连接专利数据源，按技术主题召回专利族。", owner: "信息中心", calls: "1.3K", favs: 52, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-08", icon: "wrench", color: "teal" },
+  /* —— 多尺度模拟软件 —— */
+  { id: "t13", name: "RDKit", tags: ["化学信息", "开源"], field: "材料科学", usage: "分子分析", type: "算法库", access: "计算集群", desc: "化学信息学工具包，支持结构标准化、子结构与相似性检索、构象生成、描述符与指纹计算。", owner: "科研计算中心", calls: "650", favs: 17, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-13", icon: "doc", color: "blue", scales: ["分子/化学信息尺度"], license: "开源" },
+  { id: "t14", name: "ORCA", tags: ["量子化学", "学术免费"], field: "材料科学", usage: "分子分析", type: "科研软件", access: "计算集群", desc: "量子化学程序，支持 DFT、耦合簇、TDDFT 与过渡态搜索；商业用途需单独授权。", owner: "科研计算中心", calls: "1.1K", favs: 11, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-03", icon: "network", color: "purple", scales: ["量子化学尺度"], license: "学术免费" },
+  { id: "t15", name: "PySCF", tags: ["量子化学", "开源"], field: "材料科学", usage: "分子分析", type: "算法库", access: "计算集群", desc: "Python 量子化学库，可脚本化完成 HF/DFT 单点、结构优化、电荷与轨道分析。", owner: "科研计算中心", calls: "1.0K", favs: 14, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-12", icon: "flask", color: "green", scales: ["量子化学尺度"], license: "开源" },
+  { id: "t16", name: "Q-Chem", tags: ["量子化学", "商业"], field: "材料科学", usage: "分子分析", type: "科研软件", access: "计算集群", desc: "量子化学软件，擅长 DFT、激发态与隐式溶剂模型计算。", owner: "科研计算中心", calls: "1.1K", favs: 11, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-17", icon: "chart", color: "orange", scales: ["量子化学尺度"], license: "商业" },
+  { id: "t17", name: "Quantum ESPRESSO", tags: ["第一性原理", "开源"], field: "材料科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "平面波赝势第一性原理套件，计算能带、态密度、声子、NEB 路径与 AIMD。", owner: "科研计算中心", calls: "450", favs: 10, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-03", icon: "box", color: "pink", scales: ["第一性原理尺度"], license: "开源" },
+  { id: "t18", name: "CP2K", tags: ["第一性原理", "开源"], field: "材料科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "基于 GPW 方法的 DFT/AIMD 程序，适合大体系界面、液相与表面吸附模拟。", owner: "科研计算中心", calls: "800", favs: 34, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-03", icon: "wrench", color: "teal", scales: ["第一性原理尺度"], license: "开源" },
+  { id: "t19", name: "CASTEP", tags: ["第一性原理", "商业"], field: "材料科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "平面波 DFT 程序（Materials Studio 模块），计算晶体结构、能带、声子与弹性常数。", owner: "科研计算中心", calls: "500", favs: 13, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-18", icon: "doc", color: "blue", scales: ["第一性原理尺度"], license: "商业" },
+  { id: "t22", name: "CoolProp", tags: ["热力学相平衡", "开源"], field: "通用", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "纯流体与混合物物性库，基于高精度状态方程计算热力学与输运性质。", owner: "科研计算中心", calls: "1.1K", favs: 45, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-02", icon: "chart", color: "orange", scales: ["热力学/相平衡尺度"], license: "开源" },
+  { id: "t23", name: "ThermoPack", tags: ["热力学相平衡", "开源"], field: "通用", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "SINTEF 热力学库，提供多种状态方程下的 Flash、相包络与临界点计算。", owner: "科研计算中心", calls: "1.1K", favs: 45, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-13", icon: "box", color: "pink", scales: ["热力学/相平衡尺度"], license: "开源" },
+  { id: "t26", name: "OpenPNM", tags: ["孔隙介观", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "孔隙网络建模库，求解 Stokes 流、Fickian 扩散、排驱与侵入渗流。", owner: "科研计算中心", calls: "800", favs: 17, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-18", icon: "network", color: "purple", scales: ["孔隙/介观尺度"], license: "开源"},
+  { id: "t27", name: "PoreSpy", tags: ["孔隙介观", "开源"], field: "地球科学", usage: "数据处理", type: "算法库", access: "计算集群", desc: "多孔介质图像分析库，用于孔隙分割、孔网提取与孔径分布统计。", owner: "科研计算中心", calls: "300", favs: 44, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-10", icon: "flask", color: "green", scales: ["孔隙/介观尺度"], license: "开源"},
+  { id: "t28", name: "Ansys Fluent", tags: ["连续介质", "商业"], field: "通用", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "通用 CFD 求解器，模拟湍流、传热、多相流与反应流。", owner: "科研计算中心", calls: "1.0K", favs: 60, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-22", icon: "chart", color: "orange", scales: ["连续介质尺度"], license: "商业"},
+  { id: "t30", name: "OpenFOAM", tags: ["连续介质", "开源"], field: "通用", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "有限体积 CFD 工具箱，支持稳态/瞬态流动、传热、多相流与反应流求解。", owner: "科研计算中心", calls: "1.1K", favs: 48, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-07", icon: "wrench", color: "teal", scales: ["连续介质尺度"], license: "开源"},
+  { id: "t34", name: "ECLIPSE", tags: ["油藏工程", "商业"], field: "地球科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "油藏数值模拟器，支持黑油与组分模型的历史拟合和开发方案预测。", owner: "科研计算中心", calls: "1.2K", favs: 42, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-14", icon: "chart", color: "orange", scales: ["油藏工程尺度"], license: "商业" },
+  { id: "t35", name: "CMG", tags: ["油藏工程", "商业"], field: "地球科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "油藏模拟套件（IMEX / GEM / STARS），覆盖黑油、组分、热采与化学驱。", owner: "科研计算中心", calls: "650", favs: 37, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-19", icon: "box", color: "pink", scales: ["油藏工程尺度"], license: "商业" },
+  { id: "t37", name: "OPM Flow", tags: ["油藏工程", "开源"], field: "地球科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "兼容 ECLIPSE deck 的油藏模拟器，支持黑油模型与 CO2 封存模拟。", owner: "科研计算中心", calls: "500", favs: 58, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-06", icon: "doc", color: "blue", scales: ["油藏工程尺度"], license: "开源" },
+  { id: "t38", name: "GeoEast", tags: ["地震处理", "商业"], field: "地球科学", usage: "数据处理", type: "科研软件", access: "计算集群", desc: "东方物探自主研发的地震数据处理解释一体化系统，覆盖处理、成像、正演与解释。", owner: "科研计算中心", calls: "500", favs: 13, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-19", icon: "network", color: "purple", scales: ["地震处理尺度", "地震波场尺度"], license: "商业" },
+  { id: "t40", name: "Devito", tags: ["地震波场", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "由符号表达式自动生成有限差分代码的 Python 框架，用于地震正演、RTM 与 FWI。", owner: "科研计算中心", calls: "650", favs: 54, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-15", icon: "chart", color: "orange", scales: ["地震波场尺度"], license: "开源" },
+  { id: "t43", name: "SimPEG", tags: ["物化探正反演", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "地球物理正反演框架，覆盖重力、磁法、直流电法、电磁与 MT。", owner: "科研计算中心", calls: "400", favs: 56, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-11", icon: "doc", color: "blue", scales: ["综合物化探正反演尺度"], license: "开源" },
+  { id: "t44", name: "ProMAX / SeisSpace", tags: ["地震处理", "商业"], field: "地球科学", usage: "数据处理", type: "科研软件", access: "计算集群", desc: "Landmark 地震资料处理系统，支持叠前处理、速度分析与偏移。", owner: "科研计算中心", calls: "350", favs: 39, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-14", icon: "network", color: "purple", scales: ["地震处理尺度"], license: "商业" },
+  { id: "t45", name: "SLB Omega", tags: ["地震处理", "商业"], field: "地球科学", usage: "数据处理", type: "科研软件", access: "计算集群", desc: "SLB 地震处理与成像平台，支持大规模叠前深度偏移。", owner: "科研计算中心", calls: "200", favs: 50, hot: false, enabled: true, recent: false, needAuth: true, updated: "2026-09-03", icon: "flask", color: "green", scales: ["地震处理尺度"], license: "商业" },
+  { id: "t46", name: "Madagascar / Seismic Unix", tags: ["地震处理", "开源"], field: "地球科学", usage: "数据处理", type: "科研软件", access: "计算集群", desc: "地震处理工具集，支持可复现处理流程、SEG-Y 读写与批处理。", owner: "科研计算中心", calls: "1.0K", favs: 44, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-26", icon: "chart", color: "orange", scales: ["地震处理尺度"], license: "开源" },
+  /* —— 建模前处理与可视化技术选型 —— */
+  { id: "t47", name: "3Dmol.js", tags: ["分子可视化", "开源"], field: "材料科学", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "WebGL 分子三维渲染库，在浏览器中展示 PDB/SDF/XYZ/CUBE 结构、分子表面与轨道等值面。", owner: "科研计算中心", calls: "900", favs: 63, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-18", icon: "doc", color: "blue", scales: ["分子/化学信息尺度",  "量子化学尺度",  "第一性原理尺度",  "原子/分子动力学尺度"], license: "开源" },
+  { id: "t49", name: "Jmol / JSmol", tags: ["晶体可视化", "开源"], field: "材料科学", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "分子与晶体结构查看器，JSmol 为纯 JS 版本，支持 CIF、晶胞与对称性展示。", owner: "科研计算中心", calls: "1.0K", favs: 62, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-19", icon: "flask", color: "green", scales: ["分子/化学信息尺度",  "量子化学尺度",  "第一性原理尺度"], license: "开源" },
+  { id: "t54", name: "ParaViewWeb", tags: ["场数据可视化", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "ParaView 的 Web 框架，在浏览器中交互查看远端大规模仿真结果。", owner: "科研计算中心", calls: "400", favs: 13, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-18", icon: "network", color: "purple", scales: ["连续介质尺度"], license: "开源" },
+  { id: "t55", name: "vtk.js / VTK", tags: ["三维渲染", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "三维科学可视化底层库，vtk.js 用于浏览器端网格、体数据与等值面渲染。", owner: "科研计算中心", calls: "1.4K", favs: 64, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-23", icon: "flask", color: "green", scales: ["孔隙/介观尺度",  "连续介质尺度",  "油藏工程尺度",  "综合物化探正反演尺度"], license: "开源" },
+  { id: "t56", name: "PyVista", tags: ["三维渲染", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "计算集群", desc: "基于 VTK 的 Python 三维可视化接口，适合网格、反演体与波场快照展示。", owner: "科研计算中心", calls: "1.2K", favs: 10, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-20", icon: "chart", color: "orange", scales: ["孔隙/介观尺度",  "连续介质尺度",  "油藏工程尺度",  "地震波场尺度",  "综合物化探正反演尺度"], license: "开源" },
+  { id: "t58", name: "Plotly.js", tags: ["交互图表", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "交互式科学图表库，绘制相包络、灵敏度曲线、剖面与道集图。", owner: "科研计算中心", calls: "1.2K", favs: 55, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-20", icon: "wrench", color: "teal", scales: ["热力学/相平衡尺度",  "流程模拟与优化尺度",  "地震波场尺度",  "综合物化探正反演尺度",  "地震处理尺度"], license: "开源" },
+  { id: "t59", name: "Apache ECharts", tags: ["交互图表", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "交互式图表库，适合物性曲线、流程指标与大屏统计展示。", owner: "科研计算中心", calls: "1.2K", favs: 18, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-20", icon: "doc", color: "blue", scales: ["热力学/相平衡尺度",  "流程模拟与优化尺度"], license: "开源" },
+  { id: "t60", name: "Graphviz / Mermaid", tags: ["流程图", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "以文本描述生成流程图与拓扑图，展示流程模拟单元连接与处理流程。", owner: "科研计算中心", calls: "200", favs: 61, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-17", icon: "network", color: "purple", scales: ["流程模拟与优化尺度"], license: "开源" },
+  { id: "t61", name: "Matplotlib", tags: ["科研绘图", "开源"], field: "通用", usage: "可视化", type: "可视化组件", access: "计算集群", desc: "在计算集群上导出论文级静态图（png/svg/pdf），如曲线、剖面、波场与反演结果图；会话内的交互图表由前端组件展示。", owner: "科研计算中心", calls: "300", favs: 11, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-02", icon: "flask", color: "green", scales: ["热力学/相平衡尺度",  "地震波场尺度",  "综合物化探正反演尺度",  "地震处理尺度"], license: "开源" },
+  { id: "t63", name: "Open Babel", tags: ["格式转换", "开源"], field: "材料科学", usage: "数据转换", type: "算法库", access: "计算集群", desc: "化学文件格式转换工具包，支持 100+ 种格式与 3D 坐标生成。", owner: "科研计算中心", calls: "1.1K", favs: 9, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-25", icon: "box", color: "pink", scales: ["分子/化学信息尺度",  "量子化学尺度"], license: "开源" },
+  { id: "t64", name: "ASE", tags: ["结构建模", "开源"], field: "材料科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "原子模拟环境，构建晶胞、表面与吸附构型，并驱动多种 DFT 计算器。", owner: "科研计算中心", calls: "900", favs: 28, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-15", icon: "wrench", color: "teal", scales: ["第一性原理尺度"], license: "开源" },
+  { id: "t65", name: "pymatgen", tags: ["结构建模", "开源"], field: "材料科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "材料结构分析库，生成表面与缺陷结构、读写 VASP 输入输出，对接 Materials Project。", owner: "科研计算中心", calls: "1.1K", favs: 61, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-07", icon: "doc", color: "blue", scales: ["第一性原理尺度"], license: "开源" },
+  { id: "t66", name: "Packmol", tags: ["体系构建", "开源"], field: "材料科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "按空间约束填充分子，构建溶液、混合物与界面初始构型。", owner: "科研计算中心", calls: "1.0K", favs: 22, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-21", icon: "network", color: "purple", scales: ["原子/分子动力学尺度"], license: "开源" },
+  { id: "t67", name: "Moltemplate", tags: ["体系构建", "开源"], field: "材料科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "LAMMPS 输入文件构建工具，以模板方式组装分子与力场参数。", owner: "科研计算中心", calls: "650", favs: 39, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-01", icon: "flask", color: "green", scales: ["原子/分子动力学尺度"], license: "开源" },
+  { id: "t68", name: "Polymatic / pysimm", tags: ["聚合物建模", "开源"], field: "材料科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "聚合物模拟退火成键与交联构建，生成无定形聚合物体系。", owner: "科研计算中心", calls: "1.2K", favs: 13, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-15", icon: "chart", color: "orange", scales: ["原子/分子动力学尺度"], license: "开源" },
+  { id: "t72", name: "segyio", tags: ["地震数据读写", "开源"], field: "地球科学", usage: "数据转换", type: "算法库", access: "计算集群", desc: "SEG-Y 地震数据快速读写 Python 库，访问道头与道数据。", owner: "科研计算中心", calls: "700", favs: 56, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-08", icon: "network", color: "purple", scales: ["地震波场尺度",  "地震处理尺度"], license: "开源" },
+  { id: "t73", name: "discretize", tags: ["网格生成", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "SimPEG 生态的有限体积网格库，支持张量、柱坐标与八叉树网格。", owner: "科研计算中心", calls: "1.0K", favs: 26, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-01", icon: "flask", color: "green", scales: ["地震波场尺度",  "综合物化探正反演尺度"], license: "开源" },
+  /* —— 合成生物学 —— */
+  { id: "t74", name: "AlphaFold2 / ColabFold", tags: ["结构预测", "开源"], field: "合成生物学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "蛋白质三维结构预测，ColabFold 以 MMseqs2 加速多序列比对，支持复合物预测。", owner: "科研计算中心", calls: "1.1K", favs: 20, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-01", icon: "doc", color: "blue", scales: ["生物分子结构尺度"], license: "开源" },
+  { id: "t75", name: "ESM-2 / ESMFold", tags: ["蛋白语言模型", "开源"], field: "合成生物学", usage: "分子分析", type: "算法库", access: "计算集群", desc: "蛋白质语言模型，提取序列表征、预测突变效应，并可单序列快速预测结构。", owner: "科研计算中心", calls: "1.1K", favs: 64, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-13", icon: "network", color: "purple", scales: ["序列/组学尺度",  "生物分子结构尺度"], license: "开源" },
+  { id: "t76", name: "RFdiffusion", tags: ["蛋白设计", "开源"], field: "合成生物学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "基于扩散模型的蛋白骨架从头设计，支持结合蛋白、对称组装与基序支架设计。", owner: "科研计算中心", calls: "1.3K", favs: 26, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-24", icon: "flask", color: "green", scales: ["生物分子结构尺度"], license: "开源" },
+  { id: "t77", name: "ProteinMPNN", tags: ["序列设计", "开源"], field: "合成生物学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "给定蛋白骨架反向设计氨基酸序列，常与 RFdiffusion、AlphaFold 组成设计-验证流程。", owner: "科研计算中心", calls: "800", favs: 44, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-15", icon: "chart", color: "orange", scales: ["生物分子结构尺度"], license: "开源" },
+  { id: "t78", name: "Rosetta", tags: ["蛋白建模", "学术免费"], field: "合成生物学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "蛋白结构建模与设计套件，用于酶设计、稳定性优化、对接与能量打分；商业用途需授权。", owner: "科研计算中心", calls: "200", favs: 38, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-20", icon: "box", color: "pink", scales: ["生物分子结构尺度"], license: "学术免费" },
+  { id: "t79", name: "AutoDock Vina", tags: ["分子对接", "开源"], field: "合成生物学", usage: "分子分析", type: "科研软件", access: "计算集群", desc: "小分子-蛋白对接与结合亲和力打分，用于底物、抑制剂与酶活性口袋筛选。", owner: "科研计算中心", calls: "1.6K", favs: 13, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-04", icon: "wrench", color: "teal", scales: ["生物分子结构尺度"], license: "开源" },
+  { id: "t80", name: "OpenMM", tags: ["分子动力学", "开源"], field: "合成生物学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "GPU 加速的生物分子动力学库，可用 Python 脚本定制模拟流程与力场。", owner: "科研计算中心", calls: "450", favs: 73, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-14", icon: "doc", color: "blue", scales: ["原子/分子动力学尺度",  "生物分子结构尺度"], license: "开源" },
+  { id: "t81", name: "BLAST+", tags: ["序列比对", "开源"], field: "合成生物学", usage: "数据处理", type: "科研软件", access: "计算集群", desc: "NCBI 本地序列相似性检索，支持核酸与蛋白数据库比对和同源基因发现。", owner: "科研计算中心", calls: "250", favs: 75, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-21", icon: "network", color: "purple", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t82", name: "Biopython", tags: ["序列分析", "开源"], field: "合成生物学", usage: "数据处理", type: "算法库", access: "计算集群", desc: "生物信息 Python 库，读写 FASTA/GenBank、调用 NCBI 接口与处理序列。", owner: "科研计算中心", calls: "1.6K", favs: 55, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-25", icon: "flask", color: "green", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t83", name: "ViennaRNA", tags: ["RNA 结构", "开源"], field: "合成生物学", usage: "分子分析", type: "算法库", access: "计算集群", desc: "RNA 二级结构与最小自由能预测，用于核糖开关、sgRNA 与 RBS 设计评估。", owner: "科研计算中心", calls: "350", favs: 36, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-26", icon: "chart", color: "orange", scales: ["生物分子结构尺度"], license: "开源" },
+  { id: "t84", name: "Primer3", tags: ["引物设计", "开源"], field: "合成生物学", usage: "实验设计", type: "算法库", access: "计算集群", desc: "PCR 与测序引物设计，控制熔解温度、GC 含量与二聚体风险。", owner: "科研计算中心", calls: "300", favs: 57, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-22", icon: "box", color: "pink", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t85", name: "DNA Chisel", tags: ["序列优化", "开源"], field: "合成生物学", usage: "实验设计", type: "算法库", access: "计算集群", desc: "按约束与目标优化 DNA 序列，完成密码子优化、去除酶切位点与 GC 调控。", owner: "科研计算中心", calls: "750", favs: 37, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-24", icon: "wrench", color: "teal", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t86", name: "Cello", tags: ["基因线路", "开源"], field: "合成生物学", usage: "实验设计", type: "科研软件", access: "计算集群", desc: "由 Verilog 逻辑描述自动设计遗传线路，完成元件分配与表达行为预测。", owner: "科研计算中心", calls: "1.4K", favs: 57, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-19", icon: "doc", color: "blue", scales: ["基因线路尺度"], license: "开源" },
+  { id: "t88", name: "COBRApy", tags: ["代谢通量", "开源"], field: "合成生物学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "基因组尺度代谢模型的通量平衡分析，预测敲除靶点与产物合成途径。", owner: "科研计算中心", calls: "450", favs: 70, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-06", icon: "flask", color: "green", scales: ["代谢网络/细胞尺度"], license: "开源" },
+  { id: "t90", name: "antiSMASH", tags: ["基因簇挖掘", "开源"], field: "合成生物学", usage: "分子分析", type: "科研软件", access: "计算集群", desc: "基因组中次级代谢产物生物合成基因簇的识别与注释。", owner: "科研计算中心", calls: "700", favs: 33, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-26", icon: "box", color: "pink", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t91", name: "DESeq2", tags: ["转录组", "开源"], field: "合成生物学", usage: "数据处理", type: "算法库", access: "计算集群", desc: "RNA-seq 差异表达分析 R 包，用于工程菌株与调控元件表达评估。", owner: "科研计算中心", calls: "750", favs: 78, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-11", icon: "wrench", color: "teal", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t92", name: "Nextflow / nf-core", tags: ["流程编排", "开源"], field: "合成生物学", usage: "数据处理", type: "科研软件", access: "计算集群", desc: "可复现的组学分析流程编排，nf-core 提供 RNA-seq、宏基因组等标准流程。", owner: "科研计算中心", calls: "800", favs: 24, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-03", icon: "doc", color: "blue", scales: ["序列/组学尺度"], license: "开源" },
+  { id: "t95", name: "Mol*", tags: ["分子可视化", "开源"], field: "合成生物学", usage: "可视化", type: "可视化组件", access: "前端组件", desc: "PDB 官方采用的 Web 分子可视化组件，流畅渲染大型复合物与结构注释。", owner: "科研计算中心", calls: "1.2K", favs: 23, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-12", icon: "chart", color: "orange", scales: ["生物分子结构尺度"], license: "开源" },
+  { id: "t96", name: "lasio / welly", tags: ["测井解释", "开源"], field: "地球科学", usage: "数据处理", type: "算法库", access: "计算集群", desc: "LAS/DLIS 测井数据读写与曲线质控，计算泥质含量、孔隙度与含水饱和度。", owner: "科研计算中心", calls: "900", favs: 33, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "doc", color: "green", scales: ["井筒/测井尺度"], license: "开源" },
+  { id: "t99", name: "GemPy", tags: ["地质建模", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "基于隐式势场的三维地质建模库，由层面点与产状构建构造模型并评估不确定性。", owner: "科研计算中心", calls: "350", favs: 38, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "layers", color: "orange", scales: ["地质体/盆地尺度"], license: "开源" },
+  { id: "t100", name: "GSTools / PyKrige", tags: ["地质统计", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "变差函数分析、克里金插值与序贯高斯模拟，用于属性建模与空间插值。", owner: "科研计算中心", calls: "500", favs: 29, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "chart", color: "teal", scales: ["地质体/盆地尺度", "油藏工程尺度"], license: "开源" },
+  { id: "t102", name: "bruges", tags: ["岩石物理", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "岩石物理与地震正演小工具库，计算弹性参数、AVO 响应与合成地震记录。", owner: "科研计算中心", calls: "300", favs: 27, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "flask", color: "blue", scales: ["井筒/测井尺度", "地震波场尺度"], license: "开源" },
+  { id: "t103", name: "ObsPy", tags: ["天然地震", "开源"], field: "地球科学", usage: "数据处理", type: "算法库", access: "计算集群", desc: "地震学数据处理框架，下载 FDSN 台站数据，去仪器响应、滤波与震相拾取。", owner: "科研计算中心", calls: "700", favs: 48, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "chart", color: "purple", scales: ["地震波场尺度"], license: "开源" },
+  { id: "t104", name: "SPECFEM3D", tags: ["地震波场", "开源"], field: "地球科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "谱元法三维地震波传播模拟，支持区域/全球正演与伴随层析成像。", owner: "科研计算中心", calls: "250", favs: 31, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "chart", color: "purple", scales: ["地震波场尺度"], license: "开源" },
+  { id: "t105", name: "pyGIMLi", tags: ["物化探正反演", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "地球物理建模与反演库，覆盖电阻率层析（ERT）、折射层析与探地雷达。", owner: "科研计算中心", calls: "300", favs: 24, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "doc", color: "blue", scales: ["综合物化探正反演尺度"], license: "开源" },
+  { id: "t106", name: "MRST", tags: ["油藏工程", "开源"], field: "地球科学", usage: "建模仿真", type: "算法库", access: "计算集群", desc: "SINTEF 开源油藏模拟工具箱，含黑油模型、CO2 封存（co2lab）与粗化方法。", owner: "科研计算中心", calls: "400", favs: 30, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "layers", color: "green", scales: ["油藏工程尺度"], license: "开源" },
+  { id: "t107", name: "PHREEQC", tags: ["地球化学", "免费"], field: "地球科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "USGS 水文地球化学程序，计算物种形态、矿物饱和指数、水岩反应与一维反应运移。", owner: "科研计算中心", calls: "550", favs: 36, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "flask", color: "teal", scales: ["热力学/相平衡尺度", "连续介质尺度"], license: "免费" },
+  { id: "t108", name: "PFLOTRAN", tags: ["反应运移", "开源"], field: "地球科学", usage: "建模仿真", type: "科研软件", access: "计算集群", desc: "大规模并行多相流与反应运移模拟器，用于 CO2 地质封存、地下水与地热模拟。", owner: "科研计算中心", calls: "200", favs: 19, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "flask", color: "teal", scales: ["油藏工程尺度", "连续介质尺度"], license: "开源" },
+  { id: "t110", name: "GDAL / Rasterio", tags: ["地理空间数据", "开源"], field: "地球科学", usage: "数据转换", type: "算法库", access: "计算集群", desc: "栅格与矢量地理数据读写、坐标转换与裁剪，支持 GeoTIFF、Shapefile、NetCDF 等格式。", owner: "科研计算中心", calls: "800", favs: 41, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "network", color: "purple", scales: ["地质体/盆地尺度"], license: "开源" },
+  { id: "t111", name: "PyGMT", tags: ["地学制图", "开源"], field: "地球科学", usage: "可视化", type: "算法库", access: "计算集群", desc: "GMT 的 Python 接口，绘制地形底图、构造图、震中分布与剖面图（静态出图）。", owner: "科研计算中心", calls: "400", favs: 37, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-29", icon: "chart", color: "pink", scales: ["地质体/盆地尺度"], license: "开源" },
+  { id: "t114", name: "LaTeX 排版（TeX Live）", tags: ["论文排版", "开源"], field: "通用", usage: "报告生成", type: "科研工具", access: "平台内置", desc: "按期刊模板编译 LaTeX 论文，生成参考文献与修订对比稿。", owner: "科研计算中心", calls: "1.6K", favs: 58, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-30", icon: "doc", color: "blue", license: "开源" },
+  { id: "t115", name: "Zotero 文献管理", tags: ["文献管理", "开源"], field: "通用", usage: "报告生成", type: "科研工具", access: "平台内置", desc: "连接个人与课题组文献库，检索条目、插入引文并导出 BibTeX。", owner: "信息中心", calls: "2.1K", favs: 77, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-30", icon: "book", color: "green", license: "开源" },
+  { id: "t116", name: "Pandoc 文档转换", tags: ["文档转换", "开源"], field: "通用", usage: "报告生成", type: "科研工具", access: "平台内置", desc: "Markdown、LaTeX、Word 互转，按 CSL 样式排版引文，生成投稿或汇报文档。", owner: "科研计算中心", calls: "940", favs: 31, hot: false, enabled: true, recent: false, needAuth: false, updated: "2026-09-30", icon: "network", color: "purple", license: "开源" },
+  { id: "t113", name: "远程计算", tags: ["作业调度", "远程资源"], field: "通用", usage: "计算调度", type: "科研工具", access: "平台内置", desc: "对接 HPC 集群、GPU 集群与工作站等远程资源；每个资源单独配置调度系统（Slurm、PBS、LSF、SGE 或 SSH 直连）、地址与密钥，提交作业、查询状态、传输文件。", owner: "科研计算中心", calls: "3.8K", favs: 64, hot: true, enabled: true, recent: true, needAuth: false, updated: "2026-09-29", icon: "hub", color: "teal" },
+]
+// ===== 分类维度：学科领域 → 研究方向 → 应用场景 → 能力类型 → 授权方式 =====
+// 应用场景 = 工具在科研工作中的用途（原「分类」标签已并入）；一个工具可属于多个场景
+const SCENES = ["科学计算", "实验设计", "数据处理", "可视化分析", "论文绘图", "论文写作", "文献调研", "专利与标准", "计算调度"]
+const USAGE_SCENE = { "建模仿真": "科学计算", "分子分析": "科学计算", "数据处理": "数据处理", "数据转换": "数据处理", "可视化": "可视化分析", "文献检索": "文献调研", "专利分析": "专利与标准", "标准对标": "专利与标准", "实验设计": "实验设计", "报告生成": "论文写作", "计算调度": "计算调度" }
+const SCENE_USAGE = { "科学计算": "建模仿真", "实验设计": "实验设计", "数据处理": "数据处理", "可视化分析": "可视化", "论文绘图": "可视化", "论文写作": "报告生成", "文献调研": "文献检索", "专利与标准": "专利分析", "计算调度": "计算调度" }
+// 在用途之外额外归入的场景：能导出出版级图片的归入「论文绘图」，管理引文的归入「论文写作」
+const SCENE_EXTRA = {
+  "论文绘图": "t61 t111 t58 t59 t60 t56",
+  "论文写作": "t3",
+  "数据处理": "t13 t82 t96 t103",
+  "文献调研": "t115"
+}
+const LICENSES = ["开源", "免费", "付费"]
+// 能力类型（AI 维度）：条目以什么形态交给 AI 使用
+const KINDS = ["MCP 服务", "工具", "前端组件"]
+const KIND_TIP = {
+  "MCP 服务": "一组 MCP 工具，按服务整体加载，AI 按需调用其中的工具",
+  "工具": "单个可调用的函数或接口",
+  "前端组件": "在会话里渲染工具输出的展示组件，自动启用"
+}
+function kindOf(item) {
+  if (TOOLKITS[item.id]) return "MCP 服务"
+  if (item.access === "前端组件") return "前端组件"
+  return "工具"
+}
+const KIND_CLS = { "MCP 服务": "mcp", "前端组件": "comp", "工具": "fn" }
+;(function applyDims() {
+  tools.forEach((item) => {
+    const sc = [USAGE_SCENE[item.usage]].filter(Boolean)
+    Object.keys(SCENE_EXTRA).forEach((k) => { if (SCENE_EXTRA[k].split(" ").includes(item.id) && !sc.includes(k)) sc.push(k) })
+    item.scenes = SCENES.filter((s) => sc.includes(s))
+  })
+})()
+// 研究方向 = 课题方向：工具服务于哪类课题（按学科领域划分，一个工具可服务多个方向）
+// 技术方法（分子动力学、量子化学……）仍保留在工具标签里，不作为研究方向
+const DIRS = {
+  "材料科学": [
+    ["合成橡胶", "t1 t10 t66 t67 t68 t47"],
+    ["聚合物复合材料", "t1 t10 t66 t67 t68 t63 t47"],
+    ["配方设计", "t13 t1 t10 t66 t5"],
+    ["多相催化", "t7 t17 t18 t64 t65 t47"],
+    ["均相催化", "t8 t14 t15 t16 t63 t47"],
+    ["反应机理", "t8 t14 t15 t16 t7 t18 t64 t47"],
+    ["电池材料", "t7 t17 t18 t19 t64 t65 t10 t49"],
+    ["光电材料", "t7 t17 t19 t14 t16 t65 t49"],
+    ["多孔材料", "t7 t18 t64 t65 t10 t49"],
+    ["功能分子设计", "t13 t8 t15 t16 t5 t63 t47 t1"]
+  ],
+  "地球科学": [
+    ["地震勘探", "t38 t40 t44 t45 t46 t72 t102 t104"],
+    ["储层表征", "t26 t27 t96 t102 t100"],
+    ["油气藏开发", "t34 t35 t37 t106 t26"],
+    ["地质建模", "t99 t100 t73 t110 t111"],
+    ["盆地模拟", "t99 t100 t110 t111"],
+    ["非震物化探", "t43 t105 t73"],
+    ["CO2 地质封存", "t108 t106 t37 t107"],
+    ["水文地球化学", "t107 t108"],
+    ["天然地震", "t103 t104 t110 t111"]
+  ],
+  "合成生物学": [
+    ["蛋白质设计", "t74 t75 t76 t77 t78 t79 t80 t95"],
+    ["酶工程", "t74 t75 t77 t78 t79 t80 t95 t81 t82"],
+    ["基因线路设计", "t84 t85 t86 t83 t82"],
+    ["代谢工程", "t88 t90 t85 t82"],
+    ["组学分析", "t81 t82 t91 t92 t90"]
+  ]
+}
+// 通用领域的工具跨课题使用，不再细分研究方向
+tools.forEach((item) => { item.dirs = (DIRS[item.field] || []).filter(([, ids]) => ids.split(" ").includes(item.id)).map(([n]) => n) })
+function dirsOf(item) { return item.dirs || [] }
+function techOf(item) { return (item.tags && item.tags[0]) || item.usage }
+function licOf(item) {
+  if (item.license === "开源") return "开源"
+  if (item.license === "商业" || (item.tags || []).includes("企业授权")) return "付费"
+  return "免费"
+}
+function licText(item) {
+  const l = licOf(item)
+  if (l === "付费") return item.license === "商业" ? "付费 · 商业许可" : "付费 · 企业采购授权"
+  if (l === "免费") return item.license ? `免费 · ${item.license}` : "免费 · 平台提供"
+  return "开源"
+}
+// 每个维度：[state 键, 标签, 全部选项(函数), 取值函数]
+const DIMS = [
+  ["field", "学科领域", () => FIELDS, (i) => [i.field]],
+  ["dir", "研究方向", () => ["全部", ...(state.field === "全部" ? FIELDS.slice(1).flatMap((f) => DIRS[f] || []) : (DIRS[state.field] || [])).map((d) => d[0])], dirsOf],
+  ["scene", "应用场景", () => ["全部", ...SCENES], (i) => i.scenes || []],
+  ["kind", "能力类型", () => ["全部", ...KINDS], (i) => [kindOf(i)]],
+  ["lic", "授权方式", () => ["全部", ...LICENSES], (i) => [licOf(i)]]
+]
+const DIM_LIMIT = 12 // 超过的选项折叠到「更多」
+function dimOk(item, key) {
+  const d = DIMS.find((x) => x[0] === key)
+  return state[key] === "全部" || d[3](item).includes(state[key])
+}
+function anyFilter() { return DIMS.some(([k]) => state[k] !== "全部") }
+
+
+const ICONS = {
+  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7"/><path d="M5.5 8.8V20.5h13V8.8"/><path d="M10 20.5v-5.5h4v5.5"/>',
+  hub: '<circle cx="12" cy="12" r="2.6"/><path d="M18.4 7.2A8 8 0 1 1 9.7 4.3"/><path d="M5.6 16.8A8 8 0 0 0 20 12"/><circle cx="17.5" cy="5.2" r="1.6"/>',
+  book: '<path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v12a2.8 2.8 0 0 0-2.8-2.8H2.5z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v12a2.8 2.8 0 0 1 2.8-2.8h6.7z"/>',
+  layers: '<path d="m12 3 9.5 4.8L12 12.6 2.5 7.8z"/><path d="m2.5 12.2 9.5 4.8 9.5-4.8"/><path d="m2.5 16.4 9.5 4.8 9.5-4.8"/>',
+  box: '<path d="M20.5 7.5 12 3 3.5 7.5v9L12 21l8.5-4.5z"/><path d="m3.5 7.5 8.5 4.6 8.5-4.6"/><path d="M12 12.1V21"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6.3L4.7 18.1A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.7-2.9L14 9.3V3"/><path d="M7.2 15h9.6"/>',
+  folder: '<path d="M4 20h16a2 2 0 0 0 2-2V8.5a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3.5H4a2 2 0 0 0-2 2V18a2 2 0 0 0 2 2Z"/><path d="M12 10.5v3.5"/><circle cx="12" cy="16.6" r="1.2"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8.2"/><path d="M3 3.5v4.7h4.7"/><path d="M12 7.5V12l3.4 2"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>',
+  doc: '<path d="M14 3H6.5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8.5z"/><path d="M14 3v5.5h5.5"/><path d="M8.5 9.5h2M8.5 13h7M8.5 16.5h7"/>',
+  network: '<rect x="9" y="3" width="6" height="5.5" rx="1"/><rect x="3" y="15.5" width="6" height="5.5" rx="1"/><rect x="15" y="15.5" width="6" height="5.5" rx="1"/><path d="M6 15.5v-2.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2.5"/><path d="M12 12V8.5"/>',
+  chart: '<path d="M7 19v-4.5M12 19v-8M17 19V7.5"/>',
+  sliders: '<path d="M4 8h9M17.5 8H20M4 16h2.5M11 16h9"/><circle cx="15.2" cy="8" r="2.2"/><circle cx="8.8" cy="16" r="2.2"/>',
+  upload: '<path d="M12 15V3.5"/><path d="m7 8 5-4.5L17 8"/><path d="M20.5 15v3.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V15"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  chev: '<path d="m9 6 6 6-6 6"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  grid: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17M12 3.5v17"/>',
+  list: '<path d="M9 6h11.5M9 12h11.5M9 18h11.5"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="2.6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>',
+  heart: '<path d="M19.2 13.8c1.5-1.5 2.8-3.2 2.8-5.4A5.3 5.3 0 0 0 16.7 3c-1.8 0-3 .5-4.7 2.1C10.3 3.5 9.1 3 7.3 3A5.3 5.3 0 0 0 2 8.4c0 2.2 1.3 3.9 2.8 5.4l7.2 7.1Z"/>',
+  dots: '<circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  crown: '<path d="M3 7.5 7.5 11 12 4.5l4.5 6.5L21 7.5 19.2 17H4.8Z"/><path d="M4.8 20h14.4"/>',
+  bell: '<path d="M6 8.5a6 6 0 0 1 12 0c0 6.5 2.8 8.5 2.8 8.5H3.2S6 15 6 8.5"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.5-2.6 2.5"/><path d="M12 16.6h.01" stroke-width="2.4"/>',
+  panel: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9 3.5v17"/><path d="m15.5 14.5-2.5-2.5 2.5-2.5"/>',
+  close: '<path d="M7 7l10 10M17 7 7 17"/>',
+  spark: '<path d="M12 3.5 13.9 9 19.5 11 13.9 13 12 18.5 10.1 13 4.5 11 10.1 9z"/><path d="M19 3.5v3M17.5 5h3M5 17.5v3M3.5 19h3"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+}
+
+const favs = new Set(["t1", "t58"])
+const state = { query: "", field: "全部", dir: "全部", scene: "全部", kind: "全部", lic: "全部", fOpen: {}, access: "全部", tab: "全部工具", sort: "综合排序", view: "card", space: "配方优化课题", menu: null, lpOpen: false, lpComps: false }
+const LP_FOLD = 10
+let toastTimer = 0
+
+/* ========== 工具箱与工具 ==========
+   计算软件、算法库、数据服务不是单个「工具」，而是「工具箱」：本质是一个 MCP 服务，里面的每个功能才是工具（MCP tool）。
+   例如 Gaussian 工具箱包含结构优化、单点能、频率计算等工具。AI 在会话里按需调用具体工具；加载时以工具箱为单位，可在详情里按空间停用个别工具。
+   平台内置的轻量工具、前端组件仍是单个条目。
+   格式：「tNN 服务标识」起一个工具箱，下面每行「工具名|名称|说明|输出」。 */
+const TOOLKIT_SRC = `
+t8 gaussian
+opt|结构优化|几何优化到能量极小点，支持约束优化与冗余内坐标|优化结构 xyz、能量
+sp|单点能计算|指定方法与基组计算体系能量、轨道与电荷|能量、轨道 cube
+freq|频率计算|振动频率与热力学校正，判断极小点或过渡态|IR/Raman 谱、ZPE、Gibbs 自由能
+ts|过渡态搜索|QST2/QST3 或 Berny TS 优化定位过渡态|过渡态结构、虚频
+irc|IRC 反应路径|从过渡态沿内禀反应坐标连接反应物与产物|路径能量曲线、轨迹
+tddft|激发态计算|TD-DFT 计算垂直激发能与振子强度|UV-Vis 谱
+nmr|NMR 屏蔽常数|GIAO 方法计算化学位移|NMR 谱
+t7 vasp
+relax|结构弛豫|离子与晶胞弛豫，得到稳定晶体结构|CONTCAR、能量
+scf|自洽计算|静态自洽求电荷密度与总能|CHGCAR、总能
+band|能带计算|沿高对称路径计算能带结构|能带图数据
+dos|态密度|总态密度与投影态密度|DOS/PDOS 曲线
+neb|NEB 反应路径|CI-NEB 搜索扩散与反应的最小能量路径|能垒曲线、中间构型
+aimd|从头算分子动力学|NVT/NPT 从头算 MD|轨迹 XDATCAR
+t14 orca
+opt|结构优化|DFT/HF 几何优化，支持 RI 加速|优化结构 xyz、能量
+sp|单点能计算|DFT、DLPNO-CCSD(T) 等高精度单点能|能量
+freq|频率计算|解析/数值频率与热力学校正|IR 谱、Gibbs 自由能
+ts|过渡态搜索|OptTS 与 NEB-TS 定位过渡态|过渡态结构、虚频
+tddft|激发态计算|TD-DFT/sTDA 激发能与吸收谱|UV-Vis 谱
+t16 qchem
+opt|结构优化|DFT 几何优化|优化结构 xyz
+sp|单点能计算|DFT 与隐式溶剂模型能量|能量
+freq|频率计算|振动频率与热力学量|IR 谱
+excited|激发态计算|TDDFT/ADC 激发态|激发能表
+t15 pyscf
+scf|HF/DFT 单点|脚本化 HF/DFT 能量计算|能量、轨道
+opt|结构优化|结合 geomeTRIC 的几何优化|优化结构 xyz
+charges|电荷分析|Mulliken、Löwdin 与 ESP 电荷|原子电荷表
+orbitals|轨道导出|导出分子轨道到 cube 文件|轨道 cube
+t17 quantum-espresso
+relax|结构弛豫|vc-relax 晶胞与离子弛豫|弛豫结构
+scf|自洽计算|平面波赝势 SCF|总能、电荷密度
+bands|能带计算|非自洽能带计算|能带图数据
+dos|态密度|projwfc 投影态密度|DOS/PDOS 曲线
+phonon|声子计算|ph.x 密度泛函微扰声子谱|声子色散
+neb|NEB 反应路径|neb.x 最小能量路径|能垒曲线
+t18 cp2k
+geo_opt|结构优化|GPW 方法几何与晶胞优化|优化结构
+md|从头算分子动力学|Born-Oppenheimer MD|轨迹 xyz
+adsorption|吸附能计算|界面与表面吸附能批量计算|吸附能表
+t19 castep
+geom_opt|结构优化|晶体几何优化|优化结构 cif
+band|能带与态密度|电子结构分析|能带、DOS 曲线
+elastic|弹性常数|应力-应变法求弹性张量|弹性常数表
+t1 gromacs
+prepare|体系准备|拓扑生成、加盒子、溶剂化与加离子|gro、top
+em|能量最小化|最速下降/共轭梯度能量最小化|能量曲线
+equil|平衡模拟|NVT/NPT 平衡|温度、压力、密度曲线
+md|成品模拟|生产阶段分子动力学|轨迹 xtc
+analyze|轨迹分析|RMSD、RMSF、回转半径、氢键、RDF|分析曲线
+t10 lammps
+build|输入构建|由结构与力场生成 LAMMPS data 与 in 文件|data、in 文件
+minimize|能量最小化|体系能量最小化|能量曲线
+md|分子动力学|NVT/NPT/NVE 模拟|轨迹 dump
+tg|玻璃化转变温度|逐步降温求密度-温度曲线拐点|Tg、密度-温度曲线
+mechanics|力学性能|单轴拉伸求应力-应变与模量|应力-应变曲线
+diffusion|扩散系数|MSD 计算扩散系数|MSD 曲线、扩散系数
+t66 packmol
+pack|分子填充|按盒子、密度与约束填充混合物|初始构型 pdb
+interface|界面构型|构建双层或多层界面体系|界面构型 pdb
+t13 rdkit
+standardize|结构标准化|SMILES 规范化、去盐、互变异构|规范 SMILES
+descriptors|描述符计算|分子量、logP、TPSA 等 200+ 描述符|描述符表
+fingerprint|分子指纹|Morgan、MACCS 等指纹|指纹向量
+similarity|相似性检索|按 Tanimoto 系数检索相似结构|相似度排序表
+substructure|子结构检索|按 SMARTS 匹配子结构|命中列表
+conformers|构象生成|ETKDG 生成三维构象并优化|构象 sdf
+t63 openbabel
+convert|格式转换|100+ 种化学格式互转|转换后文件
+gen3d|三维坐标生成|由 SMILES 生成三维结构|结构 sdf
+protonate|加氢与质子化|按 pH 调整质子化状态|结构文件
+t64 ase
+build_bulk|晶胞构建|按晶格与空间群构建晶体|结构 cif
+build_surface|表面与吸附构型|切表面、加真空层、放置吸附分子|结构 cif
+calculate|驱动计算器|调用 VASP/QE/GPAW 等计算能量与力|能量、力
+t65 pymatgen
+analyze|结构分析|对称性、配位环境与键长分析|分析报告
+surface|表面生成|按晶面指数生成 slab|slab 结构
+defect|缺陷构型|空位、替位、间隙缺陷|缺陷结构
+vasp_io|VASP 输入输出|生成输入集并解析计算结果|输入文件、结果表
+phase_diagram|相图|基于 Materials Project 数据构建相图|相图数据
+t67 moltemplate
+assemble|模板组装|按分子模板与力场组装体系|LAMMPS data
+t68 polymatic
+polymerize|聚合成键|模拟退火逐步成键|聚合物结构
+crosslink|交联构建|按交联度生成交联网络|交联结构
+amorphous|无定形体系|生成无定形聚合物盒子|结构 data
+t22 coolprop
+props|物性计算|给定状态点计算密度、焓、熵、黏度等|物性表
+saturation|饱和性质|饱和压力、温度与相变焓|饱和曲线
+t23 thermopack
+flash|闪蒸计算|PT/PH/PS 闪蒸|相分率与组成
+envelope|相包络|计算混合物相包络线|相包络曲线
+critical|临界点|混合物临界点计算|临界参数
+t26 openpnm
+network|孔隙网络构建|由孔网提取结果建立网络模型|网络模型
+permeability|渗透率|Stokes 流求绝对渗透率|渗透率
+diffusion|扩散|Fickian 扩散求有效扩散系数|有效扩散系数
+drainage|排驱与侵入|毛管压力曲线与相对渗透率|Pc 曲线
+t27 porespy
+segment|孔隙分割|CT 图像阈值与分水岭分割|分割体数据
+extract|孔网提取|SNOW 算法提取孔隙网络|孔网文件
+psd|孔径分布|局部厚度法统计孔径分布|孔径分布曲线
+t28 fluent
+mesh_check|网格检查|网格质量检查与修复|质量报告
+steady|稳态求解|湍流、传热稳态计算|残差曲线、场数据
+transient|瞬态求解|瞬态与多相流计算|场数据时间序列
+post|后处理|截面、监测点与积分量导出|曲线、云图
+t30 openfoam
+mesh|网格生成|blockMesh 与 snappyHexMesh|网格
+simple|稳态求解|simpleFoam 等稳态求解器|场数据
+pimple|瞬态求解|pimpleFoam、interFoam 等瞬态/多相求解器|场数据时间序列
+post|后处理|采样、力系数与场统计|曲线、场数据
+t34 eclipse
+run|模拟运行|黑油/组分模型运行|生产曲线、网格结果
+history_match|历史拟合|参数调整拟合产量与压力历史|拟合曲线
+forecast|方案预测|开发方案对比预测|预测曲线
+t35 cmg
+imex|黑油模拟|IMEX 黑油模型|生产曲线
+gem|组分模拟|GEM 组分与 CO2 驱模拟|生产曲线
+stars|热采与化学驱|STARS 热采、化学驱模拟|生产曲线
+t37 opm-flow
+run|模拟运行|运行 ECLIPSE 格式 deck|生产曲线、网格结果
+co2|CO2 封存|CO2 注入与封存模拟|羽流分布
+t38 geoeast
+preprocess|预处理|静校正、去噪、振幅补偿|处理后道集
+velocity|速度分析|速度谱拾取与速度建模|速度模型
+migration|偏移成像|叠前时间/深度偏移|成像剖面
+interpret|解释|层位、断层解释|层位与断层数据
+t44 promax
+preprocess|叠前处理|道编辑、滤波、反褶积|处理后道集
+velocity|速度分析|速度谱拾取|速度场
+migration|偏移|Kirchhoff 叠前偏移|成像剖面
+t45 omega
+migration|深度偏移|大规模叠前深度偏移|成像体
+tomography|层析速度建模|网格层析反演速度|速度模型
+t46 madagascar
+segy_io|SEG-Y 读写|SEG-Y 与 RSF 格式互转|数据文件
+process|批处理流程|滤波、NMO、叠加等可复现流程|处理结果
+t40 devito
+forward|地震正演|声波/弹性波有限差分正演|炮记录、波场快照
+rtm|逆时偏移|RTM 成像|成像剖面
+fwi|全波形反演|梯度法 FWI 反演速度|速度模型
+t43 simpeg
+gravity|重力反演|三维重力反演密度|密度模型
+magnetic|磁法反演|三维磁化率反演|磁化率模型
+dc|直流电法反演|电阻率反演|电阻率模型
+em|电磁与 MT 反演|频率/时间域电磁、大地电磁反演|电阻率模型
+t72 segyio
+read|读取道数据|按道或按线读取地震数据|数组
+headers|道头读取|读取与修改道头字段|道头表
+t73 discretize
+tensor|张量网格|生成张量网格|网格
+octree|八叉树网格|按地形与观测加密的八叉树网格|网格
+t74 alphafold
+msa|多序列比对|MMseqs2/JackHMMER 生成 MSA|MSA 文件
+predict|结构预测|单体与复合物三维结构预测|结构 pdb、pLDDT
+t75 esm
+embed|序列表征|提取序列嵌入向量|嵌入向量
+mutation|突变效应|零样本预测单点突变效应|突变打分表
+fold|快速结构预测|ESMFold 单序列结构预测|结构 pdb
+t76 rfdiffusion
+unconditional|骨架从头设计|无条件生成蛋白骨架|骨架 pdb
+binder|结合蛋白设计|按靶点表位设计结合蛋白|骨架 pdb
+motif|基序支架|围绕功能基序设计支架|骨架 pdb
+t77 proteinmpnn
+design|序列设计|给定骨架设计氨基酸序列|候选序列 fasta
+t78 rosetta
+relax|结构精修|FastRelax 能量精修|结构 pdb、打分
+design|酶与界面设计|定点设计与突变扫描|设计结构、打分
+ddg|稳定性评估|突变 ΔΔG 计算|ΔΔG 表
+dock|蛋白对接|蛋白-蛋白/配体对接|对接结构
+t79 vina
+prepare|受体配体准备|生成 pdbqt 并设置对接盒|pdbqt 文件
+dock|分子对接|对接打分与构象|对接构象、亲和力
+screen|虚拟筛选|批量对接排序|打分排序表
+t80 openmm
+setup|体系准备|加力场、溶剂与离子|体系文件
+md|分子动力学|GPU 加速 MD 模拟|轨迹 dcd
+fep|自由能计算|炼金术自由能微扰|ΔG
+t81 blast
+blastn|核酸比对|核酸序列相似性检索|比对结果表
+blastp|蛋白比对|蛋白序列相似性检索|比对结果表
+makedb|建库|由 FASTA 建立本地数据库|数据库
+t82 biopython
+seq_io|序列读写|读写 FASTA/GenBank 等格式|序列文件
+ncbi|NCBI 检索|Entrez 检索与下载序列|序列记录
+translate|翻译与分析|翻译、反向互补、ORF 查找|序列分析结果
+t83 viennarna
+fold|二级结构预测|最小自由能结构|点括号结构、MFE
+cofold|RNA 互作|双链互作结构与能量|互作结构
+t84 primer3
+design|引物设计|按 Tm、GC、产物长度设计引物|引物列表
+check|引物校验|二聚体与发夹结构检查|校验报告
+t85 dnachisel
+codon_opt|密码子优化|按宿主密码子偏好优化|优化序列
+constraints|约束优化|去除酶切位点、控制 GC 与重复|优化序列、报告
+t86 cello
+design|线路设计|由 Verilog 逻辑自动设计遗传线路|线路图、SBOL
+predict|表达预测|预测线路各状态输出|真值表与表达量
+t88 cobrapy
+fba|通量平衡分析|求最优代谢通量分布|通量表
+knockout|敲除分析|单/双基因敲除筛选靶点|敲除影响表
+fva|通量变异分析|求各反应可行通量范围|通量范围表
+t90 antismash
+detect|基因簇识别|识别次级代谢生物合成基因簇|基因簇列表
+annotate|结构域注释|NRPS/PKS 结构域与产物预测|注释报告
+t91 deseq2
+de|差异表达|负二项模型差异表达分析|差异基因表
+qc|质量评估|样本聚类、PCA 与离散度|QC 图
+t92 nextflow
+rnaseq|RNA-seq 流程|nf-core/rnaseq 定量流程|表达矩阵
+metagenome|宏基因组流程|nf-core/mag 组装与分箱|分箱结果
+run|自定义流程|运行指定 Nextflow 流程|流程输出
+t56 pyvista
+mesh_view|网格渲染|网格与标量场渲染出图|图片、vtk 文件
+slice|切片与等值面|反演体切片与等值面提取|图片
+t61 matplotlib
+plot|曲线与散点|论文级曲线、散点图|图片 png/svg
+section|剖面图|地震剖面、反演剖面绘制|图片
+contour|等值线与云图|二维场等值线与云图|图片
+t3 literature
+search|文献检索|按主题、作者、机构检索企业授权文献|文献列表
+fulltext|全文获取|获取授权范围内的全文|全文
+cite|引文分析|引用与被引关系|引文网络
+t12 patent
+search|专利检索|按技术主题、IPC 与申请人检索|专利列表
+family|专利族召回|同族专利合并|专利族列表
+landscape|技术分布|按年份、申请人、技术分支统计|统计图表
+t96 welly
+read|测井数据读取|读取 LAS/DLIS 文件，统一曲线名与单位|曲线表
+qc|曲线质控|检查缺失、跳变与深度对齐|质控报告
+petro|岩石物理解释|计算泥质含量、孔隙度与含水饱和度|解释曲线
+write|测井数据导出|导出 LAS 或 CSV|LAS 文件
+t99 gempy
+model|三维地质建模|由层面点与产状插值构造模型|三维地质模型
+section|地质剖面|沿任意测线切出剖面|剖面数据
+uncertainty|不确定性分析|对输入扰动做蒙特卡洛建模|概率模型与熵图
+t100 gstools
+variogram|变差函数分析|计算并拟合实验变差函数|变差函数曲线与参数
+kriging|克里金插值|普通/泛克里金插值|插值网格与方差
+sgs|序贯高斯模拟|生成多个等概率属性实现|属性实现集合
+t102 bruges
+elastic|弹性参数计算|由速度、密度计算阻抗、泊松比与 Lamé 参数|弹性参数曲线
+avo|AVO 响应|Zoeppritz 与近似式计算反射系数随角度变化|AVO 曲线
+synthetic|合成地震记录|由测井曲线与子波生成合成记录|合成记录道
+t103 obspy
+fetch|台站数据下载|按事件或时间窗从 FDSN 服务下载波形与台站信息|波形 miniSEED
+preprocess|波形预处理|去仪器响应、去趋势、滤波与重采样|处理后波形
+picking|震相拾取|STA/LTA 与 AIC 拾取 P/S 波到时|到时表
+spectrum|频谱分析|计算功率谱与时频谱|频谱曲线
+t104 specfem3d
+mesh|网格生成|按模型与地形生成谱元网格|网格文件
+forward|波场正演|模拟三维地震波传播|合成地震图、波场快照
+adjoint|伴随层析|计算敏感核与模型梯度|敏感核体数据
+t105 pygimli
+ert|电阻率层析|二维/三维 ERT 正反演|电阻率模型
+refraction|折射层析|初至走时反演速度结构|速度模型
+mesh|建模网格|生成非结构化正反演网格|网格文件
+t106 mrst
+blackoil|黑油模拟|全隐式黑油油藏模拟|生产曲线、压力场
+co2lab|CO2 封存评估|垂向平衡模型评估封存能力与羽流迁移|封存量与羽流分布
+upscale|渗透率粗化|流动型与平均型粗化|粗化网格属性
+t107 phreeqc
+speciation|物种形态计算|计算溶液物种分布与矿物饱和指数|饱和指数表
+reaction|水岩反应|模拟溶解、沉淀与 CO2 注入后的平衡|反应路径曲线
+transport|一维反应运移|对流-弥散耦合化学反应|浓度剖面曲线
+t108 pflotran
+flow|多相流模拟|求解地下多相多组分流动|压力、饱和度场
+reactive|反应运移|耦合地球化学反应的运移模拟|浓度场时间序列
+co2|CO2 地质封存|模拟注入、迁移与溶解、矿化封存|羽流分布与封存量
+t110 gdal
+convert|格式转换|栅格与矢量格式互转|转换后文件
+reproject|坐标转换|投影与坐标系转换|重投影数据
+clip|裁剪与重采样|按工区范围裁剪、重采样|裁剪后数据
+t111 pygmt
+basemap|底图与等值线|地形底图、等值线与构造图|图片 png/pdf
+events|震中分布图|按震级与深度绘制事件|图片 png/pdf
+profile|剖面图|沿测线绘制地形与属性剖面|图片 png/pdf
+t114 texlive
+template|期刊模板|按目标期刊或学位论文模板生成 LaTeX 工程|tex 工程
+compile|编译 PDF|latexmk / XeLaTeX 编译并返回错误定位|PDF
+bib|参考文献|BibTeX / biblatex 生成参考文献并检查缺失条目|.bbl
+diff|修订对比|latexdiff 生成与上一版本的修订稿|PDF
+t115 zotero
+search|检索文献库|按关键词、作者、标签检索个人与课题组文献库|条目列表
+cite|插入引文|按 GB/T 7714、APA 等样式生成引文与参考文献表|引文文本
+export|导出参考文献|导出 BibTeX / RIS|bib 文件
+t116 pandoc
+convert|格式转换|Markdown、LaTeX、Word 互转，保留公式与交叉引用|文档
+cite|引文排版|citeproc 按 CSL 样式排版引文|文档
+t113 remote
+resources|列出远程资源|返回课题空间可用的资源名称、调度系统与队列/分区（不含地址与凭据）|资源列表
+submit|提交作业|按目标资源配置的调度系统生成作业脚本（sbatch、qsub、bsub 等）或 SSH 后台命令并提交，可覆盖核数、时长等默认参数|作业 ID
+status|作业状态|查询排队、运行、完成、失败状态与资源占用|状态表
+cancel|取消作业|scancel / qdel / bkill 或结束后台会话|取消结果
+logs|查看日志|读取作业 stdout / stderr 尾部|日志文本
+upload|上传文件|把会话文件上传到资源工作目录|远程路径
+download|回传结果|把作业输出回传到会话文件|文件引用
+exec|执行命令|在登录节点执行只读命令（ls、cat、du 等），写操作需确认|命令输出
+`
+const TOOLKITS = {}
+let _kit = null
+TOOLKIT_SRC.trim().split("\n").forEach((line) => {
+  const head = /^(t\d+)\s+(\S+)$/.exec(line)
+  if (head) { _kit = TOOLKITS[head[1]] = { server: head[2], tools: [] }; return }
+  const [key, name, desc, out] = line.split("|")
+  _kit.tools.push({ key: `${_kit.server}.${key}`, name, desc, out })
+})
+// 形态：工具箱（含多个工具）/ 前端组件 / 工具
+function formOf(item) {
+  if (kitOf(item)) return `MCP 服务 · ${kitSize(item)} 个工具`
+  if (item.access === "前端组件") return "前端组件"
+  return "工具"
+}
+function kitOf(item) { return item && TOOLKITS[item.id] }
+function kitSize(item) { const k = kitOf(item); return k ? k.tools.length : 0 }
+// 课题空间里停用的工具
+function kitOff(id) { const e = loadedOf()[id]; return (e && e.off) || {} }
+function kitOn(item) { return kitSize(item) - Object.keys(kitOff(item.id)).length }
+// 搜索词命中的工具
+function kitHits(item, q) {
+  const k = kitOf(item)
+  const s = String(q || "").trim().toLowerCase()
+  if (!k || !s) return []
+  return k.tools.filter((t) => `${t.name} ${t.desc} ${t.key}`.toLowerCase().includes(s))
+}
+
+/* ========== 前端组件展示协议 ==========
+   前端组件不参与计算，只负责在会话里展示工具结果：平台内置、对所有空间自动启用，不需要加载。
+   工具输出「组件类型 + 数据引用 + 参数」，会话按 component 字段选组件渲染，大模型不直接生成组件代码。
+   分期：一期只开放简单组件（图表、流程图、小分子三维），二期再开放需要服务端配合的场数据与大分子组件。
+   参数按组件各自定义，分五组：
+   limit  数据上限：平台强制，工具输出不能突破
+   over   超限处理：超过上限时怎么降级
+   perf   渲染性能：平台强制
+   show   展示默认：工具输出的 options 可覆盖单次展示
+   back   交互回传：用户操作回传会话、交给 AI 的范围
+   pN(组, key, 名称, 默认, [最小, 最大], 单位, 说明, 不得大于的参数)  pS(组, key, 名称, 默认, 选项, 说明)  pB(组, key, 名称, 默认, 说明) */
+const pN = (g, key, label, def, range, unit, desc, le) => ({ g, key, label, type: "number", def, opts: range, unit, desc, le })
+const pS = (g, key, label, def, opts, desc) => ({ g, key, label, type: "select", def, opts, desc })
+const pB = (g, key, label, def, desc) => ({ g, key, label, type: "bool", def, desc })
+const KB = 1024, MB = 1024 * 1024
+const PARAM_GROUPS = [
+  ["limit", "数据上限", "平台强制，工具输出不能突破"],
+  ["over", "超限处理", "超过上限时的降级方式，降级后会在组件上提示"],
+  ["perf", "渲染性能", "平台强制，保证长会话流畅"],
+  ["show", "展示默认", "工具输出的 options 可覆盖单次展示"],
+  ["back", "交互回传", "用户在组件里的操作回传会话、交给 AI 的范围"]
+]
+const DOWNSAMPLE = ["LTTB 降采样（保留峰谷）", "等间隔抽样", "截断到上限", "降级为下载链接"]
+const COMP_SPECS = {
+  t59: {
+    phase: 1, component: "chart.echarts", formats: ["echarts-option", "csv", "json"], sample: "process/kpi.csv",
+    when: "统计指标、流程参数趋势、多序列对比、柱状与散点类结果自动选用。",
+    isolation: "option 中的 formatter 等函数字段会被剔除，只保留纯数据配置。",
+    params: [
+      pN("limit", "maxPoints", "最大数据点数", 50000, [1000, 1000000], "点", "单个图表所有序列的点数合计"),
+      pN("limit", "seriesMaxPoints", "单序列最大点数", 20000, [100, 500000], "点", "单条曲线或散点序列的点数", "maxPoints"),
+      pN("limit", "maxSeries", "最大序列数", 20, [1, 100], "条", "超过后只画前 N 条，其余列在图例外"),
+      pN("limit", "maxInlineKB", "内联数据上限", 1024, [0, 4096], "KB", "工具可直接写在输出里的数据量，超过必须传引用"),
+      pN("limit", "maxRefMB", "引用数据上限", 20, [1, 200], "MB", "通过资产引用拉取的数据量"),
+      pS("over", "overflow", "点数超限时", DOWNSAMPLE[0], DOWNSAMPLE, "降采样后图上标注「已降采样 N→M」"),
+      pS("perf", "renderer", "渲染方式", "自动", ["自动", "canvas", "svg"], "自动：点数少用 SVG 便于导出矢量图，多则用 canvas"),
+      pN("perf", "svgMaxPoints", "SVG 渲染点数上限", 2000, [100, 20000], "点", "自动模式下不超过此点数才用 SVG", "maxPoints"),
+      pN("perf", "largeThreshold", "大数据模式阈值", 2000, [500, 50000], "点", "单序列超过此点数开启 large 模式，简化样式换流畅", "seriesMaxPoints"),
+      pS("show", "chartType", "默认图表类型", "line", ["line", "bar", "scatter", "heatmap"], "工具未指定时使用"),
+      pB("show", "dataZoom", "区域缩放条", true, "图表底部显示缩放条"),
+      pN("show", "height", "默认高度", 360, [200, 800], "px", "会话中图表卡片的高度"),
+      pB("back", "toAgent", "回传给 AI", true, "点击、刷选的数据摘要作为会话上下文"),
+      pN("back", "backMaxPoints", "回传最大点数", 500, [10, 5000], "点", "刷选超过此数量时只回传统计摘要（数量、范围、均值）"),
+      pN("back", "throttle", "事件节流", 300, [0, 2000], "ms", "连续操作时的最短回传间隔")
+    ],
+    events: [
+      ["series.click", "{ seriesName, dataIndex, value }", "用户点击的数据项"],
+      ["brush.selected", "{ count, points | summary }", "刷选的数据；超过回传上限时只给摘要"],
+      ["datazoom", "{ start, end }", "缩放区间，AI 可只分析该区间"]
+    ]
+  },
+  t58: {
+    phase: 1, component: "chart.plotly", formats: ["plotly-json", "csv"], sample: "thermo/phase_envelope.csv",
+    when: "科学曲线、大量散点、热图、等值线与三维曲面类结果自动选用。",
+    isolation: "只接受 JSON 数据与布局，不执行 figure 中的自定义 JS；导出图片在沙箱内完成。",
+    params: [
+      pN("limit", "maxPoints", "最大数据点数", 100000, [1000, 2000000], "点", "单个图表所有轨迹的点数合计"),
+      pN("limit", "maxCells", "热图/曲面最大网格数", 250000, [1000, 4000000], "单元", "heatmap、contour、surface 的 z 矩阵元素数，默认约 500×500"),
+      pN("limit", "maxSeries", "最大轨迹数", 20, [1, 100], "条", "超过后只画前 N 条"),
+      pN("limit", "maxInlineKB", "内联数据上限", 1024, [0, 4096], "KB", "工具可直接写在输出里的数据量，超过必须传引用"),
+      pN("limit", "maxRefMB", "引用数据上限", 30, [1, 200], "MB", "通过资产引用拉取的数据量"),
+      pS("over", "overflow", "点数超限时", DOWNSAMPLE[0], DOWNSAMPLE, "降采样后图上标注「已降采样 N→M」"),
+      pS("over", "gridOverflow", "网格超限时", "等比缩小网格", ["等比缩小网格", "截取中心区域", "降级为下载链接"], "热图、曲面矩阵过大时的处理"),
+      pN("perf", "glThreshold", "WebGL 切换阈值", 10000, [1000, 200000], "点", "散点超过此点数自动改用 scattergl", "maxPoints"),
+      pN("perf", "maxGL", "会话内 WebGL 图表数", 8, [1, 16], "个", "超出后较早的图表冻结为图片，点击重新激活"),
+      pS("show", "chartType", "默认图表类型", "scatter", ["scatter", "line", "heatmap", "contour", "surface"], "工具未指定时使用"),
+      pN("show", "exportScale", "导出倍率", 2, [1, 4], "倍", "导出 PNG 的分辨率倍数"),
+      pN("show", "height", "默认高度", 400, [200, 800], "px", "会话中图表卡片的高度"),
+      pB("back", "toAgent", "回传给 AI", true, "框选的数据点、缩放范围作为会话上下文"),
+      pN("back", "backMaxPoints", "回传最大点数", 500, [10, 5000], "点", "框选超过此数量时只回传统计摘要"),
+      pN("back", "throttle", "事件节流", 300, [0, 2000], "ms", "连续操作时的最短回传间隔")
+    ],
+    events: [
+      ["points.select", "{ count, points | summary }", "框选的数据点，AI 可做拟合或异常分析"],
+      ["relayout", "{ xrange, yrange }", "缩放后的坐标范围"]
+    ]
+  },
+  t60: {
+    phase: 1, component: "diagram.text", formats: ["mermaid", "dot"], sample: "flow/process.mmd",
+    when: "流程模拟单元连接、处理流程、实验步骤等拓扑类结果自动选用。",
+    isolation: "Mermaid 使用 strict 安全级别，禁止 HTML 标签与点击回调脚本；节点点击统一走事件回传。",
+    params: [
+      pN("limit", "maxNodes", "最大节点数", 200, [10, 2000], "个", "节点过多时布局难以阅读，也会拖慢渲染"),
+      pN("limit", "maxEdges", "最大连线数", 400, [10, 5000], "条", "图中连线总数"),
+      pN("limit", "maxTextKB", "源文本上限", 64, [4, 512], "KB", "Mermaid / DOT 源文本大小，可内联"),
+      pN("limit", "timeout", "渲染超时", 3000, [500, 10000], "ms", "布局计算超时后按超限处理"),
+      pS("over", "overflow", "超限或超时", "显示源码与下载链接", ["显示源码与下载链接", "只渲染前 N 个节点"], "超过节点、连线上限或渲染超时时"),
+      pS("show", "engine", "渲染引擎", "按格式自动", ["按格式自动", "mermaid", "graphviz"], "mermaid 文本用 Mermaid，dot 文本用 Graphviz"),
+      pS("show", "direction", "布局方向", "LR", ["LR", "TB"], "从左到右或从上到下"),
+      pS("show", "theme", "主题", "neutral", ["neutral", "default"], "图形配色"),
+      pB("back", "toAgent", "节点点击回传 AI", true, "点击节点时回传节点编号与名称")
+    ],
+    events: [
+      ["node.click", "{ nodeId, label }", "用户点击的节点（如某个流程单元），AI 可展开说明或修改参数"]
+    ]
+  },
+  t47: {
+    phase: 1, component: "viewer.molecule3d", formats: ["pdb", "sdf", "mol2", "xyz", "cube"], sample: "md/frame_0100.pdb",
+    when: "小分子、配方组分、量化结果（含 CUBE 轨道/密度）和较小的蛋白结构自动选用。",
+    isolation: "WebGL 渲染；离开可视区域后释放 WebGL 上下文，只保留截图，避免长会话超出浏览器上下文数量上限。",
+    params: [
+      pN("limit", "maxAtoms", "最大原子数", 10000, [100, 100000], "个", "超过后按超限处理；大型复合物等二期 Mol* 接入"),
+      pN("limit", "maxFrames", "轨迹最大帧数", 200, [1, 2000], "帧", "多帧 PDB/XYZ 动画的帧数"),
+      pN("limit", "surfaceMaxAtoms", "表面计算原子上限", 2000, [100, 20000], "个", "分子表面计算开销大，超过则不生成表面", "maxAtoms"),
+      pN("limit", "maxInlineKB", "内联数据上限", 256, [0, 2048], "KB", "工具可直接写在输出里的数据量，超过必须传引用"),
+      pN("limit", "maxRefMB", "引用数据上限", 20, [1, 100], "MB", "通过资产引用拉取的数据量"),
+      pS("over", "overflow", "原子数超限时", "只显示主链骨架", ["只显示主链骨架", "只显示前 N 个原子", "降级为下载链接"], "蛋白只保留 CA 骨架，小分子体系按顺序截取"),
+      pS("over", "frameOverflow", "帧数超限时", "等间隔抽帧", ["等间隔抽帧", "只取最后 N 帧"], "轨迹帧数超过上限时"),
+      pN("perf", "maxActive", "同时活跃的 3D 视图", 4, [1, 8], "个", "浏览器 WebGL 上下文有限，超出后较早视图冻结为截图"),
+      pB("perf", "freezeOffscreen", "离开视口时冻结", true, "滚出可视区域释放 WebGL，只保留截图"),
+      pS("show", "style", "显示样式", "stick", ["stick", "sphere", "cartoon", "line"], "原子与键的显示方式"),
+      pS("show", "colorScheme", "着色方案", "element", ["element", "chain", "spectrum"], "按元素、链或序号渐变着色"),
+      pS("show", "surface", "分子表面", "none", ["none", "VDW", "SAS", "MS"], "受「表面计算原子上限」约束"),
+      pB("back", "toAgent", "回传给 AI", true, "点击、选中的原子作为会话上下文"),
+      pN("back", "backMaxAtoms", "回传最多原子数", 200, [1, 2000], "个", "选中原子超过此数量时只回传数量和残基范围"),
+      pN("back", "throttle", "事件节流", 200, [0, 2000], "ms", "旋转、选择等连续操作的最短回传间隔")
+    ],
+    events: [
+      ["atom.click", "{ serial, elem, resn, resi, chain }", "用户点击的原子，AI 可据此解释局部结构"],
+      ["selection.change", "{ count, atoms | summary }", "框选的原子；超过回传上限时只给摘要"],
+      ["view.change", "{ rotation, zoom }", "视角变化，用于历史回放时恢复（不回传 AI）"]
+    ]
+  },
+  // 二期：需要服务端或数据网关配合，暂不开放
+  t49: { phase: 2, component: "viewer.crystal", formats: ["cif", "pdb", "xyz"], when: "晶体结构、晶胞与第一性原理弛豫结果。", defer: "晶胞、超胞与对称性展开需要额外处理，且与 3Dmol.js 场景重叠。一期晶体结构先用 3Dmol.js 显示原子坐标。" },
+  t54: { phase: 2, component: "viewer.remote-field", formats: ["vtu", "pvd", "exodus", "openfoam"], when: "大规模仿真结果（CFD 流场、数字岩心、油藏网格）。", defer: "依赖服务端渲染节点和推流会话管理（资源调度、回收、并发控制），需要和计算集群联调后开放。一期先导出截图或降采样后用 3D 场组件查看。" },
+  t55: { phase: 2, component: "viewer.field3d", formats: ["vtp", "vti", "gltf"], when: "中小规模网格、体数据与等值面。", defer: "需要服务端先做格式转换与网格抽稀（vtu→vtp/vti），等数据网关支持后开放。" },
+  t95: { phase: 2, component: "viewer.macromolecule", formats: ["pdb", "mmcif", "bcif", "mrc"], when: "蛋白、核酸与大型复合物结构，冷冻电镜密度图。", defer: "组件包较大（数 MB），需要按需加载和内网 PDB 镜像。一期 1 万原子以内的蛋白结构先用 3Dmol.js。" }
+}
+// 参数配置的保存值（平台默认，对所有空间生效）
+const COMP_CONFIG = {}
+// 参数配置表单里尚未保存的修改
+const COMP_DRAFT = {}
+function isComp(item) { return !!item && item.access === "前端组件" && !!COMP_SPECS[item.id] }
+function compReady(item) { return isComp(item) && COMP_SPECS[item.id].phase === 1 }
+// 二期组件暂不可用
+tools.forEach((t) => { if (isComp(t) && !compReady(t)) t.enabled = false })
+function compValues(id) {
+  const out = {}
+  COMP_SPECS[id].params.forEach((q) => { out[q.key] = q.def })
+  return Object.assign(out, COMP_CONFIG[id] || {}, COMP_DRAFT[id] || {})
+}
+const COMP_TOTAL = () => tools.filter(compReady).length
+function sizeText(bytes) { return bytes === 0 ? "不允许内联" : bytes >= MB ? `${+(bytes / MB).toFixed(2)} MB` : `${+(bytes / KB).toFixed(1)} KB` }
+// 数据大小上限（字节）：图表与分子组件分内联和引用，流程图只有源文本
+function dataCaps(id) {
+  const v = compValues(id)
+  if (v.maxTextKB != null) return { inline: v.maxTextKB * KB, ref: v.maxTextKB * KB }
+  return { inline: v.maxInlineKB * KB, ref: v.maxRefMB * MB }
+}
+function paramText(q, val) { return q.type === "bool" ? (val ? "开启" : "关闭") : `${val}${q.unit ? " " + q.unit : ""}` }
+// 校验：范围与参数之间的大小关系
+function compCheck(id) {
+  const sp = COMP_SPECS[id]
+  const v = compValues(id)
+  for (const q of sp.params) {
+    if (q.type !== "number") continue
+    const x = v[q.key]
+    if (!Number.isFinite(x) || x < q.opts[0] || x > q.opts[1]) return `「${q.label}」应在 ${q.opts[0]}–${q.opts[1]}${q.unit ? " " + q.unit : ""} 之间`
+    if (q.le && x > v[q.le]) return `「${q.label}」不能大于「${sp.params.find((p) => p.key === q.le).label}」`
+  }
+  return ""
+}
+function compSchema(item) {
+  const sp = COMP_SPECS[item.id]
+  const v = compValues(item.id)
+  const caps = dataCaps(item.id)
+  const options = {}
+  const limits = {}
+  sp.params.forEach((q) => {
+    if (q.g === "show") {
+      const o = { title: q.label, description: q.desc, default: v[q.key] }
+      if (q.type === "select") { o.type = "string"; o.enum = q.opts }
+      else if (q.type === "bool") o.type = "boolean"
+      else { o.type = "number"; o.minimum = q.opts[0]; o.maximum = q.opts[1] }
+      options[q.key] = o
+    } else if (q.g !== "back") limits[q.key] = q.unit ? { value: v[q.key], unit: q.unit, title: q.label } : { value: v[q.key], title: q.label }
+  })
+  const dataProps = {
+    ref: { type: "string", pattern: "^asset://", description: "科研资产引用，组件凭短期令牌拉取" },
+    format: { enum: sp.formats },
+    size: { type: "integer", maximum: caps.ref, description: `数据字节数，上限 ${sizeText(caps.ref)}` },
+    sha256: { type: "string", description: "内容校验" }
+  }
+  if (caps.inline) dataProps.inline = { type: "string", maxLength: caps.inline, description: `小数据可内联，上限 ${sizeText(caps.inline)}；与 ref 二选一` }
+  const back = sp.params.filter((q) => q.g === "back")
+  return {
+    $schema: "https://json-schema.org/draft/2020-12/schema",
+    $id: `ai4s://components/${sp.component}/1.0`,
+    title: `${item.name} 展示协议`,
+    type: "object",
+    required: ["component", "data"],
+    properties: {
+      component: { const: sp.component },
+      version: { const: "1.0" },
+      data: { type: "object", required: ["format"], oneOf: caps.inline ? [{ required: ["ref"] }, { required: ["inline"] }] : [{ required: ["ref"] }], properties: dataProps, additionalProperties: false },
+      options: { type: "object", description: "展示默认，可覆盖平台默认值", properties: options, additionalProperties: false },
+      interaction: {
+        type: "object",
+        properties: {
+          emit: { type: "array", items: { enum: sp.events.map((e) => e[0]) } },
+          toAgent: { type: "boolean", default: v.toAgent }
+        }
+      }
+    },
+    "x-limits": Object.assign({ description: "平台强制执行，工具输出不能覆盖" }, limits),
+    "x-agent-feedback": Object.fromEntries(back.map((q) => [q.key, v[q.key]])),
+    "x-sandbox": { iframe: "allow-scripts", sameOrigin: false, csp: "connect-src 资产网关", channel: "postMessage" },
+    "x-events": Object.fromEntries(sp.events.map(([name, payload, desc]) => [name, { payload, description: desc }]))
+  }
+}
+function compExample(item) {
+  const sp = COMP_SPECS[item.id]
+  const v = compValues(item.id)
+  const options = {}
+  sp.params.filter((q) => q.g === "show").forEach((q) => { options[q.key] = v[q.key] })
+  return {
+    component: sp.component,
+    version: "1.0",
+    data: { ref: `asset://space/${state.space}/results/${sp.sample}`, format: sp.formats[0], size: 182340, sha256: "9f2c…e41a" },
+    options,
+    interaction: { emit: sp.events.map((e) => e[0]), toAgent: v.toAgent }
+  }
+}
+
+// ===== 默认联用：在创建/注册工具时绑定 =====
+// 目标是前端组件（id，角色固定为「展示」）或其他工具（工具箱中的工具用 server.key，独立工具用 id）
+// 每项：[目标, 传递的数据, 角色]；角色省略时按目标推断：组件 = 展示
+const BIND_ROLES = ["展示", "前处理", "后处理"]
+const COMP_ROLE = { t47: "结构展示", t58: "曲线图", t59: "图表", t60: "流程图" }
+const BINDS = {
+  "remote.status": [["t59", "作业状态与资源占用图表"]],
+  "gaussian.opt": [["t47", "优化结构 xyz"]],
+  "gaussian.freq": [["t58", "IR/Raman 谱"], ["t47", "振动模式动画"]],
+  "gaussian.ts": [["t47", "过渡态结构与虚频振动"]],
+  "gaussian.irc": [["t58", "路径能量曲线"], ["t47", "路径轨迹（与曲线联动）"]],
+  "gaussian.tddft": [["t58", "UV-Vis 谱"]],
+  "gaussian.nmr": [["t58", "NMR 谱"]],
+  "orca.opt": [["t47", "优化结构 xyz"]],
+  "orca.freq": [["t58", "IR 谱"]],
+  "orca.ts": [["t47", "过渡态结构"]],
+  "orca.tddft": [["t58", "UV-Vis 谱"]],
+  "qchem.opt": [["t47", "优化结构 xyz"]],
+  "qchem.freq": [["t58", "IR 谱"]],
+  "pyscf.opt": [["t47", "优化结构 xyz"]],
+  "pyscf.orbitals": [["t47", "轨道等值面 cube"]],
+  "vasp.relax": [["t47", "CONTCAR 结构"], ["pymatgen.vasp_io", "生成 INCAR/POSCAR/KPOINTS", "前处理"]],
+  "vasp.band": [["t58", "能带图数据"]],
+  "vasp.dos": [["t58", "DOS/PDOS 曲线"]],
+  "vasp.neb": [["t58", "能垒曲线（反应坐标-能量）"], ["t47", "中间构型 images（与曲线联动）"]],
+  "vasp.aimd": [["t47", "XDATCAR 轨迹"]],
+  "quantum-espresso.relax": [["t47", "弛豫结构"]],
+  "quantum-espresso.bands": [["t58", "能带图数据"]],
+  "quantum-espresso.dos": [["t58", "DOS/PDOS 曲线"]],
+  "quantum-espresso.phonon": [["t58", "声子色散"]],
+  "quantum-espresso.neb": [["t58", "能垒曲线（反应坐标-能量）"], ["t47", "中间构型 images（与曲线联动）"]],
+  "cp2k.geo_opt": [["t47", "优化结构"]],
+  "cp2k.md": [["t47", "轨迹 xyz"]],
+  "cp2k.adsorption": [["t59", "吸附能对比"]],
+  "castep.geom_opt": [["t47", "优化结构 cif"]],
+  "castep.band": [["t58", "能带与 DOS 曲线"]],
+  "gromacs.prepare": [["packmol.pack", "初始构型 pdb", "前处理"]],
+  "gromacs.em": [["t59", "能量曲线"]],
+  "gromacs.equil": [["t59", "温度、压力、密度曲线"]],
+  "gromacs.md": [["t47", "轨迹 xtc"]],
+  "gromacs.analyze": [["t58", "RMSD/RMSF 分析曲线"], ["t47", "轨迹帧结构（与曲线联动）"]],
+  "lammps.build": [["moltemplate.assemble", "LAMMPS data", "前处理"]],
+  "lammps.minimize": [["t59", "能量曲线"]],
+  "lammps.md": [["t47", "轨迹 dump"]],
+  "lammps.tg": [["t58", "密度-温度曲线"]],
+  "lammps.mechanics": [["t58", "应力-应变曲线"]],
+  "lammps.diffusion": [["t58", "MSD 曲线"]],
+  "packmol.pack": [["t47", "初始构型 pdb"]],
+  "packmol.interface": [["t47", "界面构型 pdb"]],
+  "rdkit.conformers": [["t47", "构象 sdf"]],
+  "rdkit.descriptors": [["t59", "描述符分布"]],
+  "rdkit.similarity": [["t59", "相似度排序"]],
+  "openbabel.gen3d": [["t47", "三维结构 sdf"]],
+  "ase.build_bulk": [["t47", "晶胞结构 cif"]],
+  "ase.build_surface": [["t47", "表面与吸附构型"]],
+  "pymatgen.surface": [["t47", "slab 结构"]],
+  "pymatgen.defect": [["t47", "缺陷结构"]],
+  "pymatgen.phase_diagram": [["t58", "相图"]],
+  "polymatic.polymerize": [["t47", "聚合物结构"]],
+  "polymatic.amorphous": [["t47", "无定形体系结构"]],
+  "coolprop.saturation": [["t58", "饱和曲线"]],
+  "thermopack.envelope": [["t58", "相包络曲线"]],
+  "openpnm.drainage": [["t58", "毛管压力 Pc 曲线"]],
+  "porespy.psd": [["t58", "孔径分布曲线"]],
+  "fluent.steady": [["t59", "残差曲线"]],
+  "fluent.post": [["t58", "监测曲线"]],
+  "openfoam.post": [["t58", "监测曲线"]],
+  "eclipse.run": [["t59", "生产曲线"]],
+  "eclipse.history_match": [["t59", "拟合曲线（实测 vs 模拟）"]],
+  "eclipse.forecast": [["t59", "预测曲线"]],
+  "cmg.imex": [["t59", "生产曲线"]],
+  "cmg.gem": [["t59", "生产曲线"]],
+  "cmg.stars": [["t59", "生产曲线"]],
+  "opm-flow.run": [["t59", "生产曲线"]],
+  "alphafold.predict": [["t47", "结构 pdb（按 pLDDT 着色）"], ["t58", "pLDDT 曲线"]],
+  "esm.fold": [["t47", "结构 pdb"]],
+  "esm.mutation": [["t58", "突变打分热图"]],
+  "rfdiffusion.unconditional": [["t47", "骨架 pdb"]],
+  "rfdiffusion.binder": [["t47", "骨架 pdb"], ["proteinmpnn.design", "骨架 pdb → 候选序列", "后处理"]],
+  "rfdiffusion.motif": [["t47", "骨架 pdb"]],
+  "rosetta.relax": [["t47", "精修结构 pdb"]],
+  "rosetta.dock": [["t47", "对接结构"]],
+  "vina.prepare": [["openbabel.protonate", "配体加氢与质子化", "前处理"]],
+  "vina.dock": [["t47", "对接构象（受体 + 配体）"]],
+  "vina.screen": [["t59", "打分排序"]],
+  "openmm.md": [["t47", "轨迹 dcd"]],
+  "deseq2.de": [["t58", "火山图"]],
+  "cello.design": [["t60", "线路图"]],
+  "nextflow.rnaseq": [["t60", "流程 DAG"]],
+  "nextflow.run": [["t60", "流程 DAG"]],
+  "literature.cite": [["t60", "引文网络"]],
+  "patent.landscape": [["t59", "技术分布统计"]],
+  "welly.read": [["t58", "测井曲线道"]],
+  "welly.qc": [["t58", "问题曲线段标注"]],
+  "welly.petro": [["t58", "解释成果曲线道"], ["welly.read", "测井曲线", "前处理"]],
+  "gempy.section": [["t58", "地质剖面"]],
+  "gempy.uncertainty": [["t59", "概率分布"]],
+  "gstools.variogram": [["t58", "实验与拟合变差函数曲线"]],
+  "gstools.kriging": [["t58", "插值等值图"]],
+  "bruges.avo": [["t58", "AVO 曲线"]],
+  "bruges.synthetic": [["t58", "井震对比道"], ["welly.read", "声波与密度曲线", "前处理"]],
+  "obspy.preprocess": [["t58", "波形"], ["obspy.fetch", "原始波形", "前处理"]],
+  "obspy.picking": [["t58", "波形与到时标注"]],
+  "obspy.spectrum": [["t58", "频谱曲线"]],
+  "specfem3d.forward": [["t58", "合成地震图"]],
+  "pygimli.ert": [["t58", "电阻率剖面"]],
+  "pygimli.refraction": [["t58", "速度剖面与走时拟合"]],
+  "mrst.blackoil": [["t59", "生产曲线"]],
+  "mrst.co2lab": [["t58", "封存量随时间曲线"]],
+  "phreeqc.speciation": [["t59", "饱和指数对比"]],
+  "phreeqc.reaction": [["t58", "反应路径曲线"]],
+  "phreeqc.transport": [["t58", "浓度剖面曲线"]],
+  "pflotran.co2": [["t58", "封存量随时间曲线"]]
+}
+const findTool = (id) => tools.find((row) => row.id === id)
+// server.key → { kit: 工具箱条目 id, tool }
+const KIT_KEYS = {}
+Object.keys(TOOLKITS).forEach((id) => TOOLKITS[id].tools.forEach((t) => { KIT_KEYS[t.key] = { kit: id, tool: t } }))
+function bindRole(to, role) { return findTool(to) && isComp(findTool(to)) ? "展示" : role || "后处理" }
+// 取绑定：工具箱中的工具用 key，独立工具用条目自身的 binds
+function bindsOf(ref) {
+  const raw = typeof ref === "string" ? BINDS[ref] : ref && (ref.binds || BINDS[ref.id])
+  return (raw || []).map(([to, data, role]) => ({ to, data: data || "", role: bindRole(to, role) }))
+}
+// 绑定目标 → 展示信息；loadId = 需要一并加载的条目（组件为空）
+function bindTarget(to) {
+  const hit = KIT_KEYS[to]
+  if (hit) { const kit = findTool(hit.kit); return { name: `${kit.name} · ${hit.tool.name}`, key: to, loadId: hit.kit, comp: false } }
+  const item = findTool(to)
+  if (!item) return { name: to, key: to, loadId: "", comp: false, missing: true }
+  if (isComp(item)) return { name: item.name, sub: COMP_ROLE[to] || "展示", key: to, loadId: "", comp: true }
+  return { name: item.name, key: to, loadId: item.id, comp: false }
+}
+// 条目下所有（启用中的）工具的绑定
+function itemBinds(item, onlyOn) {
+  const k = kitOf(item)
+  if (!k) return bindsOf(item).map((b) => Object.assign({ from: item.name }, b))
+  const off = onlyOn ? kitOff(item.id) : {}
+  const out = []
+  k.tools.forEach((t) => { if (!off[t.key]) bindsOf(t.key).forEach((b) => out.push(Object.assign({ from: t.name, fromKey: t.key }, b))) })
+  return out
+}
+// 加载时需要联带加载的其他工具箱/工具
+function bindDeps(item) {
+  const ids = []
+  itemBinds(item, true).forEach((b) => { const tg = bindTarget(b.to); if (tg.loadId && tg.loadId !== item.id && !ids.includes(tg.loadId)) ids.push(tg.loadId) })
+  return ids
+}
+function loadDeps(item, box, space) {
+  const added = []
+  bindDeps(item).forEach((id) => { if (!box[id]) { box[id] = { at: Date.now(), by: item.id }; added.push(findTool(id).name) } })
+  return added
+}
+// 反查：哪些工具默认联用了某个目标（组件或工具箱）
+function boundBy(id) {
+  const out = []
+  Object.keys(BINDS).forEach((key) => BINDS[key].forEach(([to]) => {
+    const tg = bindTarget(to)
+    if (to === id || tg.loadId === id) { const hit = KIT_KEYS[key]; if (hit && hit.kit !== id) out.push({ key, name: `${findTool(hit.kit).name} · ${hit.tool.name}`, kit: hit.kit }) }
+  }))
+  tools.forEach((t) => (t.binds || []).forEach(([to]) => { if (to === id || bindTarget(to).loadId === id) out.push({ key: t.id, name: t.name, kit: t.id }) }))
+  return out
+}
+function bindChip(b) {
+  const tg = bindTarget(b.to)
+  const state2 = tg.comp ? "自动展示" : tg.loadId && isLoaded(tg.loadId) ? "已加载" : "随加载"
+  return `<span class="bchip ${tg.comp ? "comp" : "tool"}" title="${esc(b.role)}：${esc(tg.name)}${b.data ? `，传递 ${esc(b.data)}` : ""}"><em>${esc(b.role)}</em>${esc(tg.name)}${tg.sub ? ` · ${esc(tg.sub)}` : ""}${b.data ? `<small>${esc(b.data)}</small>` : ""}<i>${state2}</i></span>`
+}
+function bindLine(list) {
+  return list.length ? `<div class="kbind"><span>联用</span>${list.map(bindChip).join("")}</div>` : ""
+}
+// 独立工具详情里的「默认联用」
+function bindBox(item) {
+  const list = bindsOf(item)
+  if (!list.length) return ""
+  return `<div class="pbox"><h4>${icon("network", 15)}默认联用<i>创建时绑定</i></h4>调用本工具时，平台按下列绑定把输出交给展示组件，或串联前后处理工具。${bindLine(list)}</div>`
+}
+// 组件详情里反查
+function boundByBox(id) {
+  const list = boundBy(id)
+  if (!list.length) return ""
+  const show = list.slice(0, 10)
+  return `<div class="pbox"><h4>${icon("network", 15)}默认联用它的工具<i>${list.length} 个</i></h4>这些工具在创建时绑定了本组件，输出返回后直接用本组件展示，不需要 AI 再判断。<div class="kbind">${show.map((x) => `<a class="bchip tool" data-detail="${x.kit}">${esc(x.name)}</a>`).join("")}${list.length > show.length ? `<span class="bmore">等 ${list.length} 个</span>` : ""}</div></div>`
+}
+
+// 新建工具表单里的联用编辑
+let createBinds = []
+function bindOptions(sel) {
+  const opt = (v, label) => `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(label)}</option>`
+  const comps = tools.filter(compReady).map((t) => opt(t.id, `${t.name} · ${COMP_ROLE[t.id] || "展示"}`)).join("")
+  const kits = Object.keys(TOOLKITS).map((id) => { const item = findTool(id); return item ? `<optgroup label="${esc(item.name)}（工具箱）">${TOOLKITS[id].tools.map((t) => opt(t.key, `${item.name} · ${t.name}`)).join("")}</optgroup>` : "" }).join("")
+  const singles = tools.filter((t) => !isComp(t) && !kitOf(t)).map((t) => opt(t.id, t.name)).join("")
+  return `<option value="">选择联用的组件或工具</option><optgroup label="展示组件（自动启用）">${comps}</optgroup>${kits}${singles ? `<optgroup label="其他工具">${singles}</optgroup>` : ""}`
+}
+function bindEditor() {
+  const rows = createBinds.map((b, i) => {
+    const tg = b.to ? bindTarget(b.to) : null
+    const comp = tg && tg.comp
+    return `<div class="brow">
+      <select data-bind="${i}|to">${bindOptions(b.to)}</select>
+      <select data-bind="${i}|role" ${comp ? "disabled" : ""}>${(comp ? ["展示"] : ["前处理", "后处理"]).map((r) => `<option ${r === (comp ? "展示" : b.role) ? "selected" : ""}>${r}</option>`).join("")}</select>
+      <input data-bind="${i}|data" value="${esc(b.data)}" placeholder="${comp ? "交给组件的输出，如：轨迹 xtc" : "传递的数据，如：初始构型 pdb"}" />
+      <button class="icon-btn" type="button" data-bind-del="${i}" aria-label="删除">${icon("close", 14)}</button>
+    </div>`
+  }).join("")
+  const quick = tools.filter(compReady).map((t) => `<button class="chip" type="button" data-bind-add="${t.id}">+ ${esc(t.name)} ${esc(COMP_ROLE[t.id] || "")}</button>`).join("")
+  return `${rows || `<p class="bempty">暂无联用。展示组件的输出会直接用绑定组件渲染；绑定其他工具时，加载本工具会联带加载对方。</p>`}
+    <div class="bquick">${quick}<button class="chip" type="button" data-bind-add="">+ 其他工具</button></div>`
+}
+function paintBindEditor() {
+  const box = document.getElementById("bind-editor")
+  if (box) box.innerHTML = bindEditor()
+}
+
+// ===== 远程计算：对接不同的远程资源；调度系统是每个资源的参数 =====
+const REMOTE_ID = "t113"
+const RTABS = ["远程资源", "工具", "说明"]
+// 字段：[key, 标签, 类型, 默认, 选项/范围, 说明, 单位]
+const SCHEDULERS = {
+  slurm: { label: "Slurm", cmd: "sbatch / squeue / scancel", fields: [
+    ["partition", "分区", "text", "cpu", "", "-p，作业提交到的分区"],
+    ["account", "计费账户", "text", "", "", "-A，可选"],
+    ["qos", "QoS", "text", "", "", "--qos，可选"],
+    ["nodes", "节点数", "number", 1, [1, 512], "-N"],
+    ["ntasks", "任务数", "number", 1, [1, 65536], "-n，MPI 进程数"],
+    ["cpus", "每任务核数", "number", 4, [1, 256], "--cpus-per-task"],
+    ["gpus", "GPU 数", "number", 0, [0, 16], "--gres=gpu:N，每节点"],
+    ["mem", "内存", "text", "8G", "", "--mem，如 8G、64G"],
+    ["time", "最长运行时间", "text", "04:00:00", "", "-t，HH:MM:SS 或 D-HH:MM:SS"],
+    ["extra", "额外参数", "text", "", "", "追加到 #SBATCH 的参数，如 --exclusive"]] },
+  pbs: { label: "PBS / Torque", cmd: "qsub / qstat / qdel", fields: [
+    ["queue", "队列", "text", "batch", "", "-q"],
+    ["account", "项目账户", "text", "", "", "-A，可选"],
+    ["select", "节点数", "number", 1, [1, 512], "-l select=N"],
+    ["ncpus", "每节点核数", "number", 4, [1, 256], ":ncpus=N"],
+    ["ngpus", "每节点 GPU", "number", 0, [0, 16], ":ngpus=N"],
+    ["mem", "内存", "text", "8gb", "", ":mem=，如 8gb"],
+    ["walltime", "最长运行时间", "text", "04:00:00", "", "-l walltime=HH:MM:SS"],
+    ["extra", "额外参数", "text", "", "", "追加到 #PBS 的参数"]] },
+  lsf: { label: "LSF", cmd: "bsub / bjobs / bkill", fields: [
+    ["queue", "队列", "text", "normal", "", "-q"],
+    ["project", "项目", "text", "", "", "-P，可选"],
+    ["n", "核数", "number", 4, [1, 65536], "-n"],
+    ["gpu", "GPU 数", "number", 0, [0, 16], "-gpu num=N"],
+    ["mem", "内存", "text", "8G", "", "-R rusage[mem=]"],
+    ["walltime", "最长运行时间", "text", "4:00", "", "-W，HH:MM"],
+    ["extra", "额外参数", "text", "", "", "追加到 #BSUB 的参数"]] },
+  sge: { label: "SGE / Grid Engine", cmd: "qsub / qstat / qdel", fields: [
+    ["queue", "队列", "text", "all.q", "", "-q"],
+    ["project", "项目", "text", "", "", "-P，可选"],
+    ["pe", "并行环境", "text", "mpi", "", "-pe 名称"],
+    ["slots", "核数", "number", 4, [1, 65536], "-pe 名称 N"],
+    ["mem", "内存", "text", "8G", "", "-l h_vmem="],
+    ["walltime", "最长运行时间", "text", "04:00:00", "", "-l h_rt=HH:MM:SS"],
+    ["extra", "额外参数", "text", "", "", "追加到 #$ 的参数"]] },
+  ssh: { label: "SSH 直连", cmd: "ssh + nohup / tmux", fields: [
+    ["runner", "后台方式", "select", "nohup", ["nohup", "tmux", "screen"], "无调度器时，作业在后台会话中运行"],
+    ["maxJobs", "并发作业上限", "number", 2, [1, 64], "超过上限的作业在平台侧排队"],
+    ["maxCpus", "单作业核数上限", "number", 8, [1, 256], "防止占满工作站"],
+    ["nice", "进程优先级", "number", 10, [0, 19], "nice 值，越大优先级越低"]] }
+}
+const AUTHS = ["私钥", "私钥 + 口令", "密码"]
+// 密钥库：只存引用与指纹，私钥本身不回显
+const RKEYS = [
+  { id: "k1", name: "林夏 · id_ed25519", fp: "SHA256:q3Vd…7Lk2" },
+  { id: "k2", name: "HPC 集群 A 部署密钥", fp: "SHA256:Z8mA…c01P" }
+]
+const COMMON = [
+  ["conn", "连接", "", [
+    ["name", "资源名称", "text", "", "", "在会话与作业记录中显示，如「HPC 集群 A」", "", true],
+    ["host", "主机地址", "text", "", "", "登录节点的域名或 IP", "", true],
+    ["port", "端口", "number", 22, [1, 65535], "SSH 端口"],
+    ["user", "用户名", "text", "", "", "远程账号", "", true],
+    ["jump", "跳板机", "text", "", "", "可选，host:port；需经堡垒机登录时填写"]]],
+  ["auth", "认证", "私钥加密存入密钥库，不传给大模型", [
+    ["auth", "认证方式", "select", "私钥", AUTHS, "推荐私钥认证；密码认证仅用于临时测试"]]],
+  ["env", "环境与文件", "", [
+    ["workdir", "工作目录", "text", "~/ai4s/jobs", "", "每个作业在此目录下建子目录"],
+    ["init", "环境初始化", "text", "", "", "作业开始前执行，如 module load gaussian/16; conda activate md"],
+    ["transfer", "文件传输", "select", "SFTP", ["SFTP", "rsync over SSH"], "上传输入与回传结果的方式"],
+    ["maxUploadMB", "单次传输上限", "number", 2048, [1, 102400], "超过上限提示改用共享存储路径", "MB"],
+    ["poll", "状态轮询间隔", "number", 30, [5, 3600], "查询作业状态的频率", "秒"],
+    ["timeout", "连接超时", "number", 20, [3, 120], "", "秒"],
+    ["keepDays", "作业目录保留", "number", 14, [0, 365], "0 表示结果回传后立即清理", "天"]]],
+  ["scope", "使用范围", "", [
+    ["scope", "可用空间", "select", "所有空间", ["所有空间", "仅课题空间"], "限制哪些空间能向该资源提交作业"],
+    ["isDefault", "默认资源", "bool", false, "", "计算集群类工具箱未指定资源时提交到这里"]]]
+]
+let REMOTES = [
+  { id: "r1", name: "HPC 集群 A", sched: "slurm", host: "hpc-a.example.org", port: 22, user: "linxia", jump: "", auth: "私钥", key: "k2", workdir: "~/ai4s/jobs", init: "module load gaussian/16 vasp/6.4 gromacs/2024", transfer: "rsync over SSH", maxUploadMB: 4096, poll: 30, timeout: 20, keepDays: 14, scope: "所有空间", isDefault: true,
+    partition: "cpu", account: "ai4s", qos: "", nodes: 1, ntasks: 32, cpus: 1, gpus: 0, mem: "64G", time: "1-00:00:00", extra: "", status: "ok", info: "Slurm 23.11 · 分区 cpu、gpu、debug · 延迟 32 ms", fp: "SHA256:hQ2x…9aTe", checked: "2026-09-29 09:12" },
+  { id: "r2", name: "GPU 集群", sched: "pbs", host: "10.20.8.15", port: 2222, user: "ai4s", jump: "bastion.example.org:22", auth: "私钥 + 口令", key: "k1", workdir: "/scratch/ai4s", init: "module load cuda/12.2", transfer: "SFTP", maxUploadMB: 2048, poll: 60, timeout: 20, keepDays: 7, scope: "所有空间", isDefault: false,
+    queue: "gpu", account: "", select: 1, ncpus: 16, ngpus: 2, mem: "128gb", walltime: "12:00:00", extra: "", status: "ok", info: "PBS Pro 2022 · 队列 gpu、batch · 延迟 48 ms", fp: "SHA256:Mv7p…Q4sd", checked: "2026-09-28 17:40" },
+  { id: "r3", name: "课题组工作站", sched: "ssh", host: "ws-lab01.example.org", port: 22, user: "lab", jump: "", auth: "私钥", key: "k1", workdir: "~/ai4s", init: "conda activate sci", transfer: "SFTP", maxUploadMB: 1024, poll: 15, timeout: 10, keepDays: 3, scope: "仅课题空间", isDefault: false,
+    runner: "tmux", maxJobs: 2, maxCpus: 16, nice: 10, status: "untested", info: "", fp: "", checked: "" }
+]
+let rEdit = null // null | "new" | 资源 id
+// 资源表单按参数组分页签，切换页签时已填内容保留在草稿里
+const RFTABS = ["连接", "认证", "作业调度", "环境与文件", "使用范围"]
+// 调度系统是资源的一个参数：新建时不预设，选择后才出现对应的调度参数
+const SCHED_FIELD = ["sched", "调度系统", "select", "", ["", ...Object.keys(SCHEDULERS)], "远程资源使用的作业调度系统；无调度系统的工作站选「SSH 直连」", "", true]
+let rTab = "连接"
+function rFieldTab(key) {
+  const g = COMMON.find((x) => x[3].some((f) => f[0] === key))
+  if (g) return { conn: "连接", auth: "认证", env: "环境与文件", scope: "使用范围" }[g[0]]
+  if (["key", "keyfile", "password", "passphrase"].includes(key)) return "认证"
+  return "作业调度"
+}
+let RDRAFT = null
+function remoteDefault() { return REMOTES.find((r) => r.isDefault) }
+function remoteBlank() {
+  const out = { id: "", status: "untested", info: "", fp: "", checked: "", key: RKEYS[0].id }
+  COMMON.forEach(([, , , fs]) => fs.forEach(([k, , , d]) => { out[k] = d }))
+  out.sched = ""
+  Object.keys(SCHEDULERS).forEach((s) => SCHEDULERS[s].fields.forEach(([k, , , d]) => { if (!(k in out)) out[k] = d }))
+  return out
+}
+function remoteBrief(r) {
+  const sp = { slurm: [r.partition && `分区 ${r.partition}`, r.time && `时长 ${r.time}`], pbs: [r.queue && `队列 ${r.queue}`, r.walltime && `时长 ${r.walltime}`], sge: [r.queue && `队列 ${r.queue}`, r.walltime && `时长 ${r.walltime}`], lsf: [r.queue && `队列 ${r.queue}`, r.walltime && `时长 ${r.walltime}`], ssh: [`${r.runner} 后台`, `并发 ${r.maxJobs}`] }[r.sched]
+  return sp.filter(Boolean).join(" · ")
+}
+function remotePanel() {
+  if (rEdit) return remoteForm()
+  const dot = { ok: "ok", fail: "fail", testing: "testing", untested: "" }
+  const stText = { ok: "连接正常", fail: "连接失败", testing: "测试中…", untested: "未测试" }
+  const card = (r) => {
+    const key = RKEYS.find((k) => k.id === r.key)
+    return `<li class="rcard">
+      <div class="rc-top"><b>${esc(r.name)}</b><em class="rs">${esc(SCHEDULERS[r.sched].label)}</em>${r.isDefault ? `<em class="rs def">默认</em>` : ""}${r.scope !== "所有空间" ? `<em class="rs gray">${esc(r.scope)}</em>` : ""}
+        <span class="rst ${dot[r.status]}"><i></i>${stText[r.status]}</span></div>
+      <p><code>${esc(r.user)}@${esc(r.host)}:${r.port}</code>${r.jump ? `<small>经跳板机 ${esc(r.jump)}</small>` : ""}</p>
+      <p class="rc-sub">${esc(remoteBrief(r))} · ${esc(r.auth)}${r.auth !== "密码" && key ? `（${esc(key.name)}）` : ""} · 工作目录 <code>${esc(r.workdir)}</code></p>
+      ${r.info ? `<p class="rc-sub">${esc(r.info)}${r.fp ? ` · 主机指纹 <code>${esc(r.fp)}</code>` : ""}${r.checked ? ` · ${esc(r.checked)}` : ""}</p>` : ""}
+      <div class="rc-act">
+        <button class="btn sm ghost" type="button" data-remote="test|${r.id}" ${r.status === "testing" ? "disabled" : ""}>测试连接</button>
+        <button class="btn sm ghost" type="button" data-remote="edit|${r.id}">编辑</button>
+        ${r.isDefault ? "" : `<button class="btn sm ghost" type="button" data-remote="default|${r.id}">设为默认</button>`}
+        <button class="btn sm ghost danger" type="button" data-remote="del|${r.id}">删除</button>
+      </div>
+    </li>`
+  }
+  return `<p class="kit-note">远程资源是作业真正运行的地方。计算集群类工具箱（Gaussian、VASP、GROMACS 等）通过本工具把作业提交到这里；AI 只看到资源名称和队列，看不到地址与密钥。</p>
+    <div class="row-actions" style="margin:0 0 10px"><button class="btn sm" type="button" data-remote="add">${icon("plus", 14, 2)}添加远程资源</button></div>
+    <ul class="rlist">${REMOTES.map(card).join("") || `<li class="bempty">还没有远程资源。</li>`}</ul>
+    <div class="pbox">${icon("box", 15)} <b>凭据安全</b>：私钥与口令加密存入密钥库，只在平台执行节点建立 SSH 连接时解密使用，不传给大模型、不写入会话记录；首次连接时校验并固定主机指纹，指纹变化会阻止提交。</div>`
+}
+function remoteForm() {
+  const v = RDRAFT
+  const ctl = ([k, , type, , opts, , unit, req]) => {
+    const val = v[k]
+    if (type === "select") return `<select name="${k}" data-rre="1">${opts.map((o) => `<option value="${esc(o)}" ${String(o) === String(val) ? "selected" : ""}>${esc(SCHEDULERS[o] ? SCHEDULERS[o].label : o === "" && k === "sched" ? "请选择调度系统" : o)}</option>`).join("")}</select>`
+    if (type === "bool") return `<label class="sw"><input type="checkbox" name="${k}" ${val ? "checked" : ""} /> 是</label>`
+    if (type === "number") return `<span class="num"><input type="number" name="${k}" value="${esc(val)}" min="${opts[0]}" max="${opts[1]}" step="1" />${unit ? `<em>${esc(unit)}</em>` : ""}</span>`
+    return `<input type="text" name="${k}" value="${esc(val)}" ${req ? "required" : ""} />`
+  }
+  const row = (f) => `<div class="prow"><span>${esc(f[1])}${f[7] ? `<i class="req">*</i>` : ""}</span>${ctl(f)}${f[5] ? `<small>${esc(f[5])}</small>` : ""}</div>`
+  const authRows = () => {
+    const out = []
+    if (v.auth !== "密码") {
+      out.push(`<div class="prow"><span>私钥<i class="req">*</i></span><select name="key" data-rre="1">${RKEYS.map((k) => `<option value="${k.id}" ${v.key === k.id ? "selected" : ""}>${esc(k.name)}</option>`).join("")}<option value="upload" ${v.key === "upload" ? "selected" : ""}>上传新私钥…</option></select>
+        <small>${v.key === "upload" ? "" : `指纹 ${esc((RKEYS.find((k) => k.id === v.key) || {}).fp || "")}；`}从密钥库选择，或上传 OpenSSH / PEM 格式私钥</small></div>`)
+      if (v.key === "upload") out.push(`<div class="prow"><span>私钥文件</span><input type="file" name="keyfile" accept=".pem,.key,*" /><small>${v.keyfile ? `已选择 ${esc(v.keyfile)}，保存后加密入库，页面不再回显` : "如 id_ed25519、id_rsa；保存后加密入库，页面不再回显"}</small></div>`)
+      if (v.auth === "私钥 + 口令") out.push(`<div class="prow"><span>私钥口令</span><input type="password" name="passphrase" placeholder="${v._passphrase ? "已填写" : v.id ? "已保存，留空不修改" : ""}" autocomplete="new-password" /><small>与私钥一同加密保存</small></div>`)
+    } else {
+      out.push(`<div class="prow"><span>密码<i class="req">*</i></span><input type="password" name="password" placeholder="${v._password ? "已填写" : v.id ? "已保存，留空不修改" : ""}" autocomplete="new-password" /><small class="warn">不推荐：密码认证无法防止口令泄露，建议改用私钥</small></div>`)
+    }
+    return out.join("")
+  }
+  const sch = SCHEDULERS[v.sched]
+  const section = (title, tip, body) => `<section class="pgroup"><h5>${esc(title)}${tip ? `<span>${esc(tip)}</span>` : ""}</h5>${body}</section>`
+  const [conn, auth, env, scope] = COMMON
+  const tab = RFTABS.includes(rTab) ? rTab : "连接"
+  const body = {
+    "连接": () => section("连接", "登录节点地址与账号", conn[3].map(row).join("")),
+    "认证": () => section("认证", auth[2], auth[3].map(row).join("") + authRows()),
+    "作业调度": () => section("调度系统", "决定作业脚本的生成方式与状态查询命令", row(SCHED_FIELD)) + (sch ? section(`${sch.label} 参数`, sch.cmd, sch.fields.map(row).join("")) + `<p class="note" style="margin-top:10px">以上是向该资源提交作业的默认值，单个作业可在会话中覆盖。调度系统可随时在上方切换。</p>` : `<p class="bempty" style="margin-top:12px">选择调度系统后填写对应的调度参数（Slurm、PBS、LSF、SGE 的队列/分区、核数、时长等，SSH 直连的后台方式与并发上限）。</p>`),
+    "环境与文件": () => section("环境与文件", "作业运行环境、文件传输与状态轮询", env[3].map(row).join("")),
+    "使用范围": () => section("使用范围", "", scope[3].map(row).join(""))
+  }[tab]()
+  const label = (t) => t
+  return `<form class="cform" id="remote-form">
+    <p class="note">${v.id ? `编辑「${esc(v.name)}」` : "添加远程资源"}${sch || v.host ? `（${[sch && sch.label, v.host && `${v.user || ""}@${v.host}:${v.port}`].filter(Boolean).map(esc).join(" · ")}）` : ""}</p>
+    <nav class="dtabs rftabs">${RFTABS.map((t) => `<button type="button" class="${t === tab ? "on" : ""}" data-remote="tab|${t}">${esc(label(t))}${v._err === t ? `<i class="rdot"></i>` : ""}</button>`).join("")}</nav>
+    ${body}
+    <div class="row-actions right cform-foot">
+      <button class="btn ghost" type="button" data-remote="cancel">取消</button>
+      <button class="btn ghost" type="button" data-remote="testdraft">测试连接</button>
+      <button class="btn" type="submit">保存</button>
+    </div>
+  </form>`
+}
+// 读取表单当前值到草稿（切换调度系统、认证方式时保留已填内容）
+function remoteRead(form) {
+  const v = RDRAFT
+  const all = [...COMMON.flatMap((g) => g[3]), SCHED_FIELD]
+  const el0 = form.elements.sched
+  if (el0) v.sched = el0.value
+  if (SCHEDULERS[v.sched]) all.push(...SCHEDULERS[v.sched].fields)
+  all.forEach(([k, , type]) => {
+    const el = form.elements[k]
+    if (!el) return
+    v[k] = type === "bool" ? el.checked : type === "number" ? Number(el.value) : el.value
+  })
+  if (form.elements.key) v.key = form.elements.key.value
+  if (form.elements.keyfile && form.elements.keyfile.files && form.elements.keyfile.files[0]) v.keyfile = form.elements.keyfile.files[0].name
+  ;["password", "passphrase"].forEach((k) => { if (form.elements[k] && form.elements[k].value) v["_" + k] = true })
+}
+function remoteCheck(v) {
+  const r = remoteCheckRaw(v)
+  v._err = r ? r[1] : ""
+  return r ? r[0] : ""
+}
+function remoteCheckRaw(v) {
+  const E = (msg, key) => [msg, rFieldTab(key)]
+  if (!String(v.name || "").trim()) return E("请填写资源名称", "name")
+  if (REMOTES.some((r) => r.name === v.name.trim() && r.id !== v.id)) return E("资源名称已存在", "name")
+  if (!/^[A-Za-z0-9.\-]+$/.test(String(v.host || "").trim())) return E("主机地址只能包含字母、数字、点和短横线", "host")
+  if (!(v.port >= 1 && v.port <= 65535)) return E("端口范围 1–65535", "port")
+  if (!String(v.user || "").trim()) return E("请填写用户名", "user")
+  if (v.jump && !/^[A-Za-z0-9.\-]+(:\d{1,5})?$/.test(v.jump)) return E("跳板机格式为 host:port", "jump")
+  if (v.auth !== "密码" && v.key === "upload" && !v.keyfile) return E("请选择私钥文件", "keyfile")
+  if (v.auth === "密码" && !v.id && !v._password) return E("请填写密码", "password")
+  if (!SCHEDULERS[v.sched]) return E("请选择调度系统", "sched")
+  const nums = [...COMMON.flatMap((g) => g[3]), ...SCHEDULERS[v.sched].fields].filter((f) => f[2] === "number")
+  for (const f of nums) if (!(v[f[0]] >= f[4][0] && v[f[0]] <= f[4][1])) return E(`「${f[1]}」范围 ${f[4][0]}–${f[4][1]}`, f[0])
+  if (v.sched === "slurm" && v.time && !/^(\d+-)?\d{1,2}:\d{2}:\d{2}$/.test(v.time)) return E("Slurm 运行时间格式为 HH:MM:SS 或 D-HH:MM:SS", "time")
+  if ((v.sched === "pbs" || v.sched === "sge") && v.walltime && !/^\d{1,3}:\d{2}:\d{2}$/.test(v.walltime)) return E(`${SCHEDULERS[v.sched].label} 运行时间格式为 HH:MM:SS`, "walltime")
+  return null
+}
+function remoteTest(r, done) {
+  r.status = "testing"
+  const t = setTimeout(() => {
+    const bad = /fail|invalid/.test(r.host)
+    r.status = bad ? "fail" : "ok"
+    const s = SCHEDULERS[r.sched]
+    r.info = bad ? "无法建立 SSH 连接：连接超时" : r.sched === "ssh" ? `SSH 连接正常 · ${r.maxCpus} 核可用 · 延迟 21 ms` : `${s.label} 可用 · ${r.sched === "slurm" ? `分区 ${r.partition}` : `队列 ${r.queue}`} 可提交 · 延迟 ${30 + (r.host.length % 40)} ms`
+    if (!bad && !r.fp) r.fp = `SHA256:${r.host.slice(0, 4)}…${String(r.port).padStart(4, "0")}`
+    r.checked = "2026-09-29 " + new Date().toTimeString().slice(0, 5)
+    done(bad)
+  }, 900)
+  return t
+}
+function remoteAction(act, arg) {
+  const redraw = () => openDrawer(findTool(REMOTE_ID))
+  if (act === "add") { rEdit = "new"; RDRAFT = remoteBlank(); rTab = "连接" }
+  if (act === "edit") { rEdit = arg; RDRAFT = Object.assign({}, REMOTES.find((r) => r.id === arg)); rTab = "连接" }
+  if (act === "tab") { const form = document.getElementById("remote-form"); if (form) remoteRead(form); rTab = arg }
+  if (act === "cancel") { rEdit = null; RDRAFT = null }
+  if (act === "del") {
+    const r = REMOTES.find((x) => x.id === arg)
+    REMOTES = REMOTES.filter((x) => x.id !== arg)
+    if (r.isDefault && REMOTES[0]) REMOTES[0].isDefault = true
+    toast(`已删除远程资源「${r.name}」${r.isDefault && REMOTES[0] ? `，默认资源改为「${REMOTES[0].name}」` : ""}`)
+  }
+  if (act === "default") { REMOTES.forEach((r) => { r.isDefault = r.id === arg }); toast(`默认资源已设为「${REMOTES.find((r) => r.id === arg).name}」`) }
+  if (act === "test") {
+    const r = REMOTES.find((x) => x.id === arg)
+    remoteTest(r, (bad) => { toast(bad ? `「${r.name}」连接失败` : `「${r.name}」连接正常`); if (!rEdit) redraw() })
+  }
+  if (act === "testdraft") {
+    const form = document.getElementById("remote-form")
+    if (form) remoteRead(form)
+    const err = remoteCheck(RDRAFT)
+    if (err) { rTab = RDRAFT._err; redraw(); toast(err); return }
+    toast(`正在连接 ${RDRAFT.user}@${RDRAFT.host}:${RDRAFT.port}…`)
+    remoteTest(RDRAFT, (bad) => toast(bad ? "连接失败：连接超时，请检查地址、端口与网络" : `连接正常：${RDRAFT.info}`))
+    return
+  }
+  redraw()
+}
+function remoteSave(form) {
+  remoteRead(form)
+  const v = RDRAFT
+  const err = remoteCheck(v)
+  if (err) { rTab = v._err; openDrawer(findTool(REMOTE_ID)); toast(`「${v._err}」页签：${err}`); return }
+  delete v._err; delete v._password; delete v._passphrase
+  v.name = v.name.trim(); v.host = v.host.trim(); v.user = v.user.trim()
+  if (v.key === "upload") { const k = { id: "k" + (RKEYS.length + 1), name: `${v.user} · ${v.keyfile}`, fp: `SHA256:${v.keyfile.slice(0, 4)}…new1` }; RKEYS.push(k); v.key = k.id; delete v.keyfile }
+  if (v.status === "testing") v.status = "untested"
+  if (v.isDefault) REMOTES.forEach((r) => { r.isDefault = false })
+  if (v.id) REMOTES = REMOTES.map((r) => (r.id === v.id ? v : r))
+  else { v.id = "r" + Date.now(); REMOTES.push(v) }
+  if (!remoteDefault()) v.isDefault = true
+  rEdit = null; RDRAFT = null
+  openDrawer(findTool(REMOTE_ID))
+  toast(`已保存远程资源「${v.name}」`)
+}
+
+function remoteNote() {
+  const rows = Object.keys(SCHEDULERS).map((k) => { const x = SCHEDULERS[k]; return `<tr><td>${esc(x.label)}</td><td><code>${esc(x.cmd)}</code></td><td>${esc(x.fields.slice(0, 4).map((f) => f[1]).join("、"))}等</td></tr>` }).join("")
+  const def = remoteDefault()
+  return `<div class="pbox"><h4>${icon("hub", 15)}工作方式</h4>
+    计算集群类工具箱（Gaussian、VASP、GROMACS、LAMMPS 等）不直接连集群，而是由远程计算把作业提交到选定的远程资源：上传输入 → 按调度系统生成作业脚本并提交 → 轮询状态 → 回传结果到会话。会话中未指定资源时使用默认资源${def ? `「${esc(def.name)}」` : ""}。
+    <table class="rtable"><tr><th>调度系统</th><th>对应命令</th><th>主要参数</th></tr>${rows}</table></div>`
+}
+function icon(name, size, sw) {
+  const s = size || 18
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.wrench}</svg>`
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]))
+}
+function toast(text) {
+  const el = document.getElementById("toast")
+  el.hidden = false
+  el.textContent = text
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { el.hidden = true }, 2400)
+}
+function paintIcons(root) {
+  root.querySelectorAll("[data-icon]").forEach((el) => {
+    if (el.dataset.ready) return
+    el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 18)
+    el.dataset.ready = "1"
+  })
+}
+function numOf(calls) {
+  const s = String(calls)
+  return s.endsWith("K") ? parseFloat(s) * 1000 : parseFloat(s) || 0
+}
+
+function chips(group, options, current) {
+  const box = document.querySelector(`[data-group="${group}"]`)
+  const label = box.querySelector(".lbl").outerHTML
+  box.hidden = !options || (group === "dir" && options.length <= 1)
+  if (!options) return
+  const open = state.fOpen[group]
+  const over = options.length - 1 > DIM_LIMIT
+  const shown = over && !open ? options.filter((op, i) => i <= DIM_LIMIT || op === current) : options
+  const last = group === DIMS[DIMS.length - 1][0] && anyFilter()
+  box.innerHTML = label + shown.map((op) => `<button type="button" class="chip ${op === current ? "on" : ""}" data-filter="${group}" data-value="${esc(op)}">${esc(op)}</button>`).join("")
+    + (over ? `<button type="button" class="fmore" data-fmore="${group}">${open ? "收起" : `更多 ${options.length - shown.length}`}${icon("down", 12, 2)}</button>` : "")
+    + (last ? `<button type="button" class="fclear" data-fclear="1">清空筛选</button>` : "")
+}
+function tabs() {
+  const n = Object.keys(loadedOf()).length
+  document.getElementById("tool-tabs").innerHTML = TABS.map((tab) => `<button type="button" class="${tab === state.tab ? "on" : ""}" data-tab="${esc(tab)}">${esc(tab)}${tab === "已加载" ? `<i class="n">${n}</i>` : ""}</button>`).join("")
+}
+function spaceInfo(name) {
+  const key = name || state.space
+  if (!SPACE_INFO[key]) SPACE_INFO[key] = { loaded: {} }
+  return SPACE_INFO[key]
+}
+function loadedOf(name) { return spaceInfo(name).loaded }
+function isLoaded(id) { return !!loadedOf()[id] }
+function loadBtn(item) {
+  if (isComp(item) && !compReady(item)) return `<span class="btn sm auto plan" title="二期开放，暂不可用">规划中</span>`
+  if (isComp(item)) return `<span class="btn sm auto" title="前端组件对所有空间自动启用，工具输出对应格式的结果时在会话中自动展示">${icon("check", 14, 2)}自动启用</span>`
+  const on = isLoaded(item.id)
+  return `<button class="btn sm load" type="button" data-name="${esc(item.name)}" onclick="event.stopPropagation();parent.joinMyAssets&&parent.joinMyAssets('工具', this.getAttribute('data-name'))" title="加入我的科研资产">${icon("plus", 14, 2)}加入我的科研资产</button>`
+}
+function toggleLoad(item) {
+  if (isComp(item)) return
+  const box = loadedOf()
+  if (box[item.id]) {
+    delete box[item.id]
+    const users = boundBy(item.id).filter((u) => box[u.kit])
+    toast(users.length ? `已从「${state.space}」移除「${item.name}」，${users[0].name}${users.length > 1 ? ` 等 ${users.length} 个工具` : ""}的默认联用将失效` : `已从「${state.space}」移除「${item.name}」`)
+  } else {
+    box[item.id] = { at: Date.now() }
+    item.recent = true
+    const kit = kitOf(item) ? `工具箱（${kitSize(item)} 个工具）` : ""
+    const deps = loadDeps(item, box)
+    const also = deps.length ? `，并联带加载「${deps.join("、")}」` : ""
+    toast(item.needAuth ? `已加载「${item.name}」${kit}${also}，需授权后才能在任务中使用` : `已加载「${item.name}」${kit}到「${state.space}」${also}`)
+  }
+}
+function loadedPanel() {
+  const info = spaceInfo()
+  const ids = Object.keys(info.loaded).filter((id) => tools.some((t) => t.id === id))
+  const shown = state.lpOpen ? ids : ids.slice(0, LP_FOLD)
+  const comps = tools.filter(compReady)
+  const chip = (id) => {
+    const item = findTool(id)
+    const by = info.loaded[id].by && findTool(info.loaded[id].by)
+    return `<span class="lchip" title="${esc(item.desc)}">
+      <span class="ic ic-${item.color}">${icon(item.icon, 14, 1.9)}</span>
+      <b data-detail="${id}">${esc(item.name)}</b>
+      ${kitOf(item) ? `<i class="kn" title="已启用工具 / 工具箱内工具">${kitOn(item)}/${kitSize(item)}</i>` : ""}
+      ${by ? `<em class="src" title="随「${esc(by.name)}」默认联用加载">联用</em>` : ""}
+      ${item.needAuth ? `<em class="src warn">待授权</em>` : ""}
+      <button class="x" type="button" data-unload="${id}" aria-label="移除 ${esc(item.name)}">${icon("close", 13, 2)}</button>
+    </span>`
+  }
+  const compChip = (item) => `<span class="lchip comp" title="${esc(item.desc)}">
+      <span class="ic ic-${item.color}">${icon(item.icon, 14, 1.9)}</span>
+      <b data-detail="${item.id}">${esc(item.name)}</b><em class="src ok">默认</em>
+    </span>`
+  const other = `<button class="lchip grp ${state.lpComps ? "on" : ""}" type="button" data-lp="comps" aria-expanded="${!!state.lpComps}" title="前端组件对所有空间默认加载">
+      <span class="ic">${icon("layers", 14, 1.9)}</span><b>其他</b><i class="kn">前端组件 ${comps.length}</i>${icon("down", 13, 2)}</button>`
+  document.getElementById("loaded-panel").innerHTML = `
+    <div class="lp-head">
+      ${icon("layers", 18)}
+      <b>课题空间已加载工具</b>
+      <span class="lp-space">${esc(state.space)}</span>
+      <span class="lp-count">${ids.length} 个</span>
+      <div class="lp-actions">
+        <button class="btn sm ghost" type="button" data-lp="clear" ${ids.length ? "" : "disabled"}>清空</button>
+      </div>
+    </div>
+    <div class="lp-chips">${shown.map(chip).join("")}${ids.length > LP_FOLD ? `<button class="lp-more" type="button" data-lp="fold">${state.lpOpen ? "收起" : `+${ids.length - LP_FOLD} 展开`}</button>` : ""}${other}</div>
+    ${state.lpComps ? `<div class="lp-chips sub">${comps.map(compChip).join("")}</div>` : ""}`
+}
+function kitLine(item) {
+  const k = kitOf(item)
+  if (!k) return ""
+  const hits = kitHits(item, state.query)
+  const names = (hits.length ? hits : k.tools).slice(0, 3).map((t) => esc(t.name)).join(" · ")
+  return `<p class="kit-line" title="${esc(k.tools.map((t) => t.name).join("、"))}">${icon("box", 13)}<b>工具箱</b>${hits.length ? `命中：${names}` : `${names}${k.tools.length > 3 ? ` 等 ${k.tools.length} 个工具` : ""}`}</p>`
+}
+function tagHtml(item, feature) {
+  const k = kindOf(item)
+  const tags = `<em class="kind k-${KIND_CLS[k]}" title="${esc(KIND_TIP[k])}">${esc(k)}</em>` + (item.tags || [item.usage, item.field]).filter((t) => t !== k).map((t) => `<em>${esc(t)}</em>`).join("")
+  let status
+  if (feature) status = `<em class="official">平台官方</em>`
+  else if (isComp(item) && !compReady(item)) status = `<em>规划中</em>`
+  else if (item.needAuth) status = `<em>需要授权</em>`
+  else status = item.enabled ? `<em class="ok">可用</em>` : `<em>未启用</em>`
+  return `<div class="tags">${tags}${status}</div>`
+}
+function featureCard(item) {
+  return `<article class="card feature">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, true)}
+      <p class="desc">${esc(item.desc)}</p>
+    </div>
+  </article>`
+}
+function toolCard(item) {
+  const open = state.menu === item.id
+  return `<article class="card ${isLoaded(item.id) ? "is-loaded" : ""}">
+    <button class="more" type="button" data-more="${item.id}" aria-label="更多操作">${icon("dots", 18)}</button>
+    ${open ? `<div class="menu more-menu">
+      <button type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+      <button type="button" data-detail="${item.id}">查看详情</button>
+      <button type="button" data-copy="${item.id}">复制工具名称</button>
+    </div>` : ""}
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, false)}
+      <p class="desc">${esc(item.desc)}</p>
+      ${kitLine(item)}
+    </div>
+    <footer>
+      <div class="meta">
+        <span class="owner" title="${esc(item.owner)}">${icon("user", 13)}<i>${esc(item.owner)}</i></span>
+        <span>${icon("eye", 14)}${esc(item.calls)}</span>
+        <span>${icon("heart", 13)}${item.favs}</span>
+      </div>
+      <div class="ops">
+        <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+        ${loadBtn(item)}
+      </div>
+    </footer>
+  </article>`
+}
+function listRow(item) {
+  return `<div class="list-row">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}</div>
+    <div><p class="desc" style="margin:0">${esc(item.desc)}</p>${kitLine(item)}</div>
+    <div class="ops">
+      <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+      ${loadBtn(item)}
+    </div>
+  </div>`
+}
+
+function visible() {
+  const q = state.query.trim().toLowerCase()
+  let list = tools.filter((item) => {
+    if (q && !`${item.name} ${item.desc} ${item.field} ${item.usage} ${item.type} ${item.access || ""} ${(item.tags || []).join(" ")} ${(item.scales || []).join(" ")} ${(item.scenes || []).join(" ")} ${dirsOf(item).join(" ")} ${licOf(item)} ${kitOf(item) ? kitOf(item).tools.map((t) => `${t.name} ${t.desc} ${t.key}`).join(" ") : ""}`.toLowerCase().includes(q)) return false
+    if (!DIMS.every(([k]) => dimOk(item, k))) return false
+    if (state.tab === "已加载") return isLoaded(item.id)
+    if (state.tab === "最近使用") return item.recent
+    if (state.tab === "已收藏") return favs.has(item.id)
+    if (state.tab === "我可用的") return item.enabled && !item.needAuth
+    return true
+  })
+  list = [...list]
+  if (state.sort === "名称") list.sort((a, b) => a.name.localeCompare(b.name, "zh"))
+  if (state.sort === "最近更新") list.sort((a, b) => String(b.updated).localeCompare(String(a.updated)))
+  if (state.sort === "最多使用") list.sort((a, b) => numOf(b.calls) - numOf(a.calls))
+  return list
+}
+// 筛选联动：按 学科领域 → 研究方向 → 应用场景 → 授权方式 逐级收窄，
+// 首行保留完整选项，下级只显示在上级条件下仍有工具的选项；研究方向常驻：学科领域为「全部」时列出所有方向，选定领域后只列该领域的方向；「通用」不分研究方向，选中时隐藏该行
+function cascadeOptions() {
+  const out = {}
+  let pool = tools
+  DIMS.forEach(([key, , all, get]) => {
+    const have = new Set(pool.flatMap(get))
+    const options = key === "field" ? all(pool) : all(pool).filter((op) => op === "全部" || have.has(op))
+    if (!options.includes(state[key])) state[key] = "全部"
+    out[key] = options
+    if (state[key] !== "全部") pool = pool.filter((item) => get(item).includes(state[key]))
+  })
+  return out
+}
+function render() {
+  const opts = cascadeOptions()
+  DIMS.forEach(([key]) => chips(key, opts[key], state[key]))
+  loadedPanel()
+  tabs()
+  document.querySelectorAll("[data-view]").forEach((btn) => btn.classList.toggle("on", btn.dataset.view === state.view))
+  const list = visible()
+  const kits = list.filter(kitOf)
+  document.getElementById("tool-count").textContent = `共 ${list.length} 项${kits.length ? `，其中 ${kits.length} 个工具箱（含 ${kits.reduce((a, i) => a + kitSize(i), 0)} 个工具）` : ""}`
+  const showHot = state.tab === "全部工具" && !state.query && !anyFilter()
+  let html = ""
+  if (showHot) {
+    html += `<section class="hot"><header>${icon("crown", 18)}<b>精选推荐</b><span>基于科研高频场景精选，助力高效科研</span></header>
+      <div class="grid">${tools.filter((i) => i.hot).map(featureCard).join("")}</div></section>`
+  }
+  if (!list.length && state.tab === "已加载") html += `<div class="empty">「${esc(state.space)}」还没有加载工具，或当前筛选条件下没有已加载的工具。</div>`
+  else if (!list.length) html += `<div class="empty">没有匹配的工具，试试更换筛选条件或搜索词。</div>`
+  else if (state.view === "card") html += `<div class="grid tools-grid">${list.map(toolCard).join("")}</div>`
+  else html += `<div class="list">${list.map(listRow).join("")}</div>`
+  document.getElementById("tool-results").innerHTML = html
+}
+
+const DTABS = ["说明", "Schema", "参数配置"]
+const KTABS = ["工具", "说明"]
+function kvList(item) {
+  return `<ul class="kv">
+      <li><span>学科领域</span><b>${esc(item.field)}</b></li>
+      ${dirsOf(item).length ? `<li><span>研究方向</span><b>${esc(dirsOf(item).join("、"))}</b></li>` : ""}
+      <li><span>技术方法</span><b>${esc(techOf(item))}</b></li>
+      ${item.scenes && item.scenes.length ? `<li><span>应用场景</span><b>${esc(item.scenes.join("、"))}</b></li>` : ""}
+      <li><span>能力类型</span><b>${esc(formOf(item))}</b></li>
+      ${kitOf(item) ? `<li><span>服务标识</span><b><code>${esc(kitOf(item).server)}</code></b></li>` : ""}
+      ${item.scales ? `<li><span>适用尺度</span><b>${esc(item.scales.join("、"))}</b></li>` : ""}
+      <li><span>授权方式</span><b>${esc(licText(item))}</b></li>
+      <li><span>提供方</span><b>${esc(item.owner)}</b></li>
+      <li><span>调用次数</span><b>${esc(item.calls)}</b></li>
+      <li><span>收藏数</span><b>${item.favs}</b></li>
+      <li><span>最近更新</span><b>${esc(item.updated || "—")}</b></li>
+      <li><span>状态</span><b>${isComp(item) && !compReady(item) ? "规划中（二期）" : item.needAuth ? "需要授权" : item.enabled ? "可用" : "未启用"}</b></li>
+      <li><span>课题空间</span><b>${isComp(item) ? (compReady(item) ? "自动启用（所有空间）" : "暂不可用") : isLoaded(item.id) ? "已加载" : "未加载"}</b></li>
+    </ul>`
+}
+function compPlanned(item) {
+  const sp = COMP_SPECS[item.id]
+  return `
+    <div class="pbox plan"><h4>${icon("history", 15)}规划中<i>二期</i></h4>${esc(sp.defer)}</div>
+    <div class="pbox"><h4>${icon("spark", 15)}计划用于</h4>${esc(sp.when)} 计划支持格式：${sp.formats.map((f) => `<code>${esc(f)}</code>`).join(" ")}。组件类型 <code>${esc(sp.component)}</code>，开放后同样遵循传引用、沙箱隔离与事件回传约定。</div>
+    ${kvList(item)}`
+}
+function compIntro(item) {
+  const sp = COMP_SPECS[item.id]
+  const v = compValues(item.id)
+  const caps = dataCaps(item.id)
+  // 说明页摘出关键限制，完整参数在「参数配置」
+  const keyLimits = sp.params.filter((q) => q.g === "limit" && !/^max(Inline|Ref|Text)/.test(q.key)).map((q) => `${esc(q.label)} <b>${esc(paramText(q, v[q.key]))}</b>`).join("；")
+  const over = sp.params.filter((q) => q.g === "over").map((q) => `${esc(q.label)}：${esc(v[q.key])}`).join("；")
+  return `
+    <div class="pbox"><h4>${icon("spark", 15)}何时展示</h4>${esc(sp.when)} 由工具输出里的 <code>component: ${esc(sp.component)}</code> 决定，AI 不直接生成组件代码。支持格式：${sp.formats.map((f) => `<code>${esc(f)}</code>`).join(" ")}</div>
+    <div class="pbox"><h4>${icon("sliders", 15)}当前限制</h4>${keyLimits}。${over ? `<br>${over}。` : ""}<a class="alink" data-dtab="参数配置">调整参数</a></div>
+    <div class="pbox"><h4>${icon("network", 15)}数据传引用<i>不传原数据</i></h4><ul>
+      <li>工具只输出资产引用 <code>asset://…</code>、格式、大小和校验值，原始数据不经过大模型，也不写进会话记录。</li>
+      <li>组件在沙箱内凭短期令牌向资产网关拉取数据，按空间权限鉴权。</li>
+      <li>${caps.inline === caps.ref ? `源文本上限 ${sizeText(caps.ref)}，可直接内联` : `内联上限 ${sizeText(caps.inline)}，引用上限 ${sizeText(caps.ref)}`}。</li></ul></div>
+    <div class="pbox"><h4>${icon("box", 15)}隔离</h4><ul>
+      <li>组件运行在 <code>sandbox="allow-scripts"</code> 的 iframe 中，无同源权限，读不到会话页面的 Cookie 与 DOM。</li>
+      <li>CSP 只放行资产网关；与会话仅通过 postMessage 通信，双向消息都按 Schema 校验。</li>
+      <li>${esc(sp.isolation)}</li></ul></div>
+    <div class="pbox"><h4>${icon("history", 15)}反向交互</h4>用户在组件里的操作以事件回传会话，事件摘要作为上下文交给 AI，用于追问、解释或继续计算。${v.toAgent ? "" : "<b>当前已关闭回传给 AI。</b>"}
+      <table class="etable"><thead><tr><th>事件</th><th>载荷</th><th>用途</th></tr></thead><tbody>
+      ${sp.events.map(([nm, pl, d]) => `<tr><td><code>${esc(nm)}</code></td><td><code>${esc(pl)}</code></td><td>${esc(d)}</td></tr>`).join("")}
+      </tbody></table></div>
+    ${boundByBox(item.id)}
+    ${kvList(item)}`
+}
+function compSchemaTab(item) {
+  const schema = JSON.stringify(compSchema(item), null, 2)
+  const example = JSON.stringify(compExample(item), null, 2)
+  return `
+    <p class="note" style="font-size:12.5px;color:var(--muted);margin:0 0 10px">工具按此协议输出展示结果，平台先校验再交给组件渲染；<code>x-limits</code> 来自参数配置，由平台强制执行；不符合协议的输出降级为文件下载链接。</p>
+    <div class="code-head"><span>渲染协议（JSON Schema）</span><button class="btn sm ghost" type="button" data-copyjson="schema">复制</button></div>
+    <pre class="code" id="cj-schema">${esc(schema)}</pre>
+    <div class="code-head"><span>工具输出示例（使用当前展示默认）</span><button class="btn sm ghost" type="button" data-copyjson="example">复制</button></div>
+    <pre class="code" id="cj-example">${esc(example)}</pre>`
+}
+function compForm(item) {
+  const sp = COMP_SPECS[item.id]
+  const v = compValues(item.id)
+  const dirty = COMP_DRAFT[item.id] && Object.keys(COMP_DRAFT[item.id]).length
+  const ctl = (q) => {
+    const val = v[q.key]
+    if (q.type === "select") return `<select name="${q.key}">${q.opts.map((o) => `<option ${o === val ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`
+    if (q.type === "bool") return `<label class="sw"><input type="checkbox" name="${q.key}" ${val ? "checked" : ""} /> 开启</label>`
+    return `<span class="num"><input type="number" name="${q.key}" value="${esc(val)}" min="${q.opts[0]}" max="${q.opts[1]}" step="any" />${q.unit ? `<em>${esc(q.unit)}</em>` : ""}</span>`
+  }
+  const row = (q) => {
+    const changed = val(q) !== q.def
+    return `<div class="prow"><span>${esc(q.label)}${changed ? `<i class="chg" title="已修改">●</i>` : ""}</span>${ctl(q)}<small>${esc(q.desc)} · 默认 ${esc(paramText(q, q.def))}${q.type === "number" ? `，范围 ${q.opts[0]}–${q.opts[1]}` : ""}${q.le ? `，不大于「${esc(sp.params.find((x) => x.key === q.le).label)}」` : ""}</small></div>`
+  }
+  const val = (q) => v[q.key]
+  const groups = PARAM_GROUPS.filter(([g]) => sp.params.some((q) => q.g === g))
+  return `<form class="cform" id="comp-form" data-comp="${item.id}">
+    <p class="note">按组件分别配置，保存后作为平台默认值对所有空间生效。「数据上限」「超限处理」「渲染性能」由平台强制执行；「展示默认」可被工具输出的 <code>options</code> 覆盖单次展示。</p>
+    ${groups.map(([g, title, tip]) => `<section class="pgroup"><h5>${esc(title)}<span>${esc(tip)}</span></h5>${sp.params.filter((q) => q.g === g).map(row).join("")}</section>`).join("")}
+    <div class="row-actions right cform-foot">
+      <span class="note ${dirty ? "dirty" : ""}" style="margin:auto auto auto 0">${dirty ? "有未保存的修改" : COMP_CONFIG[item.id] ? "已保存自定义配置" : "当前为默认配置"}</span>
+      <button class="btn ghost" type="button" data-creset="${item.id}">恢复默认</button>
+      <button class="btn" type="submit">保存</button>
+    </div>
+  </form>`
+}
+function openDrawer(item) {
+  state.menu = null
+  const box = document.getElementById("drawer")
+  box.hidden = false
+  const comp = isComp(item)
+  const ready = compReady(item)
+  const tab = DTABS.includes(state.dtab) ? state.dtab : "说明"
+  const head = `<header><h3>${comp ? "组件详情" : "工具详情"}</h3><button class="icon-btn" type="button" data-close="drawer" aria-label="关闭">${icon("close")}</button></header>
+    <div class="card">
+      <span class="ic ic-${item.color}">${icon(item.icon, 24, 1.8)}</span>
+      <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}<p class="desc">${esc(item.desc)}</p></div>
+    </div>`
+  if (kitOf(item)) {
+    const k = kitOf(item)
+    const on = isLoaded(item.id)
+    const off = kitOff(item.id)
+    const isRemote = item.id === REMOTE_ID
+    const tabs = isRemote ? RTABS : KTABS
+    const ktab = tabs.includes(state.dtab) ? state.dtab : tabs[0]
+    const list = `<p class="kit-note">${on
+      ? `已加载到「${esc(state.space)}」，启用 ${kitOn(item)}/${k.tools.length} 个工具。AI 在会话中按需调用已启用的工具；停用的工具在本空间不可见。`
+      : "工具箱以整体加载到空间，加载后可在这里按空间停用个别工具。"}带「联用」的工具在创建时绑定了展示组件或前后处理工具：展示组件直接渲染输出；绑定的其他工具会随本工具箱一并加载。</p>
+      <ul class="ktools">${k.tools.map((t) => `<li class="${on && off[t.key] ? "off" : ""}">
+        <label><input type="checkbox" data-ktool="${item.id}|${esc(t.key)}" ${on ? (off[t.key] ? "" : "checked") : "checked disabled"} />
+        <div><div class="kt-top"><b>${esc(t.name)}</b><code>${esc(t.key)}</code></div><p>${esc(t.desc)}</p>${t.out ? `<small>输出：${esc(t.out)}</small>` : ""}${bindLine(bindsOf(t.key))}</div></label>
+      </li>`).join("")}</ul>`
+    box.innerHTML = `<aside class="drawer wide" role="dialog" aria-label="${esc(item.name)}" data-open="${item.id}">
+      ${head.replace("工具详情", "工具箱详情")}
+      <div class="row-actions" style="margin-top:12px">
+        <button class="btn load ${on ? "on" : ""}" type="button" data-load="${item.id}">${icon(on ? "check" : "plus", 15, 2)}${on ? "已加载" : "加载工具箱"}</button>
+        ${item.needAuth ? `<button class="btn ghost" type="button" data-auth="${item.id}">申请授权</button>` : ""}
+        <button class="btn ghost" type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+      </div>
+      <nav class="dtabs">${tabs.map((t) => `<button type="button" class="${t === ktab ? "on" : ""}" data-dtab="${t}">${t === "工具" ? `工具（${k.tools.length}）` : t === "远程资源" ? `远程资源（${REMOTES.length}）` : t}</button>`).join("")}</nav>
+      ${ktab === "远程资源" ? remotePanel() : ktab === "工具" ? list : (isRemote ? remoteNote() : "") + boundByBox(item.id) + kvList(item)}
+    </aside>`
+    return
+  }
+  if (comp) {
+    box.innerHTML = `<aside class="drawer wide" role="dialog" aria-label="${esc(item.name)}" data-open="${item.id}">
+      ${head}
+      <div class="row-actions" style="margin-top:12px">
+        ${loadBtn(item)}
+        <button class="btn ghost sm" type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+      </div>
+      ${ready
+        ? `<nav class="dtabs">${DTABS.map((t) => `<button type="button" class="${t === tab ? "on" : ""}" data-dtab="${t}">${t}</button>`).join("")}</nav>
+          ${tab === "说明" ? compIntro(item) : tab === "Schema" ? compSchemaTab(item) : compForm(item)}`
+        : `<div style="margin-top:16px">${compPlanned(item)}</div>`}
+    </aside>`
+    return
+  }
+  const body = `${bindBox(item)}${boundByBox(item.id)}`
+  box.innerHTML = `<aside class="drawer" role="dialog" aria-label="${esc(item.name)}" data-open="${item.id}">
+    ${head}
+    <div style="margin-top:14px">${body}</div>
+    ${kvList(item)}
+    <div class="row-actions">
+      <button class="btn load ${isLoaded(item.id) ? "on" : ""}" type="button" data-load="${item.id}">${icon(isLoaded(item.id) ? "check" : "plus", 15, 2)}${isLoaded(item.id) ? "已加载" : "加载"}</button>
+      ${item.needAuth ? `<button class="btn ghost" type="button" data-auth="${item.id}">申请授权</button>` : ""}
+      <button class="btn ghost" type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+    </div>
+  </aside>`
+}
+function dirChecks(field) { return (DIRS[field] || []).length ? checks("dirs", "研究方向", DIRS[field].map((d) => d[0])) : "" } // 通用领域不分研究方向
+function checks(name, label, list) {
+  return `<div class="field"><span>${esc(label)}<small class="opt">可多选</small></span><div class="checks">${list.map((x) => `<label><input type="checkbox" name="${name}" value="${esc(x)}" /> ${esc(x)}</label>`).join("")}</div></div>`
+}
+function openCreate() {
+  const opts = (arr) => arr.filter((x) => x !== "全部").map((x) => `<option>${esc(x)}</option>`).join("")
+  const box = document.getElementById("modal")
+  box.hidden = false
+  createBinds = []
+  box.innerHTML = `<div class="modal wide" role="dialog" aria-label="新建工具">
+    <header><h3>新建工具</h3><button class="icon-btn" type="button" data-close="modal" aria-label="关闭">${icon("close")}</button></header>
+    <form id="create-form" class="scroll">
+      <label class="field">名称<input name="name" placeholder="例如：谱图解析" required /></label>
+      <label class="field">学科领域<select name="field">${opts(FIELDS)}</select></label>
+      <div id="dir-checks">${dirChecks(FIELDS[1])}</div>
+      <label class="field">技术方法<input name="dir" placeholder="例如：谱图解析、分子动力学" /></label>
+      ${checks("scenes", "应用场景", SCENES)}
+      <label class="field">授权方式<select name="lic">${LICENSES.map((x) => `<option>${x}</option>`).join("")}</select></label>
+      <label class="field">说明<textarea name="desc" rows="3" placeholder="一句话说明工具能做什么"></textarea></label>
+      <div class="field bind-field"><span>默认联用<small>调用本工具时默认一起使用的展示组件或前后处理工具。例如轨迹分析绑定 3Dmol.js 结构展示，NEB 反应路径绑定 Plotly.js 曲线图</small></span>
+        <div id="bind-editor">${bindEditor()}</div></div>
+      <div class="row-actions right">
+        <button class="btn ghost" type="button" data-close="modal">取消</button>
+        <button class="btn" type="submit">确定创建</button>
+      </div>
+    </form>
+  </div>`
+}
+function toggleMenu(id) {
+  ["scope-menu", "bell-menu", "help-menu"].forEach((m) => { if (m !== id) document.getElementById(m).hidden = true })
+  if (id) document.getElementById(id).hidden = !document.getElementById(id).hidden
+}
+function addTool(extra) {
+  const colors = ["blue", "purple", "green", "orange", "pink", "teal"]
+  const icons = ["doc", "network", "flask", "chart", "box", "wrench"]
+  const n = tools.length % 6
+  tools.unshift(Object.assign({
+    owner: "林夏", calls: "0", favs: 0, hot: false, enabled: true, recent: true, needAuth: false,
+    updated: "2026-09-29", icon: icons[n], color: colors[n]
+  }, extra))
+}
+
+document.getElementById("tool-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  state.query = document.getElementById("tool-q").value.trim()
+  render()
+})
+document.getElementById("top-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  const text = document.getElementById("top-q").value.trim()
+  document.getElementById("tool-q").value = text
+  state.query = text
+  render()
+  toast(text ? `已在科学工具箱搜索「${text}」` : "已清除搜索")
+})
+document.getElementById("tool-sort").addEventListener("change", (e) => { state.sort = e.target.value; render() })
+document.getElementById("open-create").addEventListener("click", openCreate)
+document.getElementById("rail-btn").addEventListener("click", () => document.getElementById("app").classList.toggle("is-rail"))
+document.getElementById("import-file").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0]
+  e.target.value = ""
+  if (!file) return
+  addTool({ id: "imp-" + Date.now(), name: file.name.replace(/\.[^.]+$/, ""), tags: ["数据处理", "通用"], field: "通用", usage: "数据处理", type: "科研工具", access: "平台内置", desc: `由文件 ${file.name} 接入，可在任务中调用。` })
+  state.tab = "全部工具"
+  toast(`已接入 ${file.name}`)
+  render()
+})
+document.getElementById("scope-btn").addEventListener("click", (e) => {
+  e.stopPropagation()
+  document.getElementById("scope-menu").innerHTML = SPACES.map((name) => `<button type="button" class="${name === state.space ? "on" : ""}" data-space="${esc(name)}">${esc(name)}</button>`).join("")
+  toggleMenu("scope-menu")
+})
+document.getElementById("bell-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("bell-menu") })
+document.getElementById("help-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("help-menu") })
+document.getElementById("user-btn").addEventListener("click", () => toast("这是原型，账号保持登录"))
+
+document.body.addEventListener("click", (e) => {
+  const t = e.target
+  const inMenu = t.closest(".menu")
+  const rbtn = t.closest("[data-remote]")
+  if (rbtn) { const [act, arg] = rbtn.dataset.remote.split("|"); remoteAction(act, arg); return }
+  const find = (id) => tools.find((row) => row.id === id)
+  const load = t.closest("[data-load]")
+  if (load) {
+    const item = find(load.dataset.load)
+    toggleLoad(item)
+    if (!document.getElementById("drawer").hidden) openDrawer(item)
+    render(); return
+  }
+  const unload = t.closest("[data-unload]")
+  if (unload) { toggleLoad(find(unload.dataset.unload)); render(); return }
+  const badd = t.closest("[data-bind-add]")
+  if (badd) { createBinds.push({ to: badd.dataset.bindAdd, role: "后处理", data: "" }); paintBindEditor(); return }
+  const bdel = t.closest("[data-bind-del]")
+  if (bdel) { createBinds.splice(+bdel.dataset.bindDel, 1); paintBindEditor(); return }
+  const lp = t.closest("[data-lp]")
+  if (lp) {
+    const act = lp.dataset.lp
+    const info = spaceInfo()
+    if (act === "comps") { state.lpComps = !state.lpComps; render() }
+    if (act === "fold") { state.lpOpen = !state.lpOpen; render() }
+    if (act === "dismiss") { info.hintOff = `${state.space}|${state.query.trim()}`; render() }
+    if (act === "clear") {
+      const n = Object.keys(info.loaded).length
+      info.loaded = {}
+      info.hintOff = ""
+      toast(`已清空「${state.space}」的 ${n} 个已加载工具`)
+      render()
+    }
+    return
+  }
+  const fmore = t.closest("[data-fmore]")
+  if (fmore) { state.fOpen[fmore.dataset.fmore] = !state.fOpen[fmore.dataset.fmore]; render(); return }
+  if (t.closest("[data-fclear]")) { DIMS.forEach(([k]) => { state[k] = "全部" }); render(); return }
+  const filter = t.closest("[data-filter]")
+  if (filter) { state[filter.dataset.filter] = filter.dataset.value; render(); return }
+  const tab = t.closest("[data-tab]")
+  if (tab) { state.tab = tab.dataset.tab; render(); return }
+  const view = t.closest("[data-view]")
+  if (view) { state.view = view.dataset.view; render(); return }
+  const more = t.closest("[data-more]")
+  if (more) { state.menu = state.menu === more.dataset.more ? null : more.dataset.more; render(); return }
+  const detail = t.closest("[data-detail]")
+  if (detail) { state.dtab = ""; openDrawer(find(detail.dataset.detail)); render(); return }
+  const dtab = t.closest("[data-dtab]")
+  if (dtab) { state.dtab = dtab.dataset.dtab; openDrawer(find(openId())); return }
+  const cj = t.closest("[data-copyjson]")
+  if (cj) {
+    const text = document.getElementById("cj-" + cj.dataset.copyjson).textContent
+    if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {})
+    toast(cj.dataset.copyjson === "schema" ? "已复制 JSON Schema" : "已复制输出示例")
+    return
+  }
+  const creset = t.closest("[data-creset]")
+  if (creset) {
+    const id = creset.dataset.creset
+    delete COMP_CONFIG[id]; delete COMP_DRAFT[id]
+    openDrawer(find(id)); toast("已恢复默认配置"); return
+  }
+  const auth = t.closest("[data-auth]")
+  if (auth) { toast(`已提交「${find(auth.dataset.auth).name}」的授权申请`); return }
+  const copy = t.closest("[data-copy]")
+  if (copy) {
+    const name = find(copy.dataset.copy).name
+    if (navigator.clipboard) navigator.clipboard.writeText(name).catch(() => {})
+    state.menu = null; render(); toast(`已复制「${name}」`); return
+  }
+  const fav = t.closest("[data-fav]")
+  if (fav) {
+    const id = fav.dataset.fav
+    const item = find(id)
+    if (favs.has(id)) { favs.delete(id); item.favs -= 1; toast("已取消收藏") } else { favs.add(id); item.favs += 1; toast("已收藏") }
+    state.menu = null
+    if (!document.getElementById("drawer").hidden) openDrawer(item)
+    render()
+    return
+  }
+  const close = t.closest("[data-close]")
+  if (close) { document.getElementById(close.dataset.close).hidden = true; return }
+  const space = t.closest("[data-space]")
+  if (space) {
+    state.space = space.dataset.space
+    state.lpOpen = false
+    document.getElementById("scope-label").textContent = state.space
+    toggleMenu(null)
+    document.getElementById("drawer").hidden = true
+    render()
+    const n = Object.keys(loadedOf()).length
+    toast(`课题空间已切换为${state.space}，${n ? `已加载 ${n} 个工具` : "还没有加载工具"}`)
+    return
+  }
+  if (t.id === "drawer" || t.id === "modal") t.hidden = true
+  if (!inMenu) {
+    toggleMenu(null)
+    if (state.menu) { state.menu = null; render() }
+  }
+})
+function openId() { const d = document.querySelector("#drawer [data-open]"); return d && d.dataset.open }
+// 参数配置：修改先记为草稿，切换页签不丢失，点「保存」才生效
+function compInput(e) {
+  const form = e.target.closest && e.target.closest("#comp-form")
+  if (!form || !e.target.name) return
+  const id = form.dataset.comp
+  const q = COMP_SPECS[id].params.find((x) => x.key === e.target.name)
+  if (!q) return
+  let val = q.type === "bool" ? e.target.checked : q.type === "number" ? Number(e.target.value) : e.target.value
+  if (q.type === "number" && e.target.value === "") return
+  const saved = Object.assign({}, ...COMP_SPECS[id].params.map((x) => ({ [x.key]: x.def })), COMP_CONFIG[id] || {})
+  const draft = COMP_DRAFT[id] || (COMP_DRAFT[id] = {})
+  if (val === saved[q.key]) delete draft[q.key]; else draft[q.key] = val
+  const note = form.querySelector(".row-actions .note")
+  const dirty = Object.keys(draft).length
+  note.className = `note ${dirty ? "dirty" : ""}`
+  note.textContent = dirty ? "有未保存的修改" : COMP_CONFIG[id] ? "已保存自定义配置" : "当前为默认配置"
+}
+document.body.addEventListener("change", (e) => {
+  const kt = e.target.closest && e.target.closest("[data-ktool]")
+  if (!kt) return
+  const [id, key] = kt.dataset.ktool.split("|")
+  const item = findTool(id)
+  const entry = loadedOf()[id]
+  if (!entry) return
+  const off = entry.off || (entry.off = {})
+  if (kt.checked) delete off[key]
+  else {
+    if (kitOn(item) <= 1) { kt.checked = true; toast("至少保留一个工具；不需要时可移除整个工具箱"); return }
+    off[key] = true
+  }
+  openDrawer(item)
+  render()
+})
+// 新建工具：联用行编辑
+function bindInput(e) {
+  const el = e.target.closest && e.target.closest("[data-bind]")
+  if (!el) return
+  const [i, f] = el.dataset.bind.split("|")
+  createBinds[+i][f] = el.value
+  if (f === "to" && e.type === "change") paintBindEditor()
+}
+document.body.addEventListener("input", bindInput)
+document.body.addEventListener("change", bindInput)
+document.body.addEventListener("change", (e) => {
+  if (e.target.name !== "field" || !e.target.closest("#create-form")) return
+  document.getElementById("dir-checks").innerHTML = dirChecks(e.target.value)
+})
+document.body.addEventListener("input", compInput)
+document.body.addEventListener("change", compInput)
+document.body.addEventListener("change", (e) => {
+  const el = e.target.closest("#remote-form [data-rre]")
+  if (!el) return
+  const form = document.getElementById("remote-form")
+  remoteRead(form)
+  const top = form.closest(".drawer") && form.closest(".drawer").scrollTop
+  openDrawer(findTool(REMOTE_ID))
+  const d = document.querySelector(".drawer"); if (d && top) d.scrollTop = top
+})
+document.body.addEventListener("submit", (e) => {
+  if (e.target.id === "remote-form") { e.preventDefault(); remoteSave(e.target); return }
+  if (e.target.id === "comp-form") {
+    e.preventDefault()
+    const id = e.target.dataset.comp
+    const err = compCheck(id)
+    if (err) { toast(err); return }
+    const vals = compValues(id)
+    const diff = {}
+    COMP_SPECS[id].params.forEach((q) => { if (vals[q.key] !== q.def) diff[q.key] = vals[q.key] })
+    if (Object.keys(diff).length) COMP_CONFIG[id] = diff; else delete COMP_CONFIG[id]
+    delete COMP_DRAFT[id]
+    openDrawer(findTool(id))
+    toast(`已保存「${findTool(id).name}」的参数，对所有空间生效`)
+    return
+  }
+  if (e.target.id !== "create-form") return
+  e.preventDefault()
+  const data = new FormData(e.target)
+  const name = String(data.get("name") || "").trim()
+  if (!name) { toast("请填写名称"); return }
+  const binds = []
+  createBinds.forEach((b) => { if (b.to && !binds.some((x) => x[0] === b.to)) binds.push([b.to, b.data.trim(), bindRole(b.to, b.role)]) })
+  const dir = String(data.get("dir") || "").trim()
+  const scenes = data.getAll("scenes")
+  const dirs = data.getAll("dirs")
+  if (!scenes.length) { toast("请至少选择一个应用场景"); return }
+  const usage = SCENE_USAGE[scenes[0]]
+  const lic = data.get("lic")
+  const item = { id: "new-" + Date.now(), name, tags: [dir || scenes[0], data.get("field")], field: data.get("field"), usage, type: "科研工具", access: "平台内置", desc: String(data.get("desc") || "").trim() || "用户创建的工具。", binds,
+    scenes, dirs, license: lic === "付费" ? "商业" : lic, needAuth: lic === "付费" }
+  addTool(item)
+  document.getElementById("modal").hidden = true
+  state.tab = "全部工具"
+  toast(binds.length ? `工具已创建，绑定 ${binds.length} 项默认联用` : "工具已创建")
+  render()
+})
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return
+  document.getElementById("drawer").hidden = true
+  document.getElementById("modal").hidden = true
+  toggleMenu(null)
+  if (state.menu) { state.menu = null; render() }
+})
+
+paintIcons(document)
+render()
+</script>
+</body>
+</html>

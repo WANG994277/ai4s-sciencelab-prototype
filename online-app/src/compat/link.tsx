@@ -1,0 +1,1 @@
+import {Link} from 'react-router-dom';export default function CompatLink({href,children,...props}:any){return <Link to={href.startsWith('/')?'/resource'+href:href} {...props}>{children}</Link>}

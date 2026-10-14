@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>科研技能 · AI4S</title>
+  <style>
+:root {
+  --blue: #1765e3;
+  --blue-hover: #0f58cf;
+  --blue-soft: #ebf3ff;
+  --blue-line: #8fb5ec;
+  --ink: #15233b;
+  --ink-2: #33415a;
+  --muted: #6b7a90;
+  --muted-2: #8e9bb0;
+  --line: #e2e9f3;
+  --line-2: #d5dfeb;
+  --bg: #f4f7fc;
+  --sider: 236px;
+  --rail: 68px;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+input, textarea { border: 0; background: none; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+svg { display: block; flex: none; }
+[hidden] { display: none !important; }
+
+/* ---------- 外壳 ---------- */
+.app { display: grid; grid-template-columns: var(--sider) 1fr; min-height: 100vh; }
+.app.is-rail { grid-template-columns: var(--rail) 1fr; }
+.sider { background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; z-index: 25; }
+.sider-logo { height: 56px; display: flex; align-items: center; padding: 0 30px; border-bottom: 1px solid var(--line); }
+.logo { display: flex; gap: 4px; align-items: center; color: var(--ink); text-decoration: none; }
+.logo strong { display: block; font-size: 19px; line-height: 1; font-weight: 800; letter-spacing: .2px; color: #0e1c35; font-family: "Helvetica Neue", Arial, sans-serif; }
+.logo em { display: block; font-style: normal; color: #2b5fb8; font-size: 10.5px; line-height: 1.1; margin-top: 2px; font-family: "Helvetica Neue", Arial, sans-serif; }
+.sider-nav { padding: 12px 12px; display: flex; flex-direction: column; overflow: auto; flex: 1; }
+.nav-sep { height: 1px; background: var(--line); margin: 8px 0; }
+.nav-label { color: #7c8aa0; font-size: 12px; padding: 8px 12px 4px; }
+.nav-item { display: flex; align-items: center; gap: 12px; height: 42px; padding: 0 12px; border-radius: 6px; color: var(--ink-2); text-decoration: none; position: relative; font-size: 14px; }
+.nav-item svg { color: #3b475b; }
+.nav-item .arrow { margin-left: auto; color: #6e7b90; }
+.nav-item:hover { background: #f5f8fd; }
+.nav-item.active { background: #eaf2fd; color: #1452b8; font-weight: 600; }
+.nav-item.active svg { color: #1452b8; }
+.nav-item.active::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; border-radius: 2px 0 0 2px; background: var(--blue); }
+.is-rail .sider-logo { padding: 0; justify-content: center; }
+.is-rail .logo span, .is-rail .nav-item > span, .is-rail .nav-item .arrow, .is-rail .nav-label, .is-rail .sider-foot span:last-child { display: none; }
+.is-rail .nav-item { justify-content: center; padding: 0; }
+.sider-foot { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #8b98ab; font-size: 12px; border-top: 1px solid var(--line); }
+.mark-n { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; padding: 0 20px 0 24px; position: sticky; top: 0; z-index: 20; }
+.crumb { color: var(--muted); white-space: nowrap; font-size: 13px; margin-left: 4px; }
+.crumb b { color: var(--ink); font-weight: 600; margin-left: 6px; }
+.top-search { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #f6f8fb; border: 1px solid #e3e9f1; height: 34px; border-radius: 6px; padding: 0 12px; width: 300px; color: #7d8aa0; }
+.top-search input { width: 100%; outline: none; font-size: 13px; }
+.top-search input::placeholder { color: #98a4b6; }
+.top-actions { display: flex; align-items: center; gap: 12px; position: relative; }
+.scope-btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; border-radius: 6px; padding: 0 12px; background: #f6f8fb; border: 1px solid #e3e9f1; font-size: 13px; }
+.scope-btn span { color: var(--muted); }
+.scope-btn b { font-weight: 600; font-size: 12.5px; }
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; display: inline-grid; place-items: center; color: #3a475c; position: relative; }
+.icon-btn:hover, .scope-btn:hover, .user-btn:hover { background: #f1f5fb; }
+.has-dot::after { content: ""; position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #e5484d; }
+.user-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 6px; border-radius: 8px; font-size: 14px; }
+.user-btn i { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(145deg, #6ea6f4, #3b7be0); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 13px; }
+.menu { position: absolute; top: 44px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 32px rgba(24, 60, 120, .12); min-width: 170px; padding: 6px; z-index: 30; }
+.menu button { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+.menu button:hover { background: #f3f7fd; }
+.menu button.on { color: var(--blue); background: var(--blue-soft); }
+.menu-h { font-weight: 600; padding: 6px 10px 4px; font-size: 13px; }
+.menu-p { color: var(--muted); padding: 0 10px 8px; font-size: 12px; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #16263f; color: #fff; padding: 10px 18px; border-radius: 999px; z-index: 90; box-shadow: 0 10px 30px rgba(0,0,0,.18); font-size: 13px; }
+
+/* ---------- 科研技能页面（沿用科学工具箱样式） ---------- */
+.stage { position: relative; background:
+  radial-gradient(900px 260px at 62% 60px, rgba(214, 229, 250, .75), rgba(244, 247, 252, 0) 70%),
+  linear-gradient(180deg, #f2f6fc 0, #f5f8fc 420px, #f5f8fc 100%); flex: 1; }
+.page { max-width: 1520px; margin: 0 auto; padding: 38px 60px 60px 100px; }
+.tb-head { display: flex; align-items: flex-start; gap: 24px; min-height: 118px; position: relative; }
+.tb-title h1 { font-size: 32px; line-height: 1.25; font-weight: 700; color: #0f1f3d; letter-spacing: .5px; }
+.tb-title .kicker { font-size: 15.5px; font-weight: 700; color: #1b2c4b; margin-top: 4px; }
+.tb-title .sub { font-size: 14.5px; color: #56657c; margin-top: 10px; }
+.tb-art { position: absolute; left: 50%; top: -12px; width: 300px; height: 118px; transform: translateX(-4%); pointer-events: none; }
+.tb-art .glow { position: absolute; inset: -30px -60px; background: radial-gradient(closest-side, rgba(196, 218, 250, .75), rgba(196, 218, 250, 0)); }
+.tb-art svg.orbit { position: absolute; left: 0; top: 0; }
+.tile { position: absolute; display: grid; place-items: center; color: #fff; border-radius: 8px; }
+.tile-ai { left: 116px; top: 3px; width: 64px; height: 64px; border-radius: 10px; font-size: 25px; font-weight: 500; font-family: "Helvetica Neue", Arial, sans-serif; background: linear-gradient(160deg, #7cb2f7 0%, #3f82ea 100%); box-shadow: 0 10px 22px rgba(61, 125, 232, .32), inset 0 1px 0 rgba(255,255,255,.35); }
+.tile-l { left: 0; top: 55px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tile-r { left: 265px; top: 64px; width: 46px; height: 46px; background: linear-gradient(160deg, #b9d4fa, #7eabf0); box-shadow: 0 8px 18px rgba(92, 145, 230, .25); }
+.tb-actions { margin-left: auto; display: flex; gap: 14px; margin-top: 22px; position: relative; z-index: 1; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 6px; height: 34px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+.btn:hover { background: var(--blue-hover); }
+.btn.lg { height: 42px; padding: 0 22px; font-size: 14.5px; box-shadow: 0 6px 14px rgba(23, 101, 227, .22); }
+.btn.ghost { background: #fff; color: #1d2a40; border: 1px solid var(--line-2); box-shadow: none; }
+.btn.ghost:hover { border-color: #b9cbe3; background: #fbfcff; }
+.btn:disabled { background: #a8c6f4; cursor: not-allowed; }
+.btn.sm { height: 28px; padding: 0 12px; font-size: 13px; border-radius: 5px; }
+.btn.sm.ghost { color: #25324a; }
+
+.tb-search { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 18px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.tb-search form { display: flex; align-items: stretch; height: 46px; }
+.tb-search label { flex: 1; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line-2); border-right: 0; border-radius: 6px 0 0 6px; padding: 0 16px; color: #5d6b80; }
+.tb-search input { flex: 1; outline: none; font-size: 14px; height: 100%; }
+.tb-search input::placeholder { color: #9aa6b8; }
+.tb-search .btn { height: auto; border-radius: 0 6px 6px 0; width: 88px; font-size: 14.5px; }
+
+.filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.filters[data-group="field"] { margin-top: 18px; }
+.filters .lbl { width: 76px; flex: none; font-weight: 600; color: #1d2a40; font-size: 13px; margin-right: -8px; }
+.filter-box { margin-top: 18px; }
+.filter-box .filters { margin-top: 8px; }
+.filter-box .filters[data-group="field"] { margin-top: 0; }
+.filters[hidden] { display: none; }
+.filters.sub .chip { height: 24px; font-size: 12px; background: #fafbfd; }
+.fmore, .fclear { height: 26px; padding: 0 6px; font-size: 12.5px; color: var(--blue); display: inline-flex; align-items: center; gap: 2px; background: none; }
+.fclear { color: var(--muted); margin-left: 6px; }
+.fclear:hover { color: var(--blue); }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: #34425a; }
+.field .checks input { padding: 0; width: auto; }
+.field small.opt { font-size: 12px; color: var(--muted); margin-left: 6px; }
+.field .inline { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-top: 4px; }
+.kv-note { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.chip { height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: #fff; color: #34425a; font-size: 12.5px; }
+.chip:hover { border-color: #aac3e6; color: var(--blue); }
+.chip.on { background: #eaf2fe; border-color: var(--blue-line); color: #1356c2; }
+
+.tb-bar { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 18px; border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 0; }
+.tabs button { height: 48px; padding: 0 12px; margin-right: 18px; font-size: 14px; color: #3a475d; position: relative; }
+.tabs button:hover { color: var(--blue); }
+.tabs button.on { color: #1356c2; }
+.tabs button.on::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: -1px; height: 3px; border-radius: 2px; background: var(--blue); }
+.bar-tools { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; color: #56657c; font-size: 12.5px; }
+.bar-tools .count { margin-right: 4px; }
+.select { position: relative; }
+.select select { appearance: none; -webkit-appearance: none; height: 34px; width: 122px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; padding: 0 30px 0 14px; font-size: 13.5px; color: #25324a; outline: none; }
+.select svg { position: absolute; right: 9px; top: 10px; color: #5d6b80; pointer-events: none; }
+.view-btn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; color: #6b7a90; font-size: 13.5px; }
+.view-btn.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.hot { margin-top: 26px; border-radius: 12px; padding: 14px 14px 16px; background: linear-gradient(100deg, #ecf3fd 0%, #eaf2fd 60%, #e7f0fc 100%); border: 1px solid #e4edf9; }
+.hot > header { display: flex; align-items: baseline; gap: 8px; padding: 0 2px 12px; }
+.hot > header svg { color: #e2a12b; align-self: center; }
+.hot > header b { font-size: 16px; font-weight: 500; color: #1c2a42; }
+.hot > header span { font-size: 12px; color: #6b7a90; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.hot .grid { gap: 16px; }
+
+.card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 12px; padding: 14px 16px; min-width: 0; }
+.card.feature { padding: 14px 16px; border-color: #e3ebf6; }
+.tools-grid { margin-top: 14px; }
+.tools-grid .card { grid-template-rows: 1fr auto; padding: 14px 16px 12px; transition: box-shadow .15s, border-color .15s; }
+.tools-grid .card:hover { border-color: #c8d9f1; box-shadow: 0 8px 22px rgba(30, 80, 150, .07); }
+.ic { width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center; color: #fff; }
+.ic-blue   { background: linear-gradient(160deg, #5aa1fb 0%, #2f78ea 100%); box-shadow: 0 6px 14px rgba(47, 120, 234, .28); }
+.ic-purple { background: linear-gradient(160deg, #b36bf8 0%, #8a3fe8 100%); box-shadow: 0 6px 14px rgba(138, 63, 232, .26); }
+.ic-green  { background: linear-gradient(160deg, #4fd083 0%, #1fa75c 100%); box-shadow: 0 6px 14px rgba(31, 167, 92, .26); }
+.ic-orange { background: linear-gradient(160deg, #ff9a52 0%, #f46a26 100%); box-shadow: 0 6px 14px rgba(244, 106, 38, .26); }
+.ic-pink   { background: linear-gradient(160deg, #f76aa3 0%, #e63d7f 100%); box-shadow: 0 6px 14px rgba(230, 61, 127, .26); }
+.ic-teal   { background: linear-gradient(160deg, #3ed1d6 0%, #13a8b4 100%); box-shadow: 0 6px 14px rgba(19, 168, 180, .26); }
+.body { min-width: 0; display: flex; flex-direction: column; }
+.body b.name { font-size: 15px; font-weight: 500; color: #15233b; line-height: 1.4; padding-right: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+.tags em { font-style: normal; font-size: 12px; line-height: 20px; height: 20px; padding: 0 6px; border-radius: 3px; color: #637188; background: #f1f4f8; white-space: nowrap; }
+.tags em.ok { color: #1f9a57; background: #e8f7ee; }
+.tags em.official { color: #2167d4; background: #e7f0fd; }
+.tags em.kind { font-weight: 600; }
+.tags em.k-mcp { color: #2167d4; background: #eaf2fe; }
+.tags em.k-fn { color: #4a5a73; background: #eef1f5; }
+.tags em.k-comp { color: #0f8a7e; background: #e5f6f4; }
+.pbox ol.steps { margin: 6px 0 0; padding-left: 20px; }
+.pbox ol.steps li { margin: 3px 0; }
+.desc { font-size: 13px; color: #4c5a70; margin-top: 6px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.card footer { grid-column: 2; align-self: end; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.meta { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; color: #7a879b; font-size: 12px; white-space: nowrap; overflow: hidden; }
+.meta span { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.meta span.owner { flex: 0 1 auto; min-width: 0; }
+.meta span.owner i { font-style: normal; overflow: hidden; text-overflow: ellipsis; }
+.meta svg { color: #7a879b; }
+.ops { display: flex; gap: 8px; flex: none; }
+.more { position: absolute; right: 12px; top: 8px; width: 26px; height: 24px; border-radius: 5px; display: grid; place-items: center; color: #5b687d; }
+.more:hover { background: #f1f5fb; }
+.more-menu { right: 8px; top: 34px; min-width: 132px; }
+
+.list { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.list-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 280px auto; gap: 16px; align-items: center; padding: 14px 20px; border-top: 1px solid #eef2f8; }
+.list-row:first-child { border-top: 0; }
+.list-row .ic { width: 40px; height: 40px; margin: 0; }
+.empty { margin-top: 16px; background: #fff; border: 1px dashed var(--line-2); border-radius: 8px; padding: 36px; text-align: center; color: var(--muted); }
+
+.mask { position: fixed; inset: 0; background: rgba(15, 28, 50, .3); z-index: 60; display: flex; }
+.mask.drawer-mask { justify-content: flex-end; }
+.drawer { width: min(440px, 100%); height: 100%; background: #fff; padding: 18px 22px; box-shadow: -12px 0 40px rgba(0,0,0,.08); overflow: auto; }
+.drawer.wide { width: min(640px, 100%); }
+.btn.auto { cursor: default; background: #effaf3; color: #1f7a45; box-shadow: inset 0 0 0 1px #bfe5cd; }
+.btn.auto:hover { background: #effaf3; }
+.kbind { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.kbind > span { font-size: 12px; color: #8390a4; }
+.bchip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 5px; font-size: 12px; color: #25324a; background: #f4f8fe; border: 1px solid #d6e4f8; cursor: default; }
+a.bchip { cursor: pointer; }
+a.bchip:hover { border-color: var(--blue-line); color: var(--blue); }
+.bchip.tool { background: #f6f4fd; border-color: #e0daf6; }
+.bchip em { font-style: normal; font-size: 11px; color: #1356c2; }
+.bchip.tool em { color: #6547c9; }
+.bchip small { font-size: 11.5px; color: var(--muted); }
+.bchip small::before { content: "· "; }
+.bchip i { font-style: normal; font-size: 11px; color: #1f7a45; }
+.bmore { font-size: 12px; color: var(--muted); }
+.bind-field > span small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.brow { display: grid; grid-template-columns: minmax(0, 1.4fr) 92px minmax(0, 1fr) 28px; gap: 8px; align-items: center; margin-bottom: 8px; }
+.brow select, .brow input { min-width: 0; border: 1px solid var(--line-2); border-radius: 6px; padding: 6px 8px; background: #fff; font-size: 12.5px; }
+.brow select:disabled { background: #f6f8fb; color: #56657c; }
+.bquick { display: flex; flex-wrap: wrap; gap: 6px; }
+.bempty { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; }
+.lchip.grp { cursor: pointer; padding-right: 8px; color: #43516a; background: #f6f8fb; border-style: dashed; }
+.lchip.grp .ic { background: #eef2f8; color: #56657c; }
+.lchip.grp svg:last-child { transition: transform .15s; }
+.lchip.grp.on svg:last-child { transform: rotate(180deg); }
+.lp-chips.sub { margin-top: 8px; padding: 8px; border-radius: 6px; background: #f6f8fb; }
+.lchip.comp { padding-right: 8px; }
+.lchip .src.ok { color: #1f7a45; background: #effaf3; }
+.lp-note { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.lp-note a { color: var(--blue); cursor: pointer; }
+.dtabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line-2); margin: 16px 0 14px; }
+.dtabs button { height: 36px; padding: 0 14px; font-size: 13.5px; color: #43516a; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.dtabs button.on { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+.pbox { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; font-size: 13px; color: #43516a; line-height: 1.65; }
+.pbox h4 { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: #1d2b44; margin-bottom: 6px; }
+.pbox h4 i { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.pbox ul { padding-left: 16px; margin: 0; }
+.pbox code, .etable code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.etable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+.etable th, .etable td { text-align: left; padding: 6px 8px; border-top: 1px solid #eef2f8; vertical-align: top; }
+.etable th { color: var(--muted); font-weight: 500; }
+.code-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 6px; font-size: 13px; color: #1d2b44; font-weight: 600; }
+pre.code { background: #0f1c32; color: #d6e2f5; border-radius: 8px; padding: 12px 14px; font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace; overflow: auto; max-height: 360px; margin: 0 0 14px; white-space: pre; }
+.cform .prow { display: grid; grid-template-columns: 130px 1fr; gap: 4px 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eef2f8; font-size: 13px; }
+.cform .prow > span { color: #1d2b44; }
+.cform .prow small { grid-column: 2; color: var(--muted); font-size: 12px; }
+.cform input[type=text], .cform input[type=number], .cform select { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input:focus, .cform select:focus { border-color: var(--blue-line); }
+.cform .note { font-size: 12.5px; color: var(--muted); margin: 0 0 6px; }
+.cform .dirty { color: #b26a00; }
+.btn.auto.plan { background: #f3f5f8; color: #6b7a90; box-shadow: inset 0 0 0 1px #dfe4ec; }
+.pbox.plan { background: #fafbfd; border-style: dashed; }
+.pbox .alink, .alink { color: var(--blue); cursor: pointer; margin-left: 6px; }
+.pgroup { margin-top: 14px; }
+.pgroup h5 { font-size: 13.5px; color: #1d2b44; padding: 6px 0; border-bottom: 1px solid var(--line-2); display: flex; align-items: baseline; gap: 10px; }
+.pgroup h5 span { font-weight: 400; font-size: 12px; color: var(--muted); }
+.cform .num { display: inline-flex; align-items: center; gap: 6px; }
+.cform .num input { width: 140px; }
+.cform .num em { font-style: normal; color: var(--muted); font-size: 12.5px; }
+.cform .chg { font-style: normal; color: #b26a00; font-size: 9px; margin-left: 4px; vertical-align: middle; }
+.cform-foot { position: sticky; bottom: -18px; background: #fff; padding: 12px 0; margin-top: 8px; border-top: 1px solid #eef2f8; }
+.kit-line { display: flex; align-items: center; gap: 6px; margin: 6px 0 0; font-size: 12.5px; color: #43516a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kit-line b { font-weight: 500; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; flex: none; }
+.kit-line svg { flex: none; color: #1356c2; }
+.lchip .kn { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 999px; padding: 0 6px; line-height: 17px; }
+.rftabs { margin: 8px 0 4px; }
+.rftabs button { position: relative; font-size: 13px; padding: 0 12px; }
+.rdot { position: absolute; top: 8px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #e0503f; }
+.rlist { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 10px; }
+.rcard { border: 1px solid #e3e9f3; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #43516a; }
+.rcard p { margin: 5px 0 0; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.rcard code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #f3f6fb; border-radius: 3px; padding: 0 4px; }
+.rcard small, .rc-sub { color: var(--muted); font-size: 12px; }
+.rc-top { display: flex; align-items: center; gap: 8px; }
+.rc-top b { color: #1d2b44; font-size: 14px; }
+.rs { font-style: normal; font-size: 11.5px; color: #1356c2; background: #eaf2fe; border-radius: 4px; padding: 0 6px; line-height: 18px; }
+.rs.def { color: #0b7a55; background: #e3f6ee; }
+.rs.gray { color: #6b7a90; background: #f1f3f7; }
+.rst { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.rst i { width: 7px; height: 7px; border-radius: 50%; background: #c3cad6; }
+.rst.ok { color: #0b7a55; } .rst.ok i { background: #19a974; }
+.rst.fail { color: #c0392b; } .rst.fail i { background: #e0503f; }
+.rst.testing i { background: #f0a020; animation: rblink 0.8s infinite alternate; }
+@keyframes rblink { to { opacity: 0.3; } }
+.rc-act { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.btn.danger { color: #c0392b !important; }
+.cform .req { font-style: normal; color: #e0503f; margin-left: 2px; }
+.cform input[type=password], .cform input[type=file] { height: 32px; border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; background: #fff; outline: none; font-size: 13px; }
+.cform input[type=file] { padding: 4px 8px; }
+.cform small.warn { color: #b26a00; }
+.cform .sw { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.rtable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+.rtable th, .rtable td { text-align: left; padding: 5px 8px; border-top: 1px solid #eef2f8; }
+.rtable th { color: var(--muted); font-weight: 500; }
+.kit-note { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+.ktools { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.ktools li { border: 1px solid #e3e9f3; border-radius: 8px; padding: 10px 12px; }
+.ktools li.off { background: #fafbfd; opacity: .65; }
+.ktools label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.ktools input { margin-top: 3px; }
+.ktools .kt-top { display: flex; align-items: center; gap: 8px; }
+.ktools .kt-top b { font-size: 13.5px; color: #1d2b44; }
+.ktools code, .kv code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; color: #43516a; background: #f3f6fb; border-radius: 3px; padding: 0 5px; }
+.ktools p { margin: 3px 0 0; font-size: 12.5px; color: #43516a; }
+.ktools small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.drawer > header, .modal > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.drawer h3, .modal h3 { font-size: 16px; }
+.drawer .card { border: 0; padding: 0; }
+.kv { margin: 16px 0; display: grid; gap: 10px; }
+.kv li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #eef2f8; padding-bottom: 8px; font-size: 13px; }
+.kv span { color: var(--muted); }
+.row-actions { display: flex; gap: 10px; }
+.row-actions.right { justify-content: flex-end; }
+.modal { width: min(480px, calc(100% - 32px)); margin: auto; background: #fff; border-radius: 12px; padding: 18px 22px 20px; }
+.field { display: grid; gap: 6px; margin-bottom: 12px; color: #43516a; font-size: 13px; }
+.field input, .field textarea, .field select { border: 1px solid var(--line-2); border-radius: 6px; padding: 8px 10px; background: #fff; outline: none; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--blue-line); }
+
+/* 课题空间已加载工具 */
+.loaded { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px 16px; box-shadow: 0 4px 16px rgba(30, 80, 150, .04); }
+.lp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lp-head > svg { color: var(--blue); }
+.lp-head b { font-size: 15px; font-weight: 600; color: #15233b; }
+.lp-space { font-size: 12.5px; color: #1356c2; background: #eaf2fe; border: 1px solid var(--blue-line); border-radius: 999px; padding: 0 10px; line-height: 22px; }
+.lp-count { font-size: 12.5px; color: var(--muted); }
+.lp-actions { margin-left: auto; display: flex; gap: 8px; }
+.lp-desc { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; font-size: 13px; color: #56657c; line-height: 1.6; }
+.lp-desc span { flex: none; color: #8390a4; }
+.lp-desc p { min-width: 0; }
+.lp-desc .from { flex: none; margin-left: auto; font-size: 12px; color: #9aa6b8; white-space: nowrap; }
+.lp-hint { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 8px 12px; border: 1px dashed var(--blue-line); border-radius: 6px; background: #f4f8fe; color: #1356c2; font-size: 13px; }
+.lp-hint svg { flex: none; }
+.lp-hint .grow { flex: 1; }
+.lp-hint .x { color: #7a879b; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lchip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 4px 0 4px; border: 1px solid var(--line-2); border-radius: 6px; background: #fbfcfe; font-size: 13px; color: #25324a; }
+.lchip:hover { border-color: #b9cbe3; }
+.lchip .ic { width: 24px; height: 24px; border-radius: 6px; box-shadow: none; }
+.lchip b { font-weight: 500; max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.lchip .x { width: 20px; height: 20px; border-radius: 4px; display: grid; place-items: center; color: #8a96a8; }
+.lchip .x:hover { background: #eef2f8; color: #c0392b; }
+.src { font-style: normal; font-size: 11px; line-height: 18px; padding: 0 5px; border-radius: 3px; white-space: nowrap; }
+.src.warn { color: #b8620f; background: #fdf2e4; }
+.lp-more { height: 32px; padding: 0 12px; border-radius: 6px; color: var(--blue); font-size: 13px; }
+.lp-more:hover { background: #f1f5fb; }
+.lp-empty { margin-top: 12px; padding: 14px; border: 1px dashed var(--line-2); border-radius: 6px; text-align: center; color: var(--muted); font-size: 13px; }
+.btn.load.on { background: #eaf2fe; box-shadow: inset 0 0 0 1px var(--blue-line); color: #1356c2; }
+.btn.load.on:hover { background: #dde9fc; }
+.ops .btn.sm { padding: 0 10px; }
+.tools-grid .card.is-loaded { border-color: #c9dbf6; }
+.tabs button .n { font-style: normal; font-size: 12px; margin-left: 4px; color: var(--muted); }
+.tabs button.on .n { color: #1356c2; }
+
+/* 宽弹窗（新建） */
+.modal.wide { width: min(720px, calc(100% - 32px)); max-height: calc(100vh - 64px); display: flex; flex-direction: column; }
+.modal.wide .scroll { overflow: auto; margin: 0 -22px; padding: 0 22px; }
+
+@media (max-width: 1600px) { .tools-grid .card footer { grid-column: 1 / -1; } }
+@media (max-width: 1440px) { .page { padding-left: 40px; padding-right: 32px; } }
+@media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb-art { display: none; } }
+@media (max-width: 900px) {
+  .app { grid-template-columns: var(--rail) 1fr; }
+  .logo span, .nav-item > span, .nav-item .arrow, .nav-label, .sider-foot span:last-child { display: none; }
+  .nav-item { justify-content: center; padding: 0; }
+  .sider-logo { padding: 0; justify-content: center; }
+  .grid { grid-template-columns: 1fr; }
+  .top-search { display: none; }
+  .page { padding: 24px 18px 40px; }
+  .tb-bar { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- 科研技能 / 科研模型 / 科研智能体 补充 ---------- */
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.mbox { border: 1px solid #dfe8f5; background: #f7faff; border-radius: 8px; padding: 10px 12px; }
+.mbox b { display: block; font-size: 18px; color: #1452b8; font-weight: 700; }
+.mbox span { font-size: 12px; color: var(--muted); }
+.lineage { display: flex; align-items: stretch; flex-wrap: wrap; gap: 6px; padding: 16px; border: 1px dashed #cfdcf0; border-radius: 10px; background: #fbfdff; margin-bottom: 12px; }
+.lnode { flex: 1 1 120px; min-width: 110px; border: 1px solid #d6e4f8; background: #fff; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 3px; }
+.lnode b { font-size: 13px; color: #1b2c4b; word-break: break-all; }
+.lnode small { font-size: 11.5px; color: var(--muted); }
+.lnode.gray { background: #f7f8fa; border-color: #e3e7ee; }
+.lnode.link { border-color: #b9d2f5; }
+.lnode.on { background: #eaf2fd; border-color: #8fb5ee; }
+.lnode.on b { color: #1452b8; }
+.larrow { display: grid; place-items: center; color: #8fa3c2; }
+.tags em.k-skill { color: #8a4bd0; background: #f3ecfc; }
+.tags em.k-agent { color: #c2560c; background: #fdf0e6; }
+.skill-md { white-space: pre-wrap; }
+  </style>
+<style>.sider{display:none !important;}.topbar{display:none !important;}.app{grid-template-columns:1fr !important;}.main{width:100% !important;min-width:0;}</style><style>.tb-actions{display:none !important;}[data-act^="newver"]{display:none !important;}</style></head>
+<body>
+<!--
+  合并约定
+  1. 每人一个 HTML，文件名与侧栏一致：科研工作台.html、科研超级中枢.html、科研知识中心.html、科研技能.html、科研模型.html、科学工具箱.html、云上实验室.html、科研资产.html、历史任务.html。
+  2. 侧栏和顶栏是公共外壳，合并时保持不动。
+  3. 本页只改「科研技能页面」标记之间的内容，以及底部 PAGE 配置（数据与详情页签）；公共逻辑在「通用列表引擎」段，与其他使用同一引擎的页面保持一致。
+  4. 本页视觉沿用科学工具箱页面风格；内容参考《AI4S原型截图.docx》中的科研技能广场截图。
+-->
+<div class="app" id="app">
+  <aside class="sider">
+    <div class="sider-logo">
+      <a class="logo" href="科研工作台.html" aria-label="AI4S 首页">
+        <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3fa0ff"/><stop offset="1" stop-color="#1459d9"/></linearGradient>
+            <linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b6ef0"/><stop offset="1" stop-color="#5bb4ff"/></linearGradient>
+          </defs>
+          <path d="M13.2 2.2c1-1.9 3.7-1.9 4.7 0L32.6 27a1.8 1.8 0 0 1-1.6 2.7h-4.7a2 2 0 0 1-1.8-1.1L15.6 11 11 19.4 6.8 22.6Z" fill="url(#lg1)"/>
+          <path d="M1.3 26.8 6.8 17c1.3 2.8 4 4.6 7.2 4.6 1.6 0 3-.4 4.3-1.2l-2.6 4.6c-1.6 2.9-4.9 4.6-8.3 4.6H2.8a1.8 1.8 0 0 1-1.5-2.8Z" fill="url(#lg2)"/>
+        </svg>
+        <span><strong>AI4S</strong><em>AI for Science</em></span>
+      </a>
+    </div>
+    <nav class="sider-nav">
+      <a class="nav-item" href="科研工作台.html"><span data-icon="home"></span><span>科研工作台</span></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研超级中枢.html"><span data-icon="hub"></span><span>科研超级中枢</span></a>
+      <div class="nav-sep"></div>
+      <div class="nav-label">科研广场</div>
+      <a class="nav-item" href="科研应用.html"><span data-icon="grid"></span><span>科研应用</span></a>
+      <a class="nav-item" href="科研知识中心.html"><span data-icon="book"></span><span>科研知识中心</span></a>
+      <a class="nav-item active" href="科研技能.html" aria-current="page"><span data-icon="layers"></span><span>科研技能</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <a class="nav-item" href="科研智能体.html"><span data-icon="network"></span><span>科研智能体</span></a>
+      <a class="nav-item" href="科研模型.html"><span data-icon="box"></span><span>科研模型</span></a>
+      <a class="nav-item" href="科学工具箱.html"><span data-icon="wrench"></span><span>科学工具箱</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="云上实验室.html"><span data-icon="flask"></span><span>云上实验室</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="科研资产.html"><span data-icon="folder"></span><span>科研资产</span><i class="arrow" data-icon="chev" data-size="16"></i></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="历史任务.html"><span data-icon="history"></span><span>历史任务</span></a>
+    </nav>
+    <div class="sider-foot"><span class="mark-n">N</span><span>AI4S 科研平台 · 原型</span></div>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <button class="icon-btn" type="button" id="rail-btn" aria-label="收起导航"><span data-icon="panel"></span></button>
+      <div class="crumb">当前页面：<b>科研技能</b></div>
+      <form class="top-search" id="top-search">
+        <span data-icon="search" data-size="16"></span>
+        <input id="top-q" placeholder="搜索文献、数据、工具或提问…" />
+      </form>
+      <div class="top-actions">
+        <button class="scope-btn" type="button" id="scope-btn"><span>课题空间：</span><b id="scope-label">配方优化课题</b><span data-icon="down" data-size="15"></span></button>
+        <div class="menu" id="scope-menu" style="left:0" hidden></div>
+        <button class="icon-btn has-dot" type="button" id="bell-btn" aria-label="通知"><span data-icon="bell"></span></button>
+        <div class="menu" id="bell-menu" style="right:120px;width:280px" hidden>
+          <div class="menu-h">科研活动 · 2 条未读</div>
+          <button type="button"><b>计算任务开始运行</b><div class="menu-p" style="padding:0">GROMACS 分子动力学模拟（任务 #1025）</div></button>
+          <button type="button"><b>实验数据已同步</b><div class="menu-p" style="padding:0">实验 GB-2026-0915 数据已同步至 ELN</div></button>
+        </div>
+        <button class="icon-btn" type="button" id="help-btn" aria-label="帮助"><span data-icon="help"></span></button>
+        <div class="menu" id="help-menu" style="right:80px;width:260px" hidden>
+          <div class="menu-h">科研技能</div>
+          <p class="menu-p">科研技能是写给 Research Agent 的标准化任务说明（SKILL.md），规定何时使用、按什么步骤做、调用哪些工具。点「加载」把技能放进课题空间，依赖的工具会一并加载。</p>
+        </div>
+        <button class="user-btn" type="button" id="user-btn"><i>林</i> 林夏 <span data-icon="down" data-size="15"></span></button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <!-- ========== 科研技能页面 开始 ========== -->
+      <div class="page" id="skills">
+        <header class="tb-head">
+          <div class="tb-title">
+            <h1>科研技能</h1>
+            <p class="kicker">可被 Research Agent 调用的标准化科研 Skill</p>
+            <p class="sub">在这里发现、加载和使用各类科研技能，助力你的科研创新</p>
+          </div>
+          <div class="tb-art" aria-hidden="true">
+            <div class="glow"></div>
+            <svg class="orbit" width="310" height="118" viewBox="0 0 310 118"><ellipse cx="155" cy="62" rx="118" ry="29" transform="rotate(-6 155 62)" fill="none" stroke="#a9c3ea" stroke-width="1.2"/></svg>
+            <span class="tile tile-l" data-icon="doc" data-size="20"></span>
+            <span class="tile tile-ai">AI</span>
+            <span class="tile tile-r" data-icon="layers" data-size="20"></span>
+          </div>
+          <div class="tb-actions">
+            <label class="btn ghost lg"><span data-icon="upload" data-size="17"></span> 导入技能<input id="import-file" type="file" hidden /></label>
+            <button class="btn lg" type="button" id="open-create"><span data-icon="plus" data-size="17"></span> 新建技能</button>
+          </div>
+        </header>
+
+        <div class="tb-search">
+          <form id="item-search">
+            <label><span data-icon="search" data-size="19"></span><input id="item-q" placeholder="搜索技能名称、能力或应用场景（如：文献搜索、分子预测、材料设计...）" /></label>
+            <button class="btn" type="submit">搜索</button>
+          </form>
+        </div>
+
+        <section class="loaded" id="loaded-panel" aria-label="课题空间已加载技能"></section>
+
+        <div class="filter-box"></div>
+
+        <div class="tb-bar">
+          <div class="tabs" id="item-tabs"></div>
+          <div class="bar-tools">
+            <span class="count" id="item-count"></span>
+            <div class="select">
+              <select id="item-sort" aria-label="排序">
+                <option>综合排序</option>
+                <option>最近更新</option>
+                <option>最多使用</option>
+                <option>名称</option>
+              </select>
+              <span data-icon="down" data-size="14"></span>
+            </div>
+            <button class="view-btn on" type="button" data-view="card"><span data-icon="grid" data-size="16"></span>卡片</button>
+            <button class="view-btn" type="button" data-view="list"><span data-icon="list" data-size="16"></span>列表</button>
+          </div>
+        </div>
+
+        <div id="item-results"></div>
+      </div>
+      <!-- ========== 科研技能页面 结束 ========== -->
+    </div>
+  </section>
+</div>
+
+<div class="mask drawer-mask" id="drawer" hidden></div>
+<div class="mask" id="modal" hidden></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+// ========== 科研技能 · 页面配置（数据 + 详情页签） ==========
+/* ========== 科研技能 ==========
+   Skill = 一份 SKILL.md（何时使用 + 步骤 + 模板），可附带脚本，按步骤调用科学工具箱里的 MCP 工具。
+   Research Agent 在会话中遇到匹配的任务时读取已加载的 Skill，按步骤完成，不需要用户逐步提示。
+   加载 Skill 时，它依赖的工具（科学工具箱）一并加载到课题空间。 */
+const FIELDS = ["全部", "通用", "地球科学", "合成生物学", "材料科学"]
+const DIRS = {
+  "材料科学": ["合成橡胶", "聚合物复合材料", "配方设计", "多相催化", "均相催化", "反应机理", "电池材料", "光电材料", "多孔材料", "功能分子设计"],
+  "地球科学": ["地震勘探", "储层表征", "油气藏开发", "地质建模", "盆地模拟", "天然地震"],
+  "合成生物学": ["蛋白质设计", "酶工程", "基因线路设计", "代谢工程", "组学分析"]
+}
+// 通用领域不再细分研究方向
+const SCENES = ["文献调研", "数据分析", "实验设计", "科学计算", "科研绘图", "论文写作", "专利与标准", "编程与自动化"]
+const FORMS = ["指令型", "工具编排型", "脚本型"]
+const FORM_TIP = {
+  "指令型": "只有 SKILL.md：写清何时使用、步骤与输出模板，由大模型直接完成",
+  "工具编排型": "按步骤调用科学工具箱中的 MCP 工具，加载时连带加载依赖工具",
+  "脚本型": "附带 Python 脚本，在空间沙箱中执行，适合确定性的数据处理"
+}
+const FORM_CLS = { "指令型": "k-fn", "工具编排型": "k-mcp", "脚本型": "k-skill" }
+const SOURCES = ["平台官方", "团队共享", "个人创建"]
+// 可被 Skill 调用的工具（来自科学工具箱）
+const KIT_TOOLS = ["内部文献库连接", "Zotero 文献管理", "专利库", "标准条款解析", "科研数据清洗工具", "科研数据格式转换", "Plotly.js", "Apache ECharts", "Matplotlib", "Pandoc 文档转换", "LaTeX 排版（TeX Live）", "GROMACS", "LAMMPS", "Packmol", "RDKit", "3Dmol.js", "VASP", "Quantum ESPRESSO", "pymatgen", "ASE", "segyio", "Madagascar / Seismic Unix", "lasio / welly", "OPM Flow", "PyVista", "ObsPy", "AlphaFold2 / ColabFold", "Mol*", "Biopython", "BLAST+", "Primer3", "DNA Chisel", "COBRApy", "远程计算"]
+
+const S = (id, name, field, dirs, scenes, form, src, desc, o) => Object.assign({ id, name, field, dirs, scenes, form, src, desc, owner: src === "平台官方" ? "AI4S 平台" : src === "团队共享" ? "科研计算中心" : "林夏", ver: "V1.0", updated: "2026-09-24", calls: "1.0K", favs: 20, rating: 4.6, hot: false, recent: false, uses: [], icon: "layers", color: "blue" }, o)
+const PAGE_ITEMS = [
+  S("s1", "文献自动综述", "通用", [], ["文献调研", "论文写作"], "工具编排型", "平台官方", "按主题检索文献并去重，抽取研究问题、方法与结论，生成带引用的结构化综述。", {
+    hot: true, calls: "12.3K", favs: 486, rating: 4.9, ver: "V2.3", updated: "2026-09-26", icon: "book", color: "blue", recent: true,
+    uses: ["内部文献库连接", "Zotero 文献管理"],
+    when: "用户要求「调研某方向进展」「写综述」「总结近几年研究」时使用。",
+    steps: ["把主题拆成 3～6 个检索式（中英文、同义词、时间范围）", "调用文献库检索并按 DOI/标题去重，保留前 50 篇", "逐篇抽取：研究问题、体系/样品、方法、关键结论", "按研究路线聚类，归纳共识与分歧", "按模板输出综述，所有结论附引用编号"],
+    input: "研究主题（必填）、时间范围、文献数量上限", out: "Markdown 综述 + 参考文献列表（BibTeX）",
+    guard: ["只引用实际检索到的文献，不编造 DOI", "付费全文无权限时仅使用摘要，并在结果中标注"] }),
+  S("s2", "文献证据抽取", "通用", [], ["文献调研"], "工具编排型", "平台官方", "从论文中提取实验条件、关键结论与证据引用，输出可追溯的证据表。", {
+    hot: true, calls: "8.6K", favs: 302, rating: 4.8, ver: "V1.4", icon: "doc", color: "purple",
+    uses: ["内部文献库连接"],
+    when: "需要把多篇论文中的实验条件、数据点整理成表格对比时使用。",
+    steps: ["确认要抽取的字段（如温度、压力、催化剂、产率）", "定位正文、表格和补充材料中的相关段落", "抽取数值并统一单位，保留原文句子作为证据", "输出证据表，每行附论文编号与页码"],
+    input: "论文列表或检索式、抽取字段", out: "CSV 证据表（字段 + 数值 + 单位 + 原文证据 + 出处）",
+    guard: ["数值必须能在原文中定位，找不到的字段留空", "单位换算写明换算关系"] }),
+  S("s3", "研究空白识别", "通用", [], ["文献调研"], "指令型", "平台官方", "融合多来源证据，识别争议点、口径差异与可验证的研究空白。", {
+    calls: "3.1K", favs: 128, rating: 4.7, ver: "V1.2", icon: "search", color: "teal",
+    when: "已有一批文献或综述，需要找出「还没人做 / 结论冲突」的方向时使用。",
+    steps: ["汇总已有证据中的研究对象、条件范围与结论", "标出结论冲突、样本口径不一致的地方", "找出条件空间中缺少数据的区域", "对每个空白给出可验证的假设与最小实验建议"],
+    input: "综述或证据表", out: "研究空白清单（空白描述 + 依据 + 可验证假设）",
+    guard: ["每条空白都要指向具体证据，不做无依据推断"] }),
+  S("s4", "论文图表提取", "通用", [], ["文献调研", "科研绘图"], "脚本型", "平台官方", "从论文中提取图表、标题、坐标单位，并把曲线数字化为结构化数值。", {
+    calls: "2.4K", favs: 96, rating: 4.6, ver: "V1.1", updated: "2026-09-20", icon: "image", color: "orange",
+    uses: ["Plotly.js"],
+    when: "需要复用论文中的曲线数据，或把多篇论文的图放在同一坐标下对比时使用。",
+    steps: ["解析 PDF，定位图片与图题", "识别坐标轴、刻度与单位", "运行 scripts/digitize.py 把曲线转成数据点", "用 Plotly 重绘并与原图叠加校验"],
+    input: "论文 PDF、目标图编号", out: "CSV 数据点 + 重绘图", script: "scripts/digitize.py",
+    guard: ["数字化误差超过 2% 时提示人工校对"] }),
+  S("s5", "科研数据清洗", "通用", [], ["数据分析"], "脚本型", "平台官方", "检查缺失值、异常值、重复记录与单位一致性，输出清洗后数据和质量报告。", {
+    hot: true, calls: "6.8K", favs: 233, rating: 4.8, ver: "V2.0", updated: "2026-09-25", icon: "sliders", color: "green", recent: true,
+    uses: ["科研数据清洗工具", "科研数据格式转换"],
+    when: "拿到实验或仿真原始数据、准备建模或作图之前使用。",
+    steps: ["读取数据并识别字段类型与单位", "统计缺失值、重复记录，按规则补齐或剔除", "用 IQR / 3σ 标记异常值，交给用户确认", "统一单位与命名，导出清洗结果", "生成数据质量报告"],
+    input: "CSV / Excel 数据文件", out: "清洗后数据 + 质量报告（HTML）", script: "scripts/clean.py",
+    guard: ["不直接删除异常值，先标记并请用户确认", "原始数据只读，结果另存为新版本"] }),
+  S("s6", "数据趋势分析", "通用", [], ["数据分析", "科研绘图"], "脚本型", "平台官方", "对实验或观测数据做描述统计、相关性与回归分析，自动出图并解读趋势。", {
+    calls: "5.2K", favs: 174, rating: 4.7, ver: "V1.6", icon: "chart", color: "blue",
+    uses: ["Apache ECharts", "Matplotlib"],
+    when: "需要回答「哪些因素影响结果」「趋势如何」时使用。",
+    steps: ["描述统计与分布检查", "计算相关矩阵，筛选关键变量", "拟合回归或响应面，给出显著性", "输出图表与文字解读"],
+    input: "清洗后的数据、目标变量", out: "分析报告 + 图表", script: "scripts/trend.py" }),
+  S("s7", "实验方案设计", "通用", [], ["实验设计"], "指令型", "平台官方", "根据研究目标与约束，给出正交 / 响应面等实验设计方案与样本表。", {
+    hot: true, calls: "4.4K", favs: 190, rating: 4.8, ver: "V1.3", icon: "flask", color: "green",
+    when: "要安排一批实验、希望用最少次数覆盖主要因素时使用。",
+    steps: ["明确目标响应、可控因素与取值范围", "按因素数与预算选择设计方法（正交、Box-Behnken、拉丁超立方）", "生成实验样本表并估算次数", "给出分析方法与停止条件"],
+    input: "目标、因素及范围、实验预算", out: "实验方案说明 + 样本表（CSV）",
+    guard: ["涉及危险化学品或高温高压时提示安全审查"] }),
+  S("s8", "科研报告生成", "通用", [], ["论文写作"], "工具编排型", "平台官方", "基于任务历程、引用和科研产出组织研究报告，导出 Word / PDF。", {
+    calls: "3.9K", favs: 141, rating: 4.6, ver: "V1.5", icon: "doc", color: "purple",
+    uses: ["Pandoc 文档转换"],
+    when: "阶段性汇报、结题报告、周报需要整理成文档时使用。",
+    steps: ["收集空间内的任务记录、结果文件与引用", "按报告模板组织章节（背景、方法、结果、结论）", "插入图表与表格，统一编号", "调用 Pandoc 导出 Word / PDF"],
+    input: "报告类型、时间范围", out: "Word / PDF 报告" }),
+  S("s9", "论文写作辅助", "通用", [], ["论文写作"], "工具编排型", "平台官方", "按目标期刊组织论文结构，润色表达，管理引用并排版。", {
+    hot: true, calls: "18.8K", favs: 612, rating: 4.9, ver: "V2.1", updated: "2026-09-27", icon: "pen", color: "pink",
+    uses: ["LaTeX 排版（TeX Live）", "Zotero 文献管理"],
+    when: "撰写或修改论文章节、回复审稿意见时使用。",
+    steps: ["确认目标期刊与章节", "按期刊结构给出提纲或修改建议", "润色语言，保留作者原意与术语", "核对引用格式并编译 LaTeX"],
+    input: "草稿、目标期刊", out: "修改稿 + 修改说明",
+    guard: ["不生成未经实验支持的数据或结论"] }),
+  S("s10", "技术交底书撰写", "通用", [], ["专利与标准", "论文写作"], "工具编排型", "平台官方", "从研究成果中提炼技术方案，检索现有技术，生成专利技术交底书初稿。", {
+    calls: "1.6K", favs: 72, rating: 4.6, ver: "V1.2", icon: "shield", color: "orange",
+    uses: ["专利库"],
+    when: "研究成果准备申请专利、需要写技术交底书时使用。",
+    steps: ["提炼要解决的技术问题与技术方案", "检索相近专利，列出现有技术与区别点", "按交底书模板写背景、方案、实施例、有益效果", "列出可能的权利要求要点"],
+    input: "研究成果说明、实验数据", out: "技术交底书（Word）" }),
+  S("s11", "专利技术路线分析", "通用", [], ["专利与标准"], "工具编排型", "平台官方", "提取核心专利、技术路线与差异点，形成技术路线图与对比分析。", {
+    calls: "2.2K", favs: 88, rating: 4.7, ver: "V1.3", icon: "network", color: "teal",
+    uses: ["专利库", "Apache ECharts"],
+    when: "开题、立项或布局专利前，需要了解某技术领域的专利格局时使用。",
+    steps: ["确定技术主题与检索式（IPC + 关键词）", "检索并按申请人、年份、技术分支聚类", "识别核心专利（被引、同族规模）", "绘制技术路线图并对比差异点"],
+    input: "技术主题、地域与时间范围", out: "分析报告 + 技术路线图" }),
+  S("s12", "标准条款对标", "通用", [], ["专利与标准"], "工具编排型", "团队共享", "把产品指标或实验方法与国标、行标条款逐条对标，标出差距。", {
+    calls: "980", favs: 41, rating: 4.5, icon: "check", color: "green",
+    uses: ["标准条款解析"],
+    steps: ["解析目标标准的条款与指标要求", "读取产品或方法的实测指标", "逐条比对并标注符合 / 不符合 / 无数据", "输出对标表与整改建议"],
+    input: "标准编号、产品指标表", out: "对标表（Excel）" }),
+  S("s13", "代码生成与调试", "通用", [], ["编程与自动化"], "脚本型", "平台官方", "为数据处理、仿真前后处理生成 Python 代码，在沙箱中运行并修复报错。", {
+    calls: "7.4K", favs: 256, rating: 4.7, ver: "V1.8", icon: "code", color: "blue",
+    when: "需要写脚本处理数据、批量生成输入文件、解析输出时使用。",
+    steps: ["明确输入输出与依赖库", "生成代码并附注释", "在空间沙箱运行，读取报错并修复", "给出运行结果与使用说明"],
+    input: "需求描述、示例数据", out: "可运行脚本 + 运行结果", script: "沙箱执行",
+    guard: ["沙箱内运行，不访问空间外的文件与网络"] }),
+  S("s14", "计算作业编排", "通用", [], ["科学计算", "编程与自动化"], "工具编排型", "团队共享", "生成计算作业脚本，提交到远程集群，监控状态并回收结果。", {
+    calls: "1.9K", favs: 63, rating: 4.6, icon: "cpu", color: "purple",
+    uses: ["远程计算"],
+    steps: ["根据软件与规模估算核数、内存和时长", "生成作业脚本（按资源的调度系统）", "提交作业并定期查询状态", "作业结束后回收输出文件到空间"],
+    input: "计算软件、输入文件、资源需求", out: "作业记录 + 输出文件",
+    guard: ["凭据存放在密钥库，不传给大模型", "单次提交超过 256 核需用户确认"] }),
+
+  S("s15", "分子动力学模拟编排", "材料科学", ["聚合物复合材料", "合成橡胶", "电池材料"], ["科学计算"], "工具编排型", "平台官方", "生成模拟参数，调用计算软件完成建模、平衡与生产模拟，并整理轨迹分析结果。", {
+    hot: true, calls: "3.6K", favs: 158, rating: 4.8, ver: "V1.5", updated: "2026-09-25", icon: "atom", color: "blue", recent: true,
+    uses: ["Packmol", "GROMACS", "3Dmol.js", "远程计算"],
+    when: "需要做体系建模、平衡与性质计算（密度、扩散系数、径向分布函数）时使用。",
+    steps: ["确认体系组成、力场与目标性质", "用 Packmol 搭建初始构型", "生成能量最小化、NVT、NPT、生产模拟参数", "通过远程计算提交 GROMACS 作业", "分析轨迹，输出密度、RDF、MSD 并可视化"],
+    input: "组分与配比、温度压力、力场", out: "模拟输入文件、轨迹分析结果与图表",
+    guard: ["力场参数缺失时停止并提示，不自行编造"] }),
+  S("s16", "配方相容性评估", "材料科学", ["配方设计", "合成橡胶"], ["科学计算", "实验设计"], "工具编排型", "团队共享", "计算组分溶解度参数与混合能，评估配方相容性并推荐候选配比。", {
+    calls: "1.2K", favs: 58, rating: 4.7, icon: "flask", color: "green", recent: true,
+    uses: ["RDKit", "LAMMPS"],
+    steps: ["解析各组分结构（SMILES）", "用 RDKit 估算溶解度参数初值", "LAMMPS 计算内聚能密度与混合能", "排序候选配比并给出验证实验建议"],
+    input: "组分结构与配比范围", out: "相容性评估表 + 推荐配比" }),
+  S("s17", "催化实验条件抽取", "材料科学", ["多相催化", "均相催化"], ["文献调研", "实验设计"], "工具编排型", "平台官方", "从文献中整理催化剂组成、反应条件、转化率与选择性，并标注来源。", {
+    calls: "1.4K", favs: 67, rating: 4.7, ver: "V1.1", icon: "doc", color: "orange",
+    uses: ["内部文献库连接"],
+    steps: ["检索目标反应的催化文献", "抽取催化剂组成、载体、温度、压力、空速", "抽取转化率、选择性、稳定性", "输出对比表并标出最优条件区间"],
+    input: "目标反应、催化剂体系", out: "条件对比表（附出处）" }),
+  S("s18", "DFT 计算编排", "材料科学", ["多相催化", "电池材料", "光电材料"], ["科学计算"], "工具编排型", "平台官方", "从结构到能带、态密度与吸附能，自动生成第一性原理计算流程并汇总结果。", {
+    calls: "2.1K", favs: 94, rating: 4.7, ver: "V1.3", icon: "atom", color: "purple",
+    uses: ["pymatgen", "Quantum ESPRESSO", "VASP", "远程计算"],
+    steps: ["读取结构并检查对称性与合理性", "生成收敛测试（截断能、k 点）", "结构优化后计算能带、态密度或吸附能", "提交作业并汇总结果"],
+    input: "晶体或表面结构、计算目标", out: "输入文件、结果汇总与图",
+    guard: ["VASP 需授权；无授权时改用 Quantum ESPRESSO"] }),
+  S("s19", "电镜图像识别分析", "材料科学", ["多孔材料", "多相催化"], ["数据分析"], "脚本型", "团队共享", "识别 TEM / SEM 图像中的颗粒与孔隙，统计粒径分布与形貌参数。", {
+    calls: "1.1K", favs: 52, rating: 4.5, icon: "image", color: "pink",
+    uses: ["Matplotlib"],
+    steps: ["读取图像与标尺", "分割颗粒或孔隙", "统计粒径、圆度、孔隙率", "输出分布图与统计表"],
+    input: "TEM / SEM 图像", out: "统计表 + 分布图", script: "scripts/particles.py" }),
+
+  S("s20", "地震数据质控", "地球科学", ["地震勘探"], ["数据分析"], "工具编排型", "平台官方", "读取 SEG-Y 数据，检查道头、振幅、频谱与坏道，输出质控报告。", {
+    calls: "1.7K", favs: 70, rating: 4.7, ver: "V1.2", icon: "wave", color: "teal",
+    uses: ["segyio", "Madagascar / Seismic Unix"],
+    steps: ["读取 SEG-Y 并检查道头一致性", "统计振幅与频谱，标记异常道", "生成剖面与频谱图", "输出质控报告与问题道列表"],
+    input: "SEG-Y 文件", out: "质控报告 + 问题道列表" }),
+  S("s21", "测井曲线解释", "地球科学", ["储层表征"], ["数据分析"], "工具编排型", "团队共享", "读取 LAS 测井数据，计算泥质含量、孔隙度、饱和度，划分储层段。", {
+    calls: "1.3K", favs: 61, rating: 4.6, icon: "chart", color: "orange",
+    uses: ["lasio / welly"],
+    steps: ["读取 LAS 并统一曲线名称与单位", "计算泥质含量、孔隙度（密度/中子）", "按 Archie 公式估算含水饱和度", "按截止值划分储层段并出图"],
+    input: "LAS 测井文件、解释参数", out: "解释成果表 + 测井综合图" }),
+  S("s22", "油藏数值模拟编排", "地球科学", ["油气藏开发"], ["科学计算"], "工具编排型", "平台官方", "准备油藏模型输入，提交数值模拟，对比多方案的产量与压力。", {
+    calls: "860", favs: 38, rating: 4.6, icon: "globe", color: "green",
+    uses: ["OPM Flow", "PyVista", "远程计算"],
+    steps: ["检查网格、属性与井数据", "按开发方案生成模拟输入", "提交 OPM Flow 作业", "对比各方案产量、含水与压力"],
+    input: "油藏模型、开发方案", out: "方案对比报告" }),
+  S("s23", "震相拾取与定位", "地球科学", ["天然地震"], ["数据分析"], "工具编排型", "团队共享", "下载台站波形，拾取 P / S 震相并完成地震定位与目录整理。", {
+    calls: "540", favs: 22, rating: 4.5, icon: "wave", color: "blue",
+    uses: ["ObsPy"],
+    steps: ["按时间与区域获取台站波形", "滤波并拾取 P / S 震相", "走时反演定位", "输出地震目录"],
+    input: "时间窗口、研究区域", out: "地震目录（CSV）" }),
+
+  S("s24", "蛋白质结构解析", "合成生物学", ["蛋白质设计", "酶工程"], ["科学计算"], "工具编排型", "平台官方", "预测蛋白三维结构，评估置信度并标注活性位点与关键残基。", {
+    hot: true, calls: "4.1K", favs: 205, rating: 4.9, ver: "V1.4", updated: "2026-09-26", icon: "dna", color: "purple",
+    uses: ["AlphaFold2 / ColabFold", "Mol*"],
+    steps: ["检查序列并搜索同源序列", "预测结构，输出 pLDDT 与 PAE", "标注低置信区域与活性位点", "用 Mol* 展示结构"],
+    input: "蛋白序列（FASTA）", out: "结构文件（PDB）+ 置信度报告" }),
+  S("s25", "序列特征提取", "合成生物学", ["组学分析", "蛋白质设计"], ["数据分析"], "工具编排型", "平台官方", "提取序列基础特征、同源信息与功能注释。", {
+    calls: "2.0K", favs: 83, rating: 4.7, ver: "V1.2", icon: "dna", color: "green",
+    uses: ["Biopython", "BLAST+"],
+    steps: ["读取序列并统计长度、GC 含量、分子量", "BLAST 比对同源序列", "汇总功能注释与结构域", "输出特征表"],
+    input: "FASTA 序列", out: "特征表 + 注释" }),
+  S("s26", "引物与基因片段设计", "合成生物学", ["基因线路设计"], ["实验设计"], "工具编排型", "团队共享", "为克隆与组装设计引物，按宿主做密码子优化并检查合成约束。", {
+    calls: "1.1K", favs: 49, rating: 4.6, icon: "dna", color: "orange",
+    uses: ["Primer3", "DNA Chisel"],
+    steps: ["确认目标片段与组装方式", "Primer3 设计引物并检查二聚体", "DNA Chisel 做密码子优化与约束检查", "输出引物表与优化序列"],
+    input: "目标序列、宿主、组装方式", out: "引物表 + 优化序列" }),
+  S("s27", "代谢通量分析", "合成生物学", ["代谢工程"], ["科学计算"], "工具编排型", "团队共享", "基于基因组尺度代谢模型做通量平衡分析，找出提高目标产物的改造靶点。", {
+    calls: "620", favs: 30, rating: 4.5, icon: "network", color: "teal",
+    uses: ["COBRApy"],
+    steps: ["加载代谢模型并设置培养条件", "通量平衡分析，计算目标产物理论产量", "敲除 / 过表达扫描，排序改造靶点", "输出靶点列表与通量图"],
+    input: "代谢模型（SBML）、目标产物", out: "改造靶点列表" }),
+  S("s28", "配方优化课题周报", "材料科学", ["配方设计"], ["论文写作"], "指令型", "个人创建", "汇总本周空间内的计算任务与实验结果，按课题组周报模板生成。", {
+    calls: "36", favs: 3, rating: 4.4, updated: "2026-09-28", icon: "pen", color: "pink", recent: true,
+    steps: ["收集本周任务记录与产出", "按「进展 / 问题 / 下周计划」整理", "生成周报"],
+    input: "时间范围", out: "周报（Markdown）" })
+]
+
+let skillMd = null
+const PAGE = {
+  title: "科研技能",
+  unit: "技能",
+  items: PAGE_ITEMS,
+  favs: ["s1", "s9"],
+  preload: ["s1", "s15", "s16", "s5"],
+  panelIcon: "layers",
+  newIcon: "layers",
+  hotNote: "基于科研高频场景精选，Research Agent 可直接调用",
+  tabs: ["全部技能", "已加载", "最近使用", "我的收藏", "我创建的"],
+  dims: [
+    ["field", "学科领域", () => FIELDS, (i) => [i.field]],
+    ["dir", "研究方向", () => ["全部", ...dirsFor(state.field)], (i) => i.dirs],
+    ["scene", "应用场景", () => ["全部", ...SCENES], (i) => i.scenes],
+    ["form", "技能形态", () => ["全部", ...FORMS], (i) => [i.form]],
+    ["src", "来源", () => ["全部", ...SOURCES], (i) => [i.src]]
+  ],
+  dirsOf: (i) => i.dirs,
+  scenesOf: (i) => i.scenes,
+  searchText: (i) => `${i.name} ${i.desc} ${i.field} ${i.dirs.join(" ")} ${i.scenes.join(" ")} ${i.form} ${i.src} ${(i.uses || []).join(" ")} ${(i.steps || []).join(" ")} ${i.when || ""}`,
+  tags: (i) => [[i.form, `kind ${FORM_CLS[i.form]}`, FORM_TIP[i.form]], [i.field], [i.scenes[0]]],
+  status: (i) => i.src === "个人创建" ? `<em>仅自己可见</em>` : `<em class="ok">可用</em>`,
+  cardLine: (i) => i.uses && i.uses.length ? `<p class="kit-line" title="${esc(i.uses.join("、"))}">${icon("wrench", 13)}<b>调用工具</b>${esc(i.uses.slice(0, 3).join(" · "))}${i.uses.length > 3 ? ` 等 ${i.uses.length} 个` : ""}</p>` : `<p class="kit-line">${icon("doc", 13)}<b>SKILL.md</b>无需调用工具，由大模型按说明完成</p>`,
+  meta: (i) => `<span class="owner" title="${esc(i.owner)}">${icon("user", 13)}<i>${esc(i.owner)}</i></span>
+    <span title="评分">${icon("star", 13)}${i.rating}</span>
+    <span title="调用次数">${icon("eye", 14)}${esc(i.calls)}</span>
+    <span title="版本与更新时间">${esc(i.ver)} · ${esc(i.updated.slice(5))}</span>`,
+  chipNote: (i) => i.uses && i.uses.length ? `<i class="kn" title="依赖工具">${i.uses.length} 工具</i>` : "",
+  onLoad: (i) => i.uses && i.uses.length ? `，并联带加载依赖的工具：${i.uses.join("、")}` : "",
+  drawerTabs: () => ["说明", "SKILL.md", "依赖工具", "版本记录"],
+  tabLabel: (i, t) => t === "依赖工具" ? `依赖工具（${(i.uses || []).length}）` : t,
+  drawerTab(i, tab) {
+    if (tab === "SKILL.md") {
+      return `<div class="code-head"><span>SKILL.md</span><button class="btn sm ghost" type="button" data-copytext="skill-md">复制</button></div><pre class="code" id="skill-md">${esc(skillFile(i))}</pre>
+        ${i.script ? `<p class="kit-note">附带脚本：<code>${esc(i.script)}</code>，在空间沙箱中执行，只读写空间内文件。</p>` : ""}`
+    }
+    if (tab === "依赖工具") {
+      if (!i.uses || !i.uses.length) return `<div class="empty" style="margin-top:0">这是指令型技能，不调用工具，由大模型按 SKILL.md 直接完成。</div>`
+      return `<p class="kit-note">以下工具来自科学工具箱。加载本技能时一并加载到「${esc(state.space)}」；移除技能不会移除这些工具，它们可能还被其他技能使用。</p>
+        <ul class="ktools">${i.uses.map((u, n) => `<li><div class="kt-top"><b>${esc(u)}</b><em class="src ${isLoaded(i.id) ? "ok" : ""}" style="margin-left:auto">${isLoaded(i.id) ? "已加载" : "随技能加载"}</em></div><p>步骤 ${usedIn(i, u)} 调用</p></li>`).join("")}</ul>
+        <p class="lp-note">工具的参数、版本和远程资源在<a href="科学工具箱.html">科学工具箱</a>中管理。</p>`
+    }
+    if (tab === "版本记录") {
+      const vs = versionsOf(i)
+      return `<table class="etable"><thead><tr><th>版本</th><th>更新时间</th><th>更新说明</th><th>发布人</th></tr></thead><tbody>${vs.map((v, n) => `<tr><td><b>${esc(v[0])}</b>${n === 0 ? ` <em class="rs def">当前</em>` : ""}</td><td>${esc(v[1])}</td><td>${esc(v[2])}</td><td>${esc(i.owner)}</td></tr>`).join("")}</tbody></table>`
+    }
+    return `
+      ${pbox("何时使用", "触发条件", esc(i.when || `用户提出「${i.name}」相关任务时，Research Agent 读取本技能。`), "spark")}
+      ${pbox("任务步骤", `${(i.steps || []).length} 步`, `<ol class="steps">${(i.steps || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ol>`, "list")}
+      ${pbox("输入与产出", "", `<div>输入：${esc(i.input || "—")}</div><div>产出：${esc(i.out || "—")}</div>`, "doc")}
+      ${i.guard ? pbox("执行边界", "", `<ul>${i.guard.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`, "shield") : ""}
+      ${kv([["学科领域", i.field], ["研究方向", i.dirs.join("、")], ["应用场景", i.scenes.join("、")], ["技能形态", `${i.form}<span class="kv-note">${esc(FORM_TIP[i.form])}</span>`, true], ["来源", i.src], ["维护人", i.owner], ["当前版本", `${i.ver} · ${i.updated}`], ["评分 / 调用", `${i.rating} / ${i.calls} 次`]])}`
+  },
+  drawerActions: (i) => `<button class="btn ghost" type="button" data-act="try|${i.id}">${icon("spark", 15)}在会话中使用</button>`,
+  action(name, id) {
+    const i = findItem(id)
+    if (name === "try") {
+      if (!isLoaded(id)) toggleLoad(i, true)
+      i.recent = true
+      render()
+      state.keepScroll = true
+      openDrawer(i)
+      toast(`已在「${state.space}」启用「${i.name}」，前往科研超级中枢输入任务即可调用`)
+    }
+  },
+  createForm: () => `
+    <label class="field">技能名称<input name="name" maxlength="30" placeholder="例如：催化剂表征数据整理（不超过 30 字）" required /></label>
+    <label class="field">学科领域<select name="field">${opts(FIELDS)}</select></label>
+    <div id="dir-checks">${dirChecks(FIELDS[1])}</div>
+    ${checks("scenes", "应用场景", SCENES)}
+    <label class="field">技能形态<select name="form">${FORMS.map((x) => `<option ${x === "工具编排型" ? "selected" : ""}>${x}</option>`).join("")}</select><small class="opt" id="form-tip">${esc(FORM_TIP["工具编排型"])}</small></label>
+    <label class="field">说明<textarea name="desc" rows="2" placeholder="一句话说明技能能做什么"></textarea></label>
+    <label class="field">何时使用<textarea name="when" rows="2" placeholder="Research Agent 据此判断是否调用，例如：用户要整理多篇论文中的催化实验条件时"></textarea></label>
+    <label class="field">任务步骤<textarea name="steps" rows="4" placeholder="每行一步，例如：&#10;检索目标反应的文献&#10;抽取反应条件与结果&#10;输出对比表"></textarea></label>
+    <div id="use-box">${useChecks()}</div>
+    <label class="field">可见范围<select name="src"><option value="个人创建">仅自己</option><option value="团队共享">团队共享</option></select></label>`,
+  onChange(e) {
+    if (e.target.name === "form" && e.target.closest("#create-form")) {
+      document.getElementById("form-tip").textContent = FORM_TIP[e.target.value]
+      document.getElementById("use-box").innerHTML = e.target.value === "指令型" ? "" : useChecks()
+    }
+  },
+  createSubmit(data) {
+    const name = String(data.get("name") || "").trim()
+    if (!name) return "请填写技能名称"
+    const scenes = data.getAll("scenes")
+    if (!scenes.length) return "请至少选择一个应用场景"
+    const form = data.get("form")
+    const uses = data.getAll("uses")
+    if (form === "工具编排型" && !uses.length) return "工具编排型技能需要至少选择一个调用的工具"
+    const steps = String(data.get("steps") || "").split("\n").map((s) => s.trim()).filter(Boolean)
+    if (!steps.length) return "请至少填写一个任务步骤"
+    const field = data.get("field")
+    const dirs = data.getAll("dirs")
+    return {
+      item: { id: "new-" + Date.now(), name, field, dirs: dirs.length || !DIRS[field] ? dirs : [DIRS[field].slice(-1)[0]], scenes, form, src: data.get("src"), uses: form === "指令型" ? [] : uses, steps,
+        desc: String(data.get("desc") || "").trim() || "用户创建的技能。", when: String(data.get("when") || "").trim(), rating: 0, input: "按步骤说明", out: "按步骤说明", script: form === "脚本型" ? "scripts/main.py" : "" },
+      msg: `技能已创建（${form}${uses.length && form !== "指令型" ? `，调用 ${uses.length} 个工具` : ""}）`
+    }
+  },
+  importItem: (file) => ({ id: "imp-" + Date.now(), name: file.name.replace(/\.[^.]+$/, "").replace(/^SKILL$/i, "导入的技能"), field: "通用", dirs: [], scenes: ["编程与自动化"], form: "指令型", src: "个人创建", rating: 0, desc: `由 ${file.name} 导入，解析 SKILL.md 后可在会话中调用。`, steps: ["按导入的 SKILL.md 执行"], uses: [] })
+}
+function useChecks() { return checks("uses", "调用的工具（来自科学工具箱）", KIT_TOOLS) }
+function usedIn(i, u) {
+  const low = u.split(/[ /（]/)[0].toLowerCase()
+  const hit = (i.steps || []).map((s, n) => s.toLowerCase().includes(low) ? n + 1 : 0).filter(Boolean)
+  return hit.length ? hit.join("、") : "中按需"
+}
+function versionsOf(i) {
+  const [major, minor] = i.ver.slice(1).split(".").map(Number)
+  const out = [[i.ver, i.updated, i.id.startsWith("new") || i.id.startsWith("imp") ? "首次创建" : "优化步骤描述，补充执行边界"]]
+  if (minor > 0) out.push([`V${major}.${minor - 1}`, "2026-08-18", "修复单位换算与引用格式问题"])
+  if (major > 1) out.push([`V${major - 1}.0`, "2026-05-06", "首个稳定版本"])
+  else if (minor > 0) out.push(["V1.0", "2026-06-12", "首次发布"])
+  return out
+}
+function skillFile(i) {
+  return `---
+name: ${i.name}
+description: ${i.desc}
+version: ${i.ver}
+field: ${i.field}
+tools: [${(i.uses || []).join(", ")}]
+---
+
+# ${i.name}
+
+## 何时使用
+${i.when || `用户提出「${i.name}」相关任务时使用。`}
+
+## 输入
+${i.input || "—"}
+
+## 步骤
+${(i.steps || []).map((s, n) => `${n + 1}. ${s}`).join("\n")}
+
+## 产出
+${i.out || "—"}
+${i.guard ? `\n## 执行边界\n${i.guard.map((g) => `- ${g}`).join("\n")}\n` : ""}`
+}
+
+
+// ========== 通用列表引擎（科研技能 / 科研模型 / 科研智能体 共用，保持一致） ==========
+/* ========== 公共页面逻辑（与科学工具箱同构）==========
+   页面只需提供 PAGE（文案、条目、筛选维度、详情页签、新建表单），其余交给这里。 */
+const ICONS = {
+  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7"/><path d="M5.5 8.8V20.5h13V8.8"/><path d="M10 20.5v-5.5h4v5.5"/>',
+  hub: '<circle cx="12" cy="12" r="2.6"/><path d="M18.4 7.2A8 8 0 1 1 9.7 4.3"/><path d="M5.6 16.8A8 8 0 0 0 20 12"/><circle cx="17.5" cy="5.2" r="1.6"/>',
+  book: '<path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v12a2.8 2.8 0 0 0-2.8-2.8H2.5z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v12a2.8 2.8 0 0 1 2.8-2.8h6.7z"/>',
+  layers: '<path d="m12 3 9.5 4.8L12 12.6 2.5 7.8z"/><path d="m2.5 12.2 9.5 4.8 9.5-4.8"/><path d="m2.5 16.4 9.5 4.8 9.5-4.8"/>',
+  box: '<path d="M20.5 7.5 12 3 3.5 7.5v9L12 21l8.5-4.5z"/><path d="m3.5 7.5 8.5 4.6 8.5-4.6"/><path d="M12 12.1V21"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6.3L4.7 18.1A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.7-2.9L14 9.3V3"/><path d="M7.2 15h9.6"/>',
+  folder: '<path d="M4 20h16a2 2 0 0 0 2-2V8.5a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3.5H4a2 2 0 0 0-2 2V18a2 2 0 0 0 2 2Z"/><path d="M12 10.5v3.5"/><circle cx="12" cy="16.6" r="1.2"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8.2"/><path d="M3 3.5v4.7h4.7"/><path d="M12 7.5V12l3.4 2"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>',
+  doc: '<path d="M14 3H6.5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8.5z"/><path d="M14 3v5.5h5.5"/><path d="M8.5 9.5h2M8.5 13h7M8.5 16.5h7"/>',
+  network: '<rect x="9" y="3" width="6" height="5.5" rx="1"/><rect x="3" y="15.5" width="6" height="5.5" rx="1"/><rect x="15" y="15.5" width="6" height="5.5" rx="1"/><path d="M6 15.5v-2.5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2.5"/><path d="M12 12V8.5"/>',
+  chart: '<path d="M7 19v-4.5M12 19v-8M17 19V7.5"/>',
+  sliders: '<path d="M4 8h9M17.5 8H20M4 16h2.5M11 16h9"/><circle cx="15.2" cy="8" r="2.2"/><circle cx="8.8" cy="16" r="2.2"/>',
+  upload: '<path d="M12 15V3.5"/><path d="m7 8 5-4.5L17 8"/><path d="M20.5 15v3.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V15"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  chev: '<path d="m9 6 6 6-6 6"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  grid: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17M12 3.5v17"/>',
+  list: '<path d="M9 6h11.5M9 12h11.5M9 18h11.5"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="2.6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>',
+  heart: '<path d="M19.2 13.8c1.5-1.5 2.8-3.2 2.8-5.4A5.3 5.3 0 0 0 16.7 3c-1.8 0-3 .5-4.7 2.1C10.3 3.5 9.1 3 7.3 3A5.3 5.3 0 0 0 2 8.4c0 2.2 1.3 3.9 2.8 5.4l7.2 7.1Z"/>',
+  dots: '<circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  crown: '<path d="M3 7.5 7.5 11 12 4.5l4.5 6.5L21 7.5 19.2 17H4.8Z"/><path d="M4.8 20h14.4"/>',
+  bell: '<path d="M6 8.5a6 6 0 0 1 12 0c0 6.5 2.8 8.5 2.8 8.5H3.2S6 15 6 8.5"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.5-2.6 2.5"/><path d="M12 16.6h.01" stroke-width="2.4"/>',
+  panel: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9 3.5v17"/><path d="m15.5 14.5-2.5-2.5 2.5-2.5"/>',
+  close: '<path d="M7 7l10 10M17 7 7 17"/>',
+  spark: '<path d="M12 3.5 13.9 9 19.5 11 13.9 13 12 18.5 10.1 13 4.5 11 10.1 9z"/><path d="M19 3.5v3M17.5 5h3M5 17.5v3M3.5 19h3"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  star: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+  code: '<path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5"/>',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx=".8"/><path d="M9.5 3v3M14.5 3v3M9.5 18v3M14.5 18v3M3 9.5h3M3 14.5h3M18 9.5h3M18 14.5h3"/>',
+  wave: '<path d="M2.5 12h3l2-6 3.5 12 3-9 2 5h5.5"/>',
+  dna: '<path d="M7 3c0 6 10 6 10 12s-10 6-10 6M17 3c0 6-10 6-10 12"/><path d="M8.5 6.5h7M8.5 17.5h7M10 12h4"/>',
+  atom: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>',
+  pen: '<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3Z"/>',
+  image: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m20.5 16-5-5-8.5 8.5"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6z"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+}
+function icon(name, size, sw) {
+  const s = size || 18
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw || 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.box}</svg>`
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]))
+}
+let toastTimer = 0
+function toast(text) {
+  const el = document.getElementById("toast")
+  el.hidden = false
+  el.textContent = text
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { el.hidden = true }, 2400)
+}
+function paintIcons(root) {
+  root.querySelectorAll("[data-icon]").forEach((el) => {
+    if (el.dataset.ready) return
+    el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 18)
+    el.dataset.ready = "1"
+  })
+}
+function numOf(calls) {
+  const s = String(calls)
+  return s.endsWith("K") ? parseFloat(s) * 1000 : parseFloat(s) || 0
+}
+function checks(name, label, list, on) {
+  return `<div class="field"><span>${esc(label)}<small class="opt">可多选</small></span><div class="checks">${list.map((x) => `<label><input type="checkbox" name="${name}" value="${esc(x)}" ${on && on.includes(x) ? "checked" : ""} /> ${esc(x)}</label>`).join("")}</div></div>`
+}
+const opts = (arr, cur) => arr.filter((x) => x !== "全部").map((x) => `<option ${x === cur ? "selected" : ""}>${esc(x)}</option>`).join("")
+function dirChecks(field) { return (DIRS[field] || []).length ? checks("dirs", "研究方向", DIRS[field]) : "" } // 通用领域不分研究方向
+
+const ITEMS = PAGE.items
+const findItem = (id) => ITEMS.find((row) => row.id === id)
+const DIMS = PAGE.dims // [key, 标签, 全部选项(), 取值(item)=>[]]
+const DIM_LIMIT = 12
+const favs = new Set(PAGE.favs || [])
+const state = { query: "", tab: PAGE.tabs[0], sort: "综合排序", view: "card", space: "配方优化课题", menu: null, lpOpen: false, fOpen: {}, dtab: "" }
+DIMS.forEach(([k]) => { state[k] = "全部" })
+const SPACES = ["全部项目", "配方优化课题", "高性能合成橡胶项目"]
+// 空间（课题）信息由课题管理平台同步，本平台只读；这里只维护每个空间已加载的条目
+const SPACE_INFO = {}
+SPACES.forEach((s) => { SPACE_INFO[s] = { loaded: {} } })
+;(PAGE.preload || []).forEach((id, i) => { SPACE_INFO["配方优化课题"].loaded[id] = { at: i + 1 } })
+const LP_FOLD = 10
+
+function anyFilter() { return DIMS.some(([k]) => state[k] !== "全部") }
+function spaceInfo(name) {
+  const key = name || state.space
+  if (!SPACE_INFO[key]) SPACE_INFO[key] = { loaded: {} }
+  return SPACE_INFO[key]
+}
+function loadedOf(name) { return spaceInfo(name).loaded }
+function isLoaded(id) { return !!loadedOf()[id] }
+function loadBtn(item, big) {
+  return `<button class="btn ${big ? "" : "sm"} load" type="button" data-name="${esc(item.name)}" onclick="event.stopPropagation();parent.joinMyAssets&&parent.joinMyAssets('技能', this.getAttribute('data-name'))" title="加入我的科研资产">${icon("plus", big ? 15 : 14, 2)}加入我的科研资产</button>`
+}
+function toggleLoad(item, silent) {
+  const box = loadedOf()
+  if (box[item.id]) {
+    delete box[item.id]
+    if (!silent) toast(`已从「${state.space}」移除「${item.name}」`)
+  } else {
+    box[item.id] = { at: Date.now() }
+    item.recent = true
+    const also = PAGE.onLoad ? PAGE.onLoad(item) : ""
+    if (!silent) toast(`已加载「${item.name}」到「${state.space}」${also}`)
+  }
+}
+
+function chips(group, options, current) {
+  const box = document.querySelector(`[data-group="${group}"]`)
+  const label = box.querySelector(".lbl").outerHTML
+  box.hidden = !options || (group === "dir" && options.length <= 1)
+  if (!options) return
+  const open = state.fOpen[group]
+  const over = options.length - 1 > DIM_LIMIT
+  const shown = over && !open ? options.filter((op, i) => i <= DIM_LIMIT || op === current) : options
+  const last = group === DIMS[DIMS.length - 1][0] && anyFilter()
+  box.innerHTML = label + shown.map((op) => `<button type="button" class="chip ${op === current ? "on" : ""}" data-filter="${group}" data-value="${esc(op)}">${esc(op)}</button>`).join("")
+    + (over ? `<button type="button" class="fmore" data-fmore="${group}">${open ? "收起" : `更多 ${options.length - shown.length}`}${icon("down", 12, 2)}</button>` : "")
+    + (last ? `<button type="button" class="fclear" data-fclear="1">清空筛选</button>` : "")
+}
+// 筛选联动：逐级收窄，首行保留完整选项；研究方向常驻：学科领域为「全部」时列出所有方向，选定领域后只列该领域的方向；「通用」不分研究方向，选中时隐藏该行
+function dirsFor(field) { return field === "全部" ? [...new Set(FIELDS.slice(1).flatMap((f) => DIRS[f] || []))] : (DIRS[field] || []) }
+function cascadeOptions() {
+  const out = {}
+  let pool = ITEMS
+  DIMS.forEach(([key, , all, get]) => {
+    const have = new Set(pool.flatMap(get))
+    const options = key === "field" ? all() : all().filter((op) => op === "全部" || have.has(op))
+    if (!options.includes(state[key])) state[key] = "全部"
+    out[key] = options
+    if (state[key] !== "全部") pool = pool.filter((item) => get(item).includes(state[key]))
+  })
+  return out
+}
+function tabs() {
+  const n = Object.keys(loadedOf()).length
+  document.getElementById("item-tabs").innerHTML = PAGE.tabs.map((tab) => `<button type="button" class="${tab === state.tab ? "on" : ""}" data-tab="${esc(tab)}">${esc(tab)}${tab === "已加载" ? `<i class="n">${n}</i>` : ""}</button>`).join("")
+}
+function tagHtml(item, feature) {
+  const tags = PAGE.tags(item).map(([t, cls, tip]) => `<em class="${cls || ""}" ${tip ? `title="${esc(tip)}"` : ""}>${esc(t)}</em>`).join("")
+  const status = feature ? `<em class="official">平台官方</em>` : PAGE.status(item)
+  return `<div class="tags">${tags}${status}</div>`
+}
+function loadedPanel() {
+  const info = spaceInfo()
+  const ids = Object.keys(info.loaded).filter((id) => findItem(id)).sort((a, b) => info.loaded[a].at - info.loaded[b].at)
+  const shown = state.lpOpen ? ids : ids.slice(0, LP_FOLD)
+  const chip = (id) => {
+    const item = findItem(id)
+    return `<span class="lchip" title="${esc(item.desc)}">
+      <span class="ic ic-${item.color}">${icon(item.icon, 14, 1.9)}</span>
+      <b data-detail="${id}">${esc(item.name)}</b>
+      ${PAGE.chipNote ? PAGE.chipNote(item) : ""}
+      <button class="x" type="button" data-unload="${id}" aria-label="移除 ${esc(item.name)}">${icon("close", 13, 2)}</button>
+    </span>`
+  }
+  document.getElementById("loaded-panel").innerHTML = `
+    <div class="lp-head">
+      ${icon(PAGE.panelIcon || "layers", 18)}
+      <b>课题空间已加载${PAGE.unit}</b>
+      <span class="lp-space">${esc(state.space)}</span>
+      <span class="lp-count">${ids.length} 个</span>
+      <div class="lp-actions">
+        <button class="btn sm ghost" type="button" data-lp="clear" ${ids.length ? "" : "disabled"}>清空</button>
+      </div>
+    </div>
+    ${ids.length ? `<div class="lp-chips">${shown.map(chip).join("")}${ids.length > LP_FOLD ? `<button class="lp-more" type="button" data-lp="fold">${state.lpOpen ? "收起" : `+${ids.length - LP_FOLD} 展开`}</button>` : ""}</div>`
+      : `<div class="lp-empty">「${esc(state.space)}」还没有加载${PAGE.unit}。点卡片上的「加载」即可。</div>`}`
+}
+function featureCard(item) {
+  return `<article class="card feature" data-detail="${item.id}" style="cursor:pointer">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, true)}
+      <p class="desc">${esc(item.desc)}</p>
+    </div>
+  </article>`
+}
+function itemCard(item) {
+  const open = state.menu === item.id
+  return `<article class="card ${isLoaded(item.id) ? "is-loaded" : ""}">
+    <button class="more" type="button" data-more="${item.id}" aria-label="更多操作">${icon("dots", 18)}</button>
+    ${open ? `<div class="menu more-menu">
+      <button type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+      <button type="button" data-detail="${item.id}">查看详情</button>
+      <button type="button" data-copy="${item.id}">复制${PAGE.unit}名称</button>
+    </div>` : ""}
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body">
+      <b class="name">${esc(item.name)}</b>
+      ${tagHtml(item, false)}
+      <p class="desc">${esc(item.desc)}</p>
+      ${PAGE.cardLine ? PAGE.cardLine(item) : ""}
+    </div>
+    <footer>
+      <div class="meta">${PAGE.meta(item)}</div>
+      <div class="ops">
+        <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+        ${loadBtn(item)}
+      </div>
+    </footer>
+  </article>`
+}
+function listRow(item) {
+  return `<div class="list-row">
+    <span class="ic ic-${item.color}">${icon(item.icon, 20, 1.8)}</span>
+    <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}</div>
+    <div><p class="desc" style="margin:0">${esc(item.desc)}</p>${PAGE.cardLine ? PAGE.cardLine(item) : ""}</div>
+    <div class="ops">
+      <button class="btn sm ghost" type="button" data-detail="${item.id}">查看详情</button>
+      ${loadBtn(item)}
+    </div>
+  </div>`
+}
+function visible() {
+  const q = state.query.trim().toLowerCase()
+  let list = ITEMS.filter((item) => {
+    if (q) { const hay = PAGE.searchText(item).toLowerCase(); if (!q.split(/[\s,，、]+/).filter(Boolean).every((w) => hay.includes(w))) return false }
+    if (!DIMS.every(([k, , , get]) => state[k] === "全部" || get(item).includes(state[k]))) return false
+    if (state.tab === "已加载") return isLoaded(item.id)
+    if (state.tab === "最近使用") return item.recent
+    if (state.tab === "我的收藏") return favs.has(item.id)
+    if (state.tab === "我创建的") return item.owner === "林夏"
+    return true
+  })
+  list = [...list]
+  if (state.sort === "名称") list.sort((a, b) => a.name.localeCompare(b.name, "zh"))
+  if (state.sort === "最近更新") list.sort((a, b) => String(b.updated).localeCompare(String(a.updated)))
+  if (state.sort === "最多使用") list.sort((a, b) => numOf(b.calls) - numOf(a.calls))
+  return list
+}
+function render() {
+  const o = cascadeOptions()
+  DIMS.forEach(([key]) => chips(key, o[key], state[key]))
+  loadedPanel()
+  tabs()
+  document.querySelectorAll("[data-view]").forEach((btn) => btn.classList.toggle("on", btn.dataset.view === state.view))
+  const list = visible()
+  document.getElementById("item-count").textContent = `共 ${list.length} 个${PAGE.unit}`
+  const showHot = state.tab === PAGE.tabs[0] && !state.query && !anyFilter()
+  let html = ""
+  if (showHot) {
+    html += `<section class="hot"><header>${icon("crown", 18)}<b>精选推荐</b><span>${esc(PAGE.hotNote)}</span></header>
+      <div class="grid">${ITEMS.filter((i) => i.hot).slice(0, 3).map(featureCard).join("")}</div></section>`
+  }
+  if (!list.length && state.tab === "已加载") html += `<div class="empty">「${esc(state.space)}」还没有加载${PAGE.unit}，或当前筛选条件下没有已加载的${PAGE.unit}。</div>`
+  else if (!list.length) html += `<div class="empty">没有匹配的${PAGE.unit}，试试更换筛选条件或搜索词。</div>`
+  else if (state.view === "card") html += `<div class="grid tools-grid">${list.map(itemCard).join("")}</div>`
+  else html += `<div class="list">${list.map(listRow).join("")}</div>`
+  document.getElementById("item-results").innerHTML = html
+}
+
+function openDrawer(item) {
+  state.menu = null
+  const box = document.getElementById("drawer")
+  box.hidden = false
+  const list = PAGE.drawerTabs(item)
+  const tab = list.includes(state.dtab) ? state.dtab : list[0]
+  const top = box.querySelector(".drawer") ? box.querySelector(".drawer").scrollTop : 0
+  box.innerHTML = `<aside class="drawer wide" role="dialog" aria-label="${esc(item.name)}" data-open="${item.id}">
+    <header><h3>${esc(PAGE.unit)}详情</h3><button class="icon-btn" type="button" data-close="drawer" aria-label="关闭">${icon("close")}</button></header>
+    <div class="card">
+      <span class="ic ic-${item.color}">${icon(item.icon, 24, 1.8)}</span>
+      <div class="body"><b class="name">${esc(item.name)}</b>${tagHtml(item, false)}<p class="desc" style="-webkit-line-clamp:3">${esc(item.desc)}</p></div>
+    </div>
+    <div class="row-actions" style="margin-top:12px">
+      ${loadBtn(item, true)}
+      ${PAGE.drawerActions ? PAGE.drawerActions(item) : ""}
+      <button class="btn ghost" type="button" data-fav="${item.id}">${favs.has(item.id) ? "取消收藏" : "收藏"}</button>
+    </div>
+    <nav class="dtabs">${list.map((t) => `<button type="button" class="${t === tab ? "on" : ""}" data-dtab="${esc(t)}">${esc(PAGE.tabLabel ? PAGE.tabLabel(item, t) : t)}</button>`).join("")}</nav>
+    ${PAGE.drawerTab(item, tab)}
+  </aside>`
+  if (state.keepScroll) box.querySelector(".drawer").scrollTop = top
+  state.keepScroll = false
+}
+function openId() { const d = document.querySelector("#drawer [data-open]"); return d && d.dataset.open }
+function kv(rows) {
+  return `<ul class="kv">${rows.filter((r) => r && r[1] !== undefined && r[1] !== "").map(([k, v, raw]) => `<li><span>${esc(k)}</span><b>${raw ? v : esc(v)}</b></li>`).join("")}</ul>`
+}
+function pbox(title, badge, inner, ic) {
+  return `<div class="pbox"><h4>${icon(ic || "spark", 15)}${esc(title)}${badge ? `<i>${esc(badge)}</i>` : ""}</h4>${inner}</div>`
+}
+
+function openCreate() {
+  const box = document.getElementById("modal")
+  box.hidden = false
+  box.innerHTML = `<div class="modal wide" role="dialog" aria-label="新建${PAGE.unit}">
+    <header><h3>新建${esc(PAGE.unit)}</h3><button class="icon-btn" type="button" data-close="modal" aria-label="关闭">${icon("close")}</button></header>
+    <form id="create-form" class="scroll">
+      ${PAGE.createForm()}
+      <div class="row-actions right" style="padding-bottom:4px">
+        <button class="btn ghost" type="button" data-close="modal">取消</button>
+        <button class="btn" type="submit">确定创建</button>
+      </div>
+    </form>
+  </div>`
+}
+function addItem(extra) {
+  const colors = ["blue", "purple", "green", "orange", "pink", "teal"]
+  const n = ITEMS.length % 6
+  ITEMS.unshift(Object.assign({ owner: "林夏", calls: "0", favs: 0, hot: false, recent: true, updated: "2026-09-30", icon: PAGE.newIcon || "box", color: colors[n], ver: "V1.0" }, extra))
+}
+
+function toggleMenu(id) {
+  ["scope-menu", "bell-menu", "help-menu"].forEach((m) => { if (m !== id) document.getElementById(m).hidden = true })
+  if (id) document.getElementById(id).hidden = !document.getElementById(id).hidden
+}
+
+/* ---------- 初始化与事件 ---------- */
+document.querySelector(".filter-box").innerHTML = DIMS.map(([k, label]) => `<div class="filters ${k === "dir" ? "sub" : ""}" data-group="${k}"><span class="lbl">${esc(label)}：</span></div>`).join("")
+document.getElementById("item-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  state.query = document.getElementById("item-q").value.trim()
+  render()
+})
+document.getElementById("top-search").addEventListener("submit", (e) => {
+  e.preventDefault()
+  const text = document.getElementById("top-q").value.trim()
+  document.getElementById("item-q").value = text
+  state.query = text
+  render()
+  toast(text ? `已在${PAGE.title}搜索「${text}」` : "已清除搜索")
+})
+document.getElementById("item-sort").addEventListener("change", (e) => { state.sort = e.target.value; render() })
+// PAGE.createPage：新建在独立配置页完成（如科研智能体），否则用弹窗表单
+document.getElementById("open-create").addEventListener("click", () => { if (PAGE.createPage) location.href = PAGE.createPage; else openCreate() })
+document.getElementById("rail-btn").addEventListener("click", () => document.getElementById("app").classList.toggle("is-rail"))
+document.getElementById("import-file").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0]
+  e.target.value = ""
+  if (!file) return
+  addItem(PAGE.importItem(file))
+  state.tab = PAGE.tabs[0]
+  toast(`已导入 ${file.name}`)
+  render()
+})
+document.getElementById("scope-btn").addEventListener("click", (e) => {
+  e.stopPropagation()
+  document.getElementById("scope-menu").innerHTML = SPACES.map((name) => `<button type="button" class="${name === state.space ? "on" : ""}" data-space="${esc(name)}">${esc(name)}</button>`).join("")
+  toggleMenu("scope-menu")
+})
+document.getElementById("bell-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("bell-menu") })
+document.getElementById("help-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleMenu("help-menu") })
+document.getElementById("user-btn").addEventListener("click", () => toast("这是原型，账号保持登录"))
+
+document.body.addEventListener("click", (e) => {
+  const t = e.target
+  const inMenu = t.closest(".menu")
+  const act = t.closest("[data-act]")
+  if (act) { const [name, arg, arg2] = act.dataset.act.split("|"); PAGE.action(name, arg, arg2); return }
+  const load = t.closest("[data-load]")
+  if (load) {
+    const item = findItem(load.dataset.load)
+    toggleLoad(item)
+    if (!document.getElementById("drawer").hidden) { state.keepScroll = true; openDrawer(item) }
+    render(); return
+  }
+  const unload = t.closest("[data-unload]")
+  if (unload) { toggleLoad(findItem(unload.dataset.unload)); render(); return }
+  const lp = t.closest("[data-lp]")
+  if (lp) {
+    const a = lp.dataset.lp
+    const info = spaceInfo()
+    if (a === "fold") { state.lpOpen = !state.lpOpen; render() }
+    if (a === "clear") {
+      const n = Object.keys(info.loaded).length
+      info.loaded = {}
+      toast(`已清空「${state.space}」的 ${n} 个已加载${PAGE.unit}`)
+      render()
+    }
+    return
+  }
+  const fmore = t.closest("[data-fmore]")
+  if (fmore) { state.fOpen[fmore.dataset.fmore] = !state.fOpen[fmore.dataset.fmore]; render(); return }
+  if (t.closest("[data-fclear]")) { DIMS.forEach(([k]) => { state[k] = "全部" }); render(); return }
+  const filter = t.closest("[data-filter]")
+  if (filter) { state[filter.dataset.filter] = filter.dataset.value; render(); return }
+  const tab = t.closest("[data-tab]")
+  if (tab) { state.tab = tab.dataset.tab; render(); return }
+  const view = t.closest("[data-view]")
+  if (view) { state.view = view.dataset.view; render(); return }
+  const more = t.closest("[data-more]")
+  if (more) { state.menu = state.menu === more.dataset.more ? null : more.dataset.more; render(); return }
+  const detail = t.closest("[data-detail]")
+  if (detail) { state.dtab = ""; openDrawer(findItem(detail.dataset.detail)); render(); return }
+  const dtab = t.closest("[data-dtab]")
+  if (dtab) { state.dtab = dtab.dataset.dtab; openDrawer(findItem(openId())); return }
+  const cp = t.closest("[data-copytext]")
+  if (cp) {
+    const el = document.getElementById(cp.dataset.copytext)
+    if (el && navigator.clipboard) navigator.clipboard.writeText(el.textContent).catch(() => {})
+    toast("已复制"); return
+  }
+  const copy = t.closest("[data-copy]")
+  if (copy) {
+    const name = findItem(copy.dataset.copy).name
+    if (navigator.clipboard) navigator.clipboard.writeText(name).catch(() => {})
+    state.menu = null; render(); toast(`已复制「${name}」`); return
+  }
+  const fav = t.closest("[data-fav]")
+  if (fav) {
+    const id = fav.dataset.fav
+    const item = findItem(id)
+    if (favs.has(id)) { favs.delete(id); item.favs -= 1; toast("已取消收藏") } else { favs.add(id); item.favs += 1; toast("已收藏") }
+    state.menu = null
+    if (!document.getElementById("drawer").hidden) { state.keepScroll = true; openDrawer(item) }
+    render(); return
+  }
+  const close = t.closest("[data-close]")
+  if (close) { document.getElementById(close.dataset.close).hidden = true; return }
+  const space = t.closest("[data-space]")
+  if (space) {
+    state.space = space.dataset.space
+    state.lpOpen = false
+    document.getElementById("scope-label").textContent = state.space
+    toggleMenu(null)
+    document.getElementById("drawer").hidden = true
+    render()
+    const n = Object.keys(loadedOf()).length
+    toast(`课题空间已切换为${state.space}，${n ? `已加载 ${n} 个${PAGE.unit}` : `还没有加载${PAGE.unit}`}`)
+    return
+  }
+  if (t.id === "drawer" || t.id === "modal") t.hidden = true
+  if (!inMenu) {
+    toggleMenu(null)
+    if (state.menu) { state.menu = null; render() }
+  }
+})
+document.body.addEventListener("change", (e) => {
+  if (e.target.name === "field" && e.target.closest("#create-form")) {
+    document.getElementById("dir-checks").innerHTML = dirChecks(e.target.value)
+    return
+  }
+  if (PAGE.onChange) PAGE.onChange(e)
+})
+document.body.addEventListener("submit", (e) => {
+  if (e.target.id !== "create-form") return
+  e.preventDefault()
+  const res = PAGE.createSubmit(new FormData(e.target))
+  if (typeof res === "string") { toast(res); return }
+  addItem(res.item)
+  document.getElementById("modal").hidden = true
+  state.tab = PAGE.tabs[0]
+  toast(res.msg)
+  render()
+})
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return
+  document.getElementById("drawer").hidden = true
+  document.getElementById("modal").hidden = true
+  toggleMenu(null)
+  if (state.menu) { state.menu = null; render() }
+})
+
+paintIcons(document)
+// 从独立配置页发布后回到列表：#created=<JSON>
+;(function takeCreated() {
+  const m = /^#created=(.+)$/.exec(location.hash || "")
+  if (!m || !PAGE.fromCreated) return
+  try {
+    const res = PAGE.fromCreated(JSON.parse(decodeURIComponent(m[1])))
+    addItem(res.item)
+    state.tab = "我创建的"
+    if (location.protocol !== "about:" && history.replaceState) history.replaceState(null, "", location.pathname)
+    setTimeout(() => toast(res.msg), 0)
+  } catch (err) { /* 参数损坏时忽略 */ }
+})()
+render()
+
+</script>
+</body>
+</html>

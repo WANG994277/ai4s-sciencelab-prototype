@@ -1,0 +1,218 @@
+@import 'tailwindcss' source(none);
+@source '..';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-6: var(--chart-6);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* PETROLAB 自定义语义色 */
+  --color-navy: var(--navy);
+  --color-cyan: var(--cyan);
+  --color-amber: var(--amber);
+  --color-gold: var(--gold);
+  --color-faint: var(--faint);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-blue: var(--blue);
+  --color-text: var(--text);
+  --color-red: var(--red);
+  --color-purple: var(--purple);
+  --color-bg: var(--bg);
+  --color-green: var(--green);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning-bg: var(--warning-bg);
+  --color-neutral-bg: var(--neutral-bg);
+  --color-error-bg: var(--error-bg);
+  --color-primary-container: var(--primary-container);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline-variant: var(--outline-variant);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+  --shadow-dialog: var(--shadow-dialog);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans:
+    'Microsoft YaHei', 'PingFang SC', 'Segoe UI', ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:
+    'Consolas', 'SFMono-Regular', ui-monospace, Menlo, Monaco, monospace;
+  --font-serif:
+    'Noto Serif SC', 'Songti SC', ui-serif, Georgia, serif;
+}
+
+:root {
+  --radius: 0.5rem;
+  /* AI4S Design System V1.0: 朱丹红用于品牌和正式操作。 */
+  --brand-red: #b4232d;
+  --brand-red-deep: #8d1b24;
+  --brand-red-soft: #fbecee;
+  --scientific-blue: #2878d0;
+  --compute-cyan: #0788a8;
+  --experiment-green: #168b68;
+  --ai-purple: #6558d3;
+  --background: #f5f6f8;
+  --foreground: #1f2329;
+  --card: #ffffff;
+  --card-foreground: #1f2329;
+  --popover: #ffffff;
+  --popover-foreground: #1f2329;
+  --primary: #b4232d;
+  --primary-foreground: #ffffff;
+  --secondary: #fbecee;
+  --secondary-foreground: #8d1b24;
+  --muted: #f8fafc;
+  --muted-foreground: #4e5969;
+  --accent: #fbecee;
+  --accent-foreground: #8d1b24;
+  --destructive: #d92d20;
+  --border: #d9dde3;
+  --input: #d9dde3;
+  --ring: #b4232d;
+  --chart-1: #2878d0;
+  --chart-2: #0788a8;
+  --chart-3: #168b68;
+  --chart-4: #d97706;
+  --chart-5: #6558d3;
+  --chart-6: #d92d20;
+  /* PETROLAB 自定义变量 */
+  --navy: #1f2329;
+  --cyan: #0788a8;
+  --amber: #d97706;
+  --gold: #c99325;
+  --faint: #86909c;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --line: #d9dde3;
+  --line-2: #c7ced9;
+  --blue: #2878d0;
+  --text: #1f2329;
+  --red: #d92d20;
+  --purple: #6558d3;
+  --bg: #f5f6f8;
+  --green: #168b68;
+  --success: #168b68;
+  --success-bg: #e9f7f1;
+  --warning-bg: #fff3e0;
+  --neutral-bg: #f5f5f5;
+  --error-bg: #fff0ef;
+  --primary-container: #fbecee;
+  --on-surface-variant: #4e5969;
+  --outline-variant: #c7ced9;
+  --surface-container: #f8fafc;
+  --surface-container-high: #fbecee;
+  --surface-container-highest: #e7ebf0;
+  --shadow-card: 0 2px 8px rgba(16, 38, 79, 0.04);
+  --shadow-float: 0 4px 12px rgba(16, 38, 79, 0.08);
+  --shadow-dialog: 0 10px 25px rgba(16, 38, 79, 0.12);
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2329;
+  --sidebar-primary: #b4232d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fbecee;
+  --sidebar-accent-foreground: #8d1b24;
+  --sidebar-border: #d9dde3;
+  --sidebar-ring: #b4232d;
+}
+
+.v-resource-main {
+  --v-brand: #1268e8;
+  --v-brand-strong: #0756c9;
+  --v-brand-soft: #eaf3ff;
+  --v-ink: #102a56;
+  --v-muted: #627695;
+  --v-line: #dbe6f4;
+  --v-bg: #f4f8fd;
+  --v-soft: #eef5ff;
+  --v-green: #0a9b78;
+  --v-amber: #df8b13;
+  --v-danger: #d83b3b;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--v-bg);
+  color: var(--v-ink);
+  font: 14px/1.6 "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button, a {
+    &:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+  }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+}
+
+@layer components {
+  .research-input { @apply min-h-10 w-full rounded-lg border border-line bg-white px-3 py-2 text-sm; }
+  .research-button { @apply inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-line bg-white px-3 py-2 text-sm transition-colors hover:bg-surface-2 disabled:opacity-50; }
+  .research-primary { @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:opacity-50; }
+  .research-table { @apply w-full text-left text-sm; }
+  .research-table th { @apply bg-surface-2 px-4 py-3 text-xs font-medium text-muted-foreground; }
+  .research-table td { @apply border-t border-line px-4 py-3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.sc-related-task{display:block;border:0;background:none;padding:4px 0;color:#0969f6;font-size:12px;text-align:left;cursor:pointer}.sc-related-task:hover{text-decoration:underline}

@@ -1,0 +1,1 @@
+export function notify(message:string){const node=document.getElementById("task-notice");if(node){node.textContent=message;setTimeout(()=>{node.textContent="";},3500);}}

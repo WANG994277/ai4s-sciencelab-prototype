@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="2820" viewBox="0 0 1520 2820">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#526782"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<rect x="35" y="180" width="1450" height="310" fill="#F1F6FF" stroke="#DAE4EE"/>
+<text x="65" y="208.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI4S  /  定位研究</tspan></text>
+<rect x="35" y="515" width="1450" height="1390" fill="#EEF7F4" stroke="#DAE4EE"/>
+<text x="65" y="543.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">科研超级中枢  /  开展读、算</tspan></text>
+<rect x="35" y="1930" width="1450" height="645" fill="#F1F6FF" stroke="#DAE4EE"/>
+<text x="65" y="1958.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="20" font-weight="650" fill="#0B2146"><tspan x="65" dy="0">AI4S  /  判断与成果</tspan></text>
+<polyline points="710.0,339 710.0,550" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,654 710.0,705" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,809 710.0,860" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,964 710.0,1020" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,1091.0 1100,1091.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1257.5,1034 1257.5,757 890,757.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,1162 710.0,1215" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1319 710,1345 420,1345 420.0,1380" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1319 710,1345 1070,1345 1070.0,1380" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="420.0,1484 420,1512 710,1512 710.0,1550" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="1070.0,1484 1070,1512 710,1512 710.0,1550" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,1654 710.0,1710" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,1780.0 975.0,1780.0 975.0,1777.5 1100,1777.5" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1415,1777.5 1470,1777.5 1470,912 890,912.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,1850 710.0,1995" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="710.0,2099 710.0,2155" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="850,2225.0 975.0,2225.0 975.0,2227.5 1100,2227.5" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="1415,2227.5 1490,2227.5 1490,757 890,757.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<polyline points="710.0,2295 710.0,2380" fill="none" stroke="#526782" stroke-width="2"  marker-end="url(#arrow)"/>
+<polyline points="890,2432.0 970.0,2432.0 970.0,2455.0 1050,2455.0" fill="none" stroke="#526782" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<rect x="530" y="235" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="261.15999999999997" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">01  进入工作台或课题空间</tspan><tspan x="710.0" dy="25.840000000000003">明确本次研究目标</tspan><tspan x="710.0" dy="25.840000000000003">[科研工作台 / 课题空间]</tspan></text>
+<rect x="530" y="550" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="576.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">02  进入科研超级中枢</tspan><tspan x="710.0" dy="25.840000000000003">新建或继续研究会话</tspan><tspan x="710.0" dy="25.840000000000003">[科研超级中枢 / 任务内中枢会话]</tspan></text>
+<rect x="530" y="705" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="731.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">03  描述问题、加载上下文</tspan><tspan x="710.0" dy="25.840000000000003">提供文献、数据、约束与版本</tspan><tspan x="710.0" dy="25.840000000000003">[中枢输入区 · 上下文]</tspan></text>
+<rect x="530" y="860" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="886.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">04  查看中枢研究计划</tspan><tspan x="710.0" dy="25.840000000000003">核对任务范围、能力与确认点</tspan><tspan x="710.0" dy="25.840000000000003">[科研超级中枢 · 研究计划]</tspan></text>
+<polygon points="710.0,1020 850,1091.0 710.0,1162 570,1091.0" fill="#FFF8E8" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="1078.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">计划、材料与权限</tspan><tspan x="710.0" dy="25.840000000000003">是否满足执行要求？</tspan></text>
+<rect x="1100" y="1034" width="315" height="114" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="1065.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">补充材料 / 调整计划</tspan><tspan x="1257.5" dy="25.840000000000003">申请所需资源授权</tspan><tspan x="1257.5" dy="25.840000000000003">[中枢上下文 / 资源授权]</tspan></text>
+<rect x="530" y="1215" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="1241.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">05  确认计划并推进研究</tspan><tspan x="710.0" dy="25.840000000000003">中枢按任务组织读、算能力</tspan><tspan x="710.0" dy="25.840000000000003">[科研超级中枢 · 执行会话]</tspan></text>
+<rect x="225" y="1380" width="390" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="420.0" y="1406.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="420.0" dy="0">通过中枢开展「读」</tspan><tspan x="420.0" dy="25.840000000000003">检索研读、证据摘录与引用</tspan><tspan x="420.0" dy="25.840000000000003">[科研超级中枢 · 知识能力]</tspan></text>
+<rect x="875" y="1380" width="390" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="1070.0" y="1406.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1070.0" dy="0">通过中枢开展「算」</tspan><tspan x="1070.0" dy="25.840000000000003">数据分析、模型调用与科学计算</tspan><tspan x="1070.0" dy="25.840000000000003">[科研超级中枢 · 工具能力]</tspan></text>
+<rect x="530" y="1550" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="1576.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">06  在中枢查看进度与产物</tspan><tspan x="710.0" dy="25.840000000000003">检查轨迹、工具状态和阶段结果</tspan><tspan x="710.0" dy="25.840000000000003">[科研超级中枢 · 轨迹 / 产出]</tspan></text>
+<polygon points="710.0,1710 850,1780.0 710.0,1850 570,1780.0" fill="#FFF8E8" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="1767.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">本次执行</tspan><tspan x="710.0" dy="25.840000000000003">是否正常完成？</tspan></text>
+<rect x="1100" y="1720" width="315" height="115" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1257.5" y="1751.66" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">查看失败原因与调用记录</tspan><tspan x="1257.5" dy="25.840000000000003">补齐条件后回中枢调整重试</tspan><tspan x="1257.5" dy="25.840000000000003">[中枢轨迹 · 人工接管]</tspan></text>
+<rect x="530" y="1995" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="2021.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">07  人工复核结果与证据</tspan><tspan x="710.0" dy="25.840000000000003">核查来源、模型边界和适用条件</tspan><tspan x="710.0" dy="25.840000000000003">[产物溯源 · 科学问题]</tspan></text>
+<polygon points="710.0,2155 850,2225.0 710.0,2295 570,2225.0" fill="#FFF8E8" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="2212.08" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">本轮判断依据</tspan><tspan x="710.0" dy="25.840000000000003">是否充分？</tspan></text>
+<rect x="1100" y="2170" width="315" height="115" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="1257.5" y="2201.66" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1257.5" dy="0">补充证据 / 修订假设</tspan><tspan x="1257.5" dy="25.840000000000003">把下一轮问题带回中枢</tspan><tspan x="1257.5" dy="25.840000000000003">[科学问题 → 科研超级中枢]</tspan></text>
+<rect x="530" y="2380" width="360" height="104" rx="8" fill="#FFFFFF" stroke="#085FD7" stroke-width="2" />
+<text x="710.0" y="2406.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="710.0" dy="0">08  保存有边界的阶段判断</tspan><tspan x="710.0" dy="25.840000000000003">保留证据、产物和未解决问题</tspan><tspan x="710.0" dy="25.840000000000003">[科研任务 · 科学问题 · 空间资产]</tspan></text>
+<rect x="1050" y="2400" width="360" height="110" rx="8" fill="#FFFFFF" stroke="#526782" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1230.0" y="2429.16" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#0B2146"><tspan x="1230.0" dy="0">按需整理可复用资产</tspan><tspan x="1230.0" dy="25.840000000000003">向项目管理人员提交阶段材料</tspan><tspan x="1230.0" dy="25.840000000000003">[空间资产 / 评审交接]</tspan></text>
+<rect x="957.0" y="1055" width="46" height="30" fill="white" rx="3"/>
+<text x="980.0" y="1070.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="980.0" dy="0">否</tspan></text>
+<rect x="725.0" y="1175" width="46" height="30" fill="white" rx="3"/>
+<text x="748.0" y="1190.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="748.0" dy="0">是</tspan></text>
+<rect x="423.0" y="1305" width="84" height="30" fill="white" rx="3"/>
+<text x="465.0" y="1320.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="465.0" dy="0">按需选读</tspan></text>
+<rect x="988.0" y="1305" width="84" height="30" fill="white" rx="3"/>
+<text x="1030.0" y="1320.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1030.0" dy="0">按需选算</tspan></text>
+<rect x="967.0" y="1745" width="46" height="30" fill="white" rx="3"/>
+<text x="990.0" y="1760.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="990.0" dy="0">否</tspan></text>
+<rect x="727.0" y="1860" width="46" height="30" fill="white" rx="3"/>
+<text x="750.0" y="1875.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="750.0" dy="0">是</tspan></text>
+<rect x="962.0" y="2195" width="46" height="30" fill="white" rx="3"/>
+<text x="985.0" y="2210.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="985.0" dy="0">否</tspan></text>
+<rect x="727.0" y="2305" width="46" height="30" fill="white" rx="3"/>
+<text x="750.0" y="2320.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="750.0" dy="0">是</tspan></text>
+<rect x="944.0" y="2400" width="52" height="30" fill="white" rx="3"/>
+<text x="970.0" y="2415.0" text-anchor="middle" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="970.0" dy="0">按需</tspan></text>
+<text x="40" y="51.5" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="30" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">ScienceLab AI4S  /  科研人员使用旅程</tspan></text>
+<text x="40" y="117.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="400" fill="#526782"><tspan x="40" dy="0">核心入口：科研超级中枢｜提交问题与材料 → 确认计划 → 中枢组织读、算 → 人工复核与迭代</tspan></text>
+<text x="95" y="376.88" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="95" dy="0">起点：已有研究目标或待解决问题。</tspan><tspan x="95" dy="23.12">课题空间提供研究归属；</tspan><tspan x="95" dy="23.12">读、算操作围绕科研超级中枢展开。</tspan></text>
+<text x="1100" y="589.86" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="1100" dy="0">中枢可以调用底层知识、模型与工具。</tspan><tspan x="1100" dy="21.76">科研人员通过中枢推进任务，</tspan><tspan x="1100" dy="21.76">本旅程不要求其进入 AI 中台开发工具。</tspan><tspan x="1100" dy="21.76">底层服务接入状态以实际环境为准。</tspan></text>
+<text x="130" y="1222.36" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="16" font-weight="400" fill="#526782"><tspan x="130" dy="0">读、算按计划选择和组合，</tspan><tspan x="130" dy="21.76">可以只读、只算或读算迭代。</tspan><tspan x="130" dy="21.76">图中两支不要求同时执行，</tspan><tspan x="130" dy="21.76">在产出节点汇集本次实际结果。</tspan></text>
+<text x="95" y="2204.38" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="95" dy="0">“依据充分”并不等于假设成立。</tspan><tspan x="95" dy="23.12">反驳假设或保留分歧，也可以形成</tspan><tspan x="95" dy="23.12">有来源、有边界的阶段判断。</tspan></text>
+<text x="40" y="2630.94" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="650" fill="#0B2146"><tspan x="40" dy="0">图例：实框＝原型现有或本地演示；虚框＝尚待接入或未核实的业务环节。</tspan><tspan x="40" dy="23.12">实箭头＝正常推进；虚箭头＝退回、跨角色交接或可选路径。</tspan></text>
+<text x="40" y="2723.44" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="17" font-weight="400" fill="#526782"><tspan x="40" dy="0">交付：阶段判断、证据与产物、下一轮研究问题或待评审材料。</tspan><tspan x="40" dy="23.12">当前读、算运行仍为演示；权限申请、异常重试与成果送审的具体联动需在目标环境核实。</tspan></text>
+<text x="40" y="2801.0" text-anchor="start" dominant-baseline="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" font-weight="400" fill="#526782"><tspan x="40" dy="0">角色与系统分工依据用户确认；对应原型模块参考本工作区。更新：2026-10-10</tspan></text>
+</svg>
